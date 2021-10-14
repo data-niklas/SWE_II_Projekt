@@ -118,7 +118,7 @@ public class Dijkstra {
         return weg;
     }
 
-    public class DijkstraKnotenDaten{
+    private static class DijkstraKnotenDaten{
         private double distanz;
         private boolean bearbeitet;
         private Knoten von;
