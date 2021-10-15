@@ -1,6 +1,7 @@
 package schicht_4_abstraktion.dijkstra;
 
-public interface Knoten{
-    String holeIdentifizierer();
+import schicht_4_abstraktion.Identifizierbar;
+
+public interface Knoten extends Identifizierbar {
     boolean equals(Knoten andererKnoten);
 }

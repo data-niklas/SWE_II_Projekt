@@ -1,10 +1,10 @@
 package schicht_4_abstraktion.dijkstra;
 
-public class MockKnoten implements Knoten{
+public class MockKnoten implements Knoten {
 
     private final String identifizierer;
 
-    public MockKnoten(String identifizierer){
+    public MockKnoten(String identifizierer) {
         this.identifizierer = identifizierer;
     }
 

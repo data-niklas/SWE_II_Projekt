@@ -11,9 +11,9 @@ public class DijkstraTest {
     private Dijkstra dijkstra;
 
     //Maximal 24
-    private static void initialisiereKnoten(MockGraph graph, int anzahl){
-        for (int i = 0; i < anzahl; i++){
-            String identifizierer = Character.toString((char)('A'+i));
+    private static void initialisiereKnoten(MockGraph graph, int anzahl) {
+        for (int i = 0; i < anzahl; i++) {
+            String identifizierer = Character.toString((char) ('A' + i));
             graph.neuerKnoten(new MockKnoten(identifizierer));
         }
     }
@@ -25,18 +25,18 @@ public class DijkstraTest {
      * C        D
      * Alle Knoten sind mit ihren direkt nächsten Knoten mit Gewichtung 1 verbunden
      */
-    private static MockGraph mockGraph1(){
+    private static MockGraph mockGraph1() {
         MockGraph graph = new MockGraph();
         //A-E
         initialisiereKnoten(graph, 5);
-        graph.neueKante("A","B",1);
-        graph.neueKante("A","E",1);
-        graph.neueKante("A","C",1);
-        graph.neueKante("D","C",1);
-        graph.neueKante("D","E",1);
-        graph.neueKante("D","B",1);
-        graph.neueKante("C","E",1);
-        graph.neueKante("B","E",1);
+        graph.neueKante("A", "B", 1);
+        graph.neueKante("A", "E", 1);
+        graph.neueKante("A", "C", 1);
+        graph.neueKante("D", "C", 1);
+        graph.neueKante("D", "E", 1);
+        graph.neueKante("D", "B", 1);
+        graph.neueKante("C", "E", 1);
+        graph.neueKante("B", "E", 1);
         return graph;
     }
 
@@ -47,18 +47,18 @@ public class DijkstraTest {
      * C        D
      * Alle Knoten sind mit ihren direkt nächsten Knoten
      */
-    private static MockGraph mockGraph2(){
+    private static MockGraph mockGraph2() {
         MockGraph graph = new MockGraph();
         //A-E
         initialisiereKnoten(graph, 5);
-        graph.neueKante("A","B",2);//!
-        graph.neueKante("A","E",1);
-        graph.neueKante("A","C",1);
-        graph.neueKante("D","C",1);
-        graph.neueKante("D","E",1);
-        graph.neueKante("D","B",1);
-        graph.neueKante("C","E",3);//!
-        graph.neueKante("B","E",1);
+        graph.neueKante("A", "B", 2);//!
+        graph.neueKante("A", "E", 1);
+        graph.neueKante("A", "C", 1);
+        graph.neueKante("D", "C", 1);
+        graph.neueKante("D", "E", 1);
+        graph.neueKante("D", "B", 1);
+        graph.neueKante("C", "E", 3);//!
+        graph.neueKante("B", "E", 1);
         return graph;
     }
 
@@ -66,18 +66,18 @@ public class DijkstraTest {
      *
      *      C
      */
-    private static MockGraph mockGraph3(){
+    private static MockGraph mockGraph3() {
         MockGraph graph = new MockGraph();
         //A-E
         initialisiereKnoten(graph, 3);
-        graph.neueKante("A","B",3);//!
-        graph.neueKante("A","C",1);
-        graph.neueKante("C","B",1);
+        graph.neueKante("A", "B", 3);//!
+        graph.neueKante("A", "C", 1);
+        graph.neueKante("C", "B", 1);
         return graph;
     }
 
     //Reihenfolge wird ignoriert
-    private static void assertKanteGleich(Kante kante, String identifizierer1, String identifizierer2){
+    private static void assertKanteGleich(Kante kante, String identifizierer1, String identifizierer2) {
         String startIdentifizierer = kante.holeStartKnoten().holeIdentifizierer();
         String endIdentifizierer = kante.holeEndKnoten().holeIdentifizierer();
         boolean reihenfolge1 = startIdentifizierer.equals(identifizierer1) && endIdentifizierer.equals(identifizierer2);
@@ -87,7 +87,7 @@ public class DijkstraTest {
 
 
     @Test
-    public void einfacherGewichtungsTest(){
+    public void einfacherGewichtungsTest() {
         //Init
         MockGraph graph = mockGraph3();
         dijkstra = new Dijkstra(graph);

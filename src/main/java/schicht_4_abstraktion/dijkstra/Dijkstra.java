@@ -10,36 +10,36 @@ public class Dijkstra {
     private Knoten aktuellerKnoten;
     private Map<Knoten, DijkstraKnotenDaten> distanzTabelle;
 
-    public Dijkstra(Graph graph){
+    public Dijkstra(Graph graph) {
         this.graph = graph;
     }
 
     private void initialisiereDistanzTabelle() {
-        if (distanzTabelle == null){
+        if (distanzTabelle == null) {
             distanzTabelle = new HashMap<>();
         }
-        for (Knoten knoten : graph.holeKnoten()){
+        for (Knoten knoten : graph.holeKnoten()) {
             distanzTabelle.put(knoten, new DijkstraKnotenDaten());
         }
     }
 
-    private void laufeKnotenAb(Knoten knoten, double distanz){
+    private void laufeKnotenAb(Knoten knoten, double distanz) {
         DijkstraKnotenDaten daten = distanzTabelle.get(knoten);
-        if (distanz < daten.holeDistanz()){
+        if (distanz < daten.holeDistanz()) {
             daten.setzeDistanz(distanz);
             daten.setzeVon(aktuellerKnoten);
         }
     }
 
-    private Knoten findeUnbearbeitetenMinimalenKnoten(){
+    private Knoten findeUnbearbeitetenMinimalenKnoten() {
         Knoten minimalerKnoten = null;
         DijkstraKnotenDaten minimalerKnotenDaten = null;
-        for (Map.Entry<Knoten, DijkstraKnotenDaten> entry : distanzTabelle.entrySet()){
+        for (Map.Entry<Knoten, DijkstraKnotenDaten> entry : distanzTabelle.entrySet()) {
             Knoten knoten = entry.getKey();
             DijkstraKnotenDaten daten = entry.getValue();
-            if (daten.istBearbeitet())continue;
+            if (daten.istBearbeitet()) continue;
             if (minimalerKnoten == null
-            || daten.holeDistanz() < minimalerKnotenDaten.holeDistanz()){
+                    || daten.holeDistanz() < minimalerKnotenDaten.holeDistanz()) {
                 minimalerKnoten = knoten;
                 minimalerKnotenDaten = daten;
             }
@@ -48,18 +48,17 @@ public class Dijkstra {
         return minimalerKnoten;
     }
 
-    private void berechneDistanzen(){
-        for (Kante kante : graph.holeKanten()){
+    private void berechneDistanzen() {
+        for (Kante kante : graph.holeKanten()) {
             Knoten endKnoten = null;
-            if (kante.holeStartKnoten().equals(aktuellerKnoten)){
+            if (kante.holeStartKnoten().equals(aktuellerKnoten)) {
                 endKnoten = kante.holeEndKnoten();
-            }
-            else if (kante.holeEndKnoten().equals(aktuellerKnoten)){
+            } else if (kante.holeEndKnoten().equals(aktuellerKnoten)) {
                 endKnoten = kante.holeStartKnoten();
             }
-            if (endKnoten != null){
+            if (endKnoten != null) {
                 DijkstraKnotenDaten daten = distanzTabelle.get(endKnoten);
-                if (daten.istBearbeitet())continue;
+                if (daten.istBearbeitet()) continue;
                 double aktuelleGewichtung = distanzTabelle.get(aktuellerKnoten).holeDistanz();
                 laufeKnotenAb(endKnoten, aktuelleGewichtung + kante.holeGewichtung());
             }
@@ -67,20 +66,20 @@ public class Dijkstra {
     }
 
 
-    private void waehleKnoten(Knoten knoten){
+    private void waehleKnoten(Knoten knoten) {
         distanzTabelle.get(knoten).setzeBearbeitet(true);
         aktuellerKnoten = knoten;
     }
 
-    List<Kante> kuerzesterWeg(Knoten start, Knoten end){
+    List<Kante> kuerzesterWeg(Knoten start, Knoten end) {
         initialisiereDistanzTabelle();
         waehleKnoten(start);
         distanzTabelle.get(start).setzeDistanz(0);
 
-        while (!aktuellerKnoten.equals(end)){
+        while (!aktuellerKnoten.equals(end)) {
             berechneDistanzen();
             Knoten neuerKnoten = findeUnbearbeitetenMinimalenKnoten();
-            if (neuerKnoten == null){
+            if (neuerKnoten == null) {
                 // Keinen Weg gefunden :(
                 return new ArrayList<>();
             }
@@ -90,16 +89,15 @@ public class Dijkstra {
         return bauWeg(start, end);
     }
 
-    private Knoten vorgeangerKnoten(Knoten knoten){
+    private Knoten vorgeangerKnoten(Knoten knoten) {
         return distanzTabelle.get(knoten).holeVon();
     }
 
-    private Kante kanteZwischen(Knoten knoten_1, Knoten knoten_2){
+    private Kante kanteZwischen(Knoten knoten_1, Knoten knoten_2) {
         for (Kante kante : graph.holeKanten()) {
-            if (kante.holeEndKnoten().equals(knoten_1) && kante.holeStartKnoten().equals(knoten_2)){
+            if (kante.holeEndKnoten().equals(knoten_1) && kante.holeStartKnoten().equals(knoten_2)) {
                 return kante;
-            }
-            else if (kante.holeEndKnoten().equals(knoten_2) && kante.holeStartKnoten().equals(knoten_1)){
+            } else if (kante.holeEndKnoten().equals(knoten_2) && kante.holeStartKnoten().equals(knoten_1)) {
                 return kante;
             }
         }
@@ -109,7 +107,7 @@ public class Dijkstra {
     private List<Kante> bauWeg(Knoten start, Knoten end) {
         List<Kante> weg = new ArrayList<>();
         Knoten zwischenKnoten = end;
-        while(!zwischenKnoten.equals(start)){
+        while (!zwischenKnoten.equals(start)) {
             Knoten knoten = vorgeangerKnoten(zwischenKnoten);
             Kante kante = kanteZwischen(knoten, zwischenKnoten);
             weg.add(0, kante);
@@ -118,12 +116,12 @@ public class Dijkstra {
         return weg;
     }
 
-    private static class DijkstraKnotenDaten{
+    private static class DijkstraKnotenDaten {
         private double distanz;
         private boolean bearbeitet;
         private Knoten von;
 
-        public DijkstraKnotenDaten(){
+        public DijkstraKnotenDaten() {
             this.distanz = Integer.MAX_VALUE;
             this.bearbeitet = false;
             this.von = null;
