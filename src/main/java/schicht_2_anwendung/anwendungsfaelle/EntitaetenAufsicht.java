@@ -14,7 +14,7 @@ public class EntitaetenAufsicht {
     private final EntitaetenVerwaltung<Zug> zugVerwaltung;
     private final EntitaetenVerwaltung<Bahnhof> bahnhofVerwaltung;
 
-    public EntitaetenAufsicht(EntitaetenVerwaltung<Strecke> streckenVerwaltung, EntitaetenVerwaltung<Zug> zugVerwaltung, EntitaetenVerwaltung<Bahnhof> bahnhofsVerwaltung){
+    public EntitaetenAufsicht(EntitaetenVerwaltung<Strecke> streckenVerwaltung, EntitaetenVerwaltung<Zug> zugVerwaltung, EntitaetenVerwaltung<Bahnhof> bahnhofsVerwaltung) {
         this.streckenVerwaltung = streckenVerwaltung;
         this.zugVerwaltung = zugVerwaltung;
         this.bahnhofVerwaltung = bahnhofsVerwaltung;
@@ -24,15 +24,15 @@ public class EntitaetenAufsicht {
         if (streckenVerwaltung.hatEntitaet(strecke))
             throw new DuplikatFehler("Eine Strecke mit diesem Identifizierer ist bereits vorhanden.");
 
-        if (!bahnhofVerwaltung.hatEntitaet(strecke.holeStartKnoten()))
+        if (!bahnhofVerwaltung.hatEntitaet(strecke.holeStartBahnhof()))
             throw new MissingResourceException("Der Startbahnhof der Strecke ist nicht vorhanden.",
                     Bahnhof.class.getSimpleName(),
-                    strecke.holeStartKnoten().holeIdentifizierer());
+                    strecke.holeStartBahnhof().holeIdentifizierer());
 
-        if (!bahnhofVerwaltung.hatEntitaet(strecke.holeEndKnoten()))
+        if (!bahnhofVerwaltung.hatEntitaet(strecke.holeEndBahnhof()))
             throw new MissingResourceException("Der Endbahnhof der Strecke ist nicht vorhanden.",
                     Bahnhof.class.getSimpleName(),
-                    strecke.holeEndKnoten().holeIdentifizierer());
+                    strecke.holeEndBahnhof().holeIdentifizierer());
 
         this.streckenVerwaltung.persistiereEntitaet(strecke);
     }

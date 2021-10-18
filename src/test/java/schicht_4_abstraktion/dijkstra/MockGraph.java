@@ -20,10 +20,10 @@ public class MockGraph implements Graph{
         return null;
     }
 
-    public void neueKante(String von, String zu, double gewichtung){
+    public void neueKante(String von, String zu, double gewichtung, String identifizierer){
         Knoten vonKnoten = sucheKnoten(von);
         Knoten zuKnoten = sucheKnoten(zu);
-        kanten.add(new MockKante(vonKnoten, zuKnoten, gewichtung));
+        kanten.add(new MockKante(vonKnoten, zuKnoten, gewichtung, identifizierer));
     }
 
     public void neuerKnoten(Knoten knoten){

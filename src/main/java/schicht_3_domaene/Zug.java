@@ -4,8 +4,8 @@ import schicht_4_abstraktion.Identifizierbar;
 
 public class Zug implements Identifizierbar {
 
-    private int zugNummer;
-    private ZugTyp zugTyp;
+    private final int zugNummer;
+    private final ZugTyp zugTyp;
     private double hoechstGeschwindigkeit;
     private double verbrauch; // Verbrauch an Kraftstoff pro 100 km
 

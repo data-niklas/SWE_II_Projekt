@@ -71,7 +71,7 @@ public class Dijkstra {
         aktuellerKnoten = knoten;
     }
 
-    public List<Kante> kuerzesterWeg(Knoten start, Knoten end) {
+    public List<? extends Kante> kuerzesterWeg(Knoten start, Knoten end) {
         initialisiereDistanzTabelle();
         waehleKnoten(start);
         distanzTabelle.get(start).setzeDistanz(0);
