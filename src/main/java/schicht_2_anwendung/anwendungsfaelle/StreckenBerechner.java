@@ -45,7 +45,7 @@ public class StreckenBerechner {
             GraphStrecke streckeGraph = new GraphStrecke(strecke) {
                 @Override
                 public double holeGewichtung() {
-                    return this.holeLaenge();
+                    return this.holeStrecke().holeLaenge();
                 }
             };
             netz.streckeHinzufuegen(streckeGraph);
@@ -66,8 +66,8 @@ public class StreckenBerechner {
             GraphStrecke streckeGraph = new GraphStrecke(strecke) {
                 @Override
                 public double holeGewichtung() {
-                    double fahrGeschwindigkeit = Math.min(zug.holeHoechstGeschwindigkeit(), this.holeMaximalGeschwindigkeit());
-                    double zeitGewichtung = this.holeLaenge() / fahrGeschwindigkeit;
+                    double fahrGeschwindigkeit = Math.min(zug.holeHoechstGeschwindigkeit(), this.holeStrecke().holeMaximalGeschwindigkeit());
+                    double zeitGewichtung = this.holeStrecke().holeLaenge() / fahrGeschwindigkeit;
                     return zeitGewichtung;
                 }
             };

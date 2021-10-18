@@ -3,34 +3,30 @@ package schicht_3_domaene;
 import schicht_4_abstraktion.dijkstra.Kante;
 import schicht_4_abstraktion.dijkstra.Knoten;
 
-import java.util.Set;
+public abstract class GraphStrecke implements Kante {
 
-public abstract class GraphStrecke extends Strecke implements Kante {
+    private final Strecke strecke;
 
     public GraphStrecke(Strecke strecke) {
-        super(
-                strecke.holeBezeichnung(),
-                strecke.holeLaenge(),
-                strecke.holeMaximalGeschwindigkeit(),
-                strecke.holeErlaubteZugTypen(),
-                strecke.istFreigegeben(),
-                strecke.holeStartBahnhof(),
-                strecke.holeEndBahnhof()
-        );
+        this.strecke = strecke;
     }
 
-    public GraphStrecke(String bezeichnung, double laenge, double maximalGeschwindigkeit, Set<ZugTyp> erlaubteZugTypen, boolean freigegeben, Bahnhof startBahnhof, Bahnhof endBahnhof) {
-        super(bezeichnung, laenge, maximalGeschwindigkeit, erlaubteZugTypen, freigegeben, startBahnhof, endBahnhof);
+    public Strecke holeStrecke() {
+        return strecke;
     }
 
     @Override
     public Knoten holeStartKnoten() {
-        return this.holeStartBahnhof();
+        return this.strecke.holeStartBahnhof();
     }
 
     @Override
     public Knoten holeEndKnoten() {
-        return this.holeEndBahnhof();
+        return this.strecke.holeEndBahnhof();
     }
 
+    @Override
+    public String holeIdentifizierer() {
+        return this.strecke.holeIdentifizierer();
+    }
 }
