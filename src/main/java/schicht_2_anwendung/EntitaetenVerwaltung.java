@@ -7,31 +7,31 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-public class EntitaetenVerwaltung <T extends Identifizierbar>{
+public class EntitaetenVerwaltung<T extends Identifizierbar> {
 
     protected Map<String, T> zuweisungsTabelle;
 
-    public EntitaetenVerwaltung(){
+    public EntitaetenVerwaltung() {
         this.zuweisungsTabelle = new HashMap<>();
     }
 
-    public boolean hatEntitaet(T entitaet){
+    public boolean hatEntitaet(T entitaet) {
         return zuweisungsTabelle.containsKey(entitaet.holeIdentifizierer());
     }
 
-    public T holeEntitaet(String identifizierer){
+    public T holeEntitaet(String identifizierer) {
         return zuweisungsTabelle.get(identifizierer);
     }
 
-    public void persistiereEntitaet(T entitaet){
+    public void persistiereEntitaet(T entitaet) {
         this.zuweisungsTabelle.put(entitaet.holeIdentifizierer(), entitaet);
     }
 
-    public void loescheEntitaet(T entitaet){
+    public void loescheEntitaet(T entitaet) {
         this.zuweisungsTabelle.remove(entitaet.holeIdentifizierer());
     }
 
-    public List<T> holeEntitaeten(){
+    public List<T> holeEntitaeten() {
         return new ArrayList<>(zuweisungsTabelle.values());
     }
 }

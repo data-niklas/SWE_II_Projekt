@@ -1,11 +1,18 @@
 package schicht_3_domaene;
 
+import schicht_4_abstraktion.Identifizierbar;
+
 import java.util.Set;
 
-public class Strecke extends AbstrakteStrecke {
+public class Strecke implements Identifizierbar {
 
-    private Set<ZugTyp> erlaubteZugTypen;
-    private boolean freigegeben;
+    private final String bezeichnung;
+    private final Bahnhof startBahnhof;
+    private final Bahnhof endBahnhof;
+    private final double laenge;
+
+    private final Set<ZugTyp> erlaubteZugTypen;
+    private final boolean freigegeben;
     private double maximalGeschwindigkeit;
 
     public Strecke(String bezeichnung,
@@ -15,7 +22,10 @@ public class Strecke extends AbstrakteStrecke {
                    boolean freigegeben,
                    Bahnhof startBahnhof,
                    Bahnhof endBahnhof) {
-        super(bezeichnung, laenge, startBahnhof, endBahnhof);
+        this.bezeichnung = bezeichnung;
+        this.startBahnhof = startBahnhof;
+        this.endBahnhof = endBahnhof;
+        this.laenge = laenge;
         this.erlaubteZugTypen = erlaubteZugTypen;
         this.freigegeben = freigegeben;
         this.setzeMaximalGeschwindigkeit(maximalGeschwindigkeit);
@@ -25,6 +35,27 @@ public class Strecke extends AbstrakteStrecke {
         if (maximalGeschwindigkeit < 0)
             throw new IllegalArgumentException("Die Maximalgeschwindigkeit muss positiv sein.");
         this.maximalGeschwindigkeit = maximalGeschwindigkeit;
+    }
+
+    public String holeBezeichnung() {
+        return bezeichnung;
+    }
+
+    public Bahnhof holeStartBahnhof() {
+        return startBahnhof;
+    }
+
+    public Bahnhof holeEndBahnhof() {
+        return endBahnhof;
+    }
+
+    public double holeLaenge() {
+        return this.laenge;
+    }
+
+    @Override
+    public String holeIdentifizierer() {
+        return this.bezeichnung;
     }
 
 
