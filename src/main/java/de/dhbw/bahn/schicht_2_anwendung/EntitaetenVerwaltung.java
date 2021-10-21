@@ -1,6 +1,6 @@
-package schicht_2_anwendung;
+package de.dhbw.bahn.schicht_2_anwendung;
 
-import schicht_4_abstraktion.Identifizierbar;
+import de.dhbw.bahn.schicht_4_abstraktion.Identifizierbar;
 
 import java.util.ArrayList;
 import java.util.HashMap;

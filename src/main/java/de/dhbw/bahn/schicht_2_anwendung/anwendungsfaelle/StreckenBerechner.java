@@ -1,9 +1,9 @@
-package schicht_2_anwendung.anwendungsfaelle;
+package de.dhbw.bahn.schicht_2_anwendung.anwendungsfaelle;
 
 
-import schicht_2_anwendung.EntitaetenVerwaltung;
-import schicht_3_domaene.*;
-import schicht_4_abstraktion.dijkstra.Dijkstra;
+import de.dhbw.bahn.schicht_2_anwendung.EntitaetenVerwaltung;
+import de.dhbw.bahn.schicht_3_domaene.*;
+import de.dhbw.bahn.schicht_4_abstraktion.dijkstra.Dijkstra;
 
 import java.util.List;
 

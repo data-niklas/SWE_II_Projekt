@@ -1,7 +1,7 @@
-package schicht_3_domaene;
+package de.dhbw.bahn.schicht_3_domaene;
 
-import schicht_4_abstraktion.DuplikatFehler;
-import schicht_4_abstraktion.dijkstra.Graph;
+import de.dhbw.bahn.schicht_4_abstraktion.DuplikatFehler;
+import de.dhbw.bahn.schicht_4_abstraktion.dijkstra.Graph;
 
 import java.util.ArrayList;
 import java.util.List;

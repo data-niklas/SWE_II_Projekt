@@ -1,4 +1,4 @@
-package schicht_3_domaene;
+package de.dhbw.bahn.schicht_3_domaene;
 
 public enum ZugTyp {
     ICE,

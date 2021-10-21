@@ -1,4 +1,4 @@
-package schicht_4_abstraktion.dijkstra;
+package de.dhbw.bahn.schicht_4_abstraktion.dijkstra;
 
 import java.util.ArrayList;
 import java.util.List;

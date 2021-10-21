@@ -1,7 +1,7 @@
-package schicht_3_domaene;
+package de.dhbw.bahn.schicht_3_domaene;
 
-import schicht_4_abstraktion.dijkstra.Kante;
-import schicht_4_abstraktion.dijkstra.Knoten;
+import de.dhbw.bahn.schicht_4_abstraktion.dijkstra.Kante;
+import de.dhbw.bahn.schicht_4_abstraktion.dijkstra.Knoten;
 
 public abstract class GraphStrecke implements Kante {
 

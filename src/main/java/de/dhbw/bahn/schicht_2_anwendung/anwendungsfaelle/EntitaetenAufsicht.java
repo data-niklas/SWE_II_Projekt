@@ -1,10 +1,10 @@
-package schicht_2_anwendung.anwendungsfaelle;
+package de.dhbw.bahn.schicht_2_anwendung.anwendungsfaelle;
 
-import schicht_2_anwendung.EntitaetenVerwaltung;
-import schicht_3_domaene.Bahnhof;
-import schicht_3_domaene.Strecke;
-import schicht_3_domaene.Zug;
-import schicht_4_abstraktion.DuplikatFehler;
+import de.dhbw.bahn.schicht_2_anwendung.EntitaetenVerwaltung;
+import de.dhbw.bahn.schicht_3_domaene.Bahnhof;
+import de.dhbw.bahn.schicht_3_domaene.Strecke;
+import de.dhbw.bahn.schicht_3_domaene.Zug;
+import de.dhbw.bahn.schicht_4_abstraktion.DuplikatFehler;
 
 import java.util.MissingResourceException;
 

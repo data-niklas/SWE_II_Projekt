@@ -1,4 +1,4 @@
-package schicht_4_abstraktion;
+package de.dhbw.bahn.schicht_4_abstraktion;
 
 public class DuplikatFehler extends RuntimeException {
     public DuplikatFehler(String message) {

@@ -1,6 +1,6 @@
-package schicht_3_domaene;
+package de.dhbw.bahn.schicht_3_domaene;
 
-import schicht_4_abstraktion.Identifizierbar;
+import de.dhbw.bahn.schicht_4_abstraktion.Identifizierbar;
 
 import java.util.Set;
 
