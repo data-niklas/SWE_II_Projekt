@@ -11,7 +11,6 @@ import de.dhbw.bahn.schicht_2_anwendung.anwendungsfaelle.EntitaetenAufsicht;
 import de.dhbw.bahn.schicht_3_domaene.Bahnhof;
 import de.dhbw.bahn.schicht_3_domaene.Strecke;
 import de.dhbw.bahn.schicht_3_domaene.Zug;
-import de.dhbw.bahn.schicht_3_domaene.ZugTyp;
 
 public class Main {
 
@@ -21,8 +20,6 @@ public class Main {
         Verwaltung<Bahnhof> bahnhofVerwaltung = new TemporaereVerwaltung<>();
         Verwaltung<Strecke> streckenVerwaltung = new TemporaereVerwaltung<>();
         Verwaltung<Zug> zugVerwaltung = new TemporaereVerwaltung<>();
-        Zug zug = new Zug(3000, ZugTyp.ICE, 30, 40);
-        zugVerwaltung.persistiereEntitaet(zug);
 
         EntitaetenAufsicht aufsicht = new EntitaetenAufsicht(bahnhofVerwaltung, streckenVerwaltung, zugVerwaltung);
 

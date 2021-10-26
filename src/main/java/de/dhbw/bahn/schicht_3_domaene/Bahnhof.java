@@ -15,6 +15,10 @@ public class Bahnhof implements Knoten {
         return andererKnoten.holeIdentifizierer().equals(this.holeIdentifizierer());
     }
 
+    public String holeName() {
+        return name;
+    }
+
     @Override
     public String holeIdentifizierer() {
         return this.name;

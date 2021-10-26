@@ -3,9 +3,9 @@ package de.dhbw.bahn.schicht_1_adapter.http;
 public class HttpAntwort {
     private final int status;
     private final String koerper;
-    private final String koerperTyp;
+    private final MimeTyp koerperTyp;
 
-    public HttpAntwort(int status, String koerper, String koerperTyp) {
+    public HttpAntwort(int status, String koerper, MimeTyp koerperTyp) {
         this.status = status;
         this.koerper = koerper;
         this.koerperTyp = koerperTyp;
@@ -19,7 +19,7 @@ public class HttpAntwort {
         return koerper;
     }
 
-    public String holeKoerperTyp() {
+    public MimeTyp holeKoerperTyp() {
         return koerperTyp;
     }
 }

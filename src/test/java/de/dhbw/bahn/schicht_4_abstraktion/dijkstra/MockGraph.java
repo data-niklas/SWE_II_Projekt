@@ -3,30 +3,30 @@ package de.dhbw.bahn.schicht_4_abstraktion.dijkstra;
 import java.util.ArrayList;
 import java.util.List;
 
-public class MockGraph implements Graph{
+public class MockGraph implements Graph {
 
     private List<Knoten> knoten;
     private List<Kante> kanten;
 
-    public MockGraph(){
+    public MockGraph() {
         knoten = new ArrayList<>();
         kanten = new ArrayList<>();
     }
 
-    public Knoten sucheKnoten(String identifizierer){
-        for (Knoten knoten : this.knoten){
-            if (knoten.holeIdentifizierer().equals(identifizierer))return knoten;
+    public Knoten sucheKnoten(String identifizierer) {
+        for (Knoten knoten : this.knoten) {
+            if (knoten.holeIdentifizierer().equals(identifizierer)) return knoten;
         }
         return null;
     }
 
-    public void neueKante(String von, String zu, double gewichtung, String identifizierer){
+    public void neueKante(String von, String zu, double gewichtung, String identifizierer) {
         Knoten vonKnoten = sucheKnoten(von);
         Knoten zuKnoten = sucheKnoten(zu);
         kanten.add(new MockKante(vonKnoten, zuKnoten, gewichtung, identifizierer));
     }
 
-    public void neuerKnoten(Knoten knoten){
+    public void neuerKnoten(Knoten knoten) {
         this.knoten.add(knoten);
     }
 

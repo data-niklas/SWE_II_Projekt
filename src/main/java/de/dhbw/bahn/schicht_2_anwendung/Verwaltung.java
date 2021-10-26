@@ -5,13 +5,13 @@ import de.dhbw.bahn.schicht_4_abstraktion.Identifizierbar;
 import java.util.List;
 
 public interface Verwaltung<T extends Identifizierbar> {
-    boolean hatEntitaet(T entitaet);
+    boolean hatEntitaet(String identifizierer);
 
     T holeEntitaet(String identifizierer);
 
     void persistiereEntitaet(T entitaet);
 
-    void loescheEntitaet(T entitaet);
+    void loescheEntitaet(String identifizierer);
 
     List<T> holeEntitaeten();
 }

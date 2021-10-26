@@ -2,6 +2,7 @@ package de.dhbw.bahn.schicht_1_adapter.http.routen.zug;
 
 import de.dhbw.bahn.schicht_1_adapter.http.HttpAntwort;
 import de.dhbw.bahn.schicht_1_adapter.http.HttpRoute;
+import de.dhbw.bahn.schicht_1_adapter.http.MimeTyp;
 import de.dhbw.bahn.schicht_1_adapter.serialisierer.Serialisierer;
 import de.dhbw.bahn.schicht_2_anwendung.anwendungsfaelle.EntitaetenAufsicht;
 import de.dhbw.bahn.schicht_3_domaene.Zug;
@@ -22,15 +23,15 @@ public class ZugGet extends ZugRoute {
             String zugId = parameter.get("id");
             Zug zug = this.aufsicht.holeZug(zugId);
             if (zug == null) {
-                return new HttpAntwort(404, "Zug mit dieser ID nicht gefunden", "text/plain");
+                return new HttpAntwort(404, "Zug mit dieser ID nicht gefunden", MimeTyp.SCHLICHT);
             }
-            antwort = this.zugSerialisierer.zuJson(zug);
+            antwort = this.zugSerialisierer.serialisieren(zug);
         } else {
             List<Zug> zuege = this.aufsicht.holeZuege();
-            antwort = this.zugSerialisierer.zuJson(zuege);
+            antwort = this.zugSerialisierer.serialisieren(zuege);
         }
 
-        return new HttpAntwort(200, antwort, "application/json");
+        return new HttpAntwort(200, antwort, MimeTyp.JSON);
     }
 
 }

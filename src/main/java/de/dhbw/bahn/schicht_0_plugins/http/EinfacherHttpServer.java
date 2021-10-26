@@ -12,9 +12,9 @@ import java.util.Map;
 
 public class EinfacherHttpServer implements HttpServer, HttpHandler {
 
+    private final Map<HttpRoute, HttpRueckruf> rueckrufTabelle;
     private int port;
     private String host;
-    private final Map<HttpRoute, HttpRueckruf> rueckrufTabelle;
     private boolean laeuft;
 
     private com.sun.net.httpserver.HttpServer httpServer;
@@ -80,7 +80,7 @@ public class EinfacherHttpServer implements HttpServer, HttpHandler {
 
         HttpRoute route = new HttpRoute(pfad, HttpAnfragemethode.valueOf(exchange.getRequestMethod()));
         if (!this.rueckrufTabelle.containsKey(route)) {
-            this.verarbeiteHttpAntwort(exchange, new HttpAntwort(404, "Not Found", "text/plain"));
+            this.verarbeiteHttpAntwort(exchange, new HttpAntwort(404, "Not Found", MimeTyp.SCHLICHT));
             return;
         }
 
@@ -88,7 +88,7 @@ public class EinfacherHttpServer implements HttpServer, HttpHandler {
         try {
             parameter = leseParameter(query);
         } catch (UnsupportedEncodingException e) {
-            this.verarbeiteHttpAntwort(exchange, new HttpAntwort(500, "Internal server error", "text/plain"));
+            this.verarbeiteHttpAntwort(exchange, new HttpAntwort(500, "Internal server error", MimeTyp.SCHLICHT));
             return;
         }
 
@@ -101,7 +101,13 @@ public class EinfacherHttpServer implements HttpServer, HttpHandler {
             // todo: exception
             return;
         }
-        HttpAntwort antwort = rueckruf.bearbeiteAnfrage(route, koerper, parameter);
+        HttpAntwort antwort;
+        try {
+            antwort = rueckruf.bearbeiteAnfrage(route, koerper, parameter);
+        } catch (Exception e) {
+            this.verarbeiteHttpAntwort(exchange, new HttpAntwort(500, e.getMessage(), MimeTyp.SCHLICHT));
+            return;
+        }
         this.verarbeiteHttpAntwort(exchange, antwort);
     }
 
@@ -121,7 +127,7 @@ public class EinfacherHttpServer implements HttpServer, HttpHandler {
 
     private void verarbeiteHttpAntwort(HttpExchange exchange, HttpAntwort antwort) {
         try {
-            exchange.sendResponseHeaders(antwort.holeStatus(), antwort.holeKoerper().length());
+            exchange.sendResponseHeaders(antwort.holeStatus(), antwort.holeKoerper().getBytes().length);
             this.schreibeKoerper(exchange.getResponseBody(), antwort.holeKoerper());
         } catch (IOException e) {
             e.printStackTrace();

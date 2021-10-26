@@ -12,12 +12,12 @@ public class GsonSerialisierer implements Serialisierer {
     }
 
     @Override
-    public <T> String zuJson(T objekt) {
+    public <T> String serialisieren(T objekt) {
         return this.gson.toJson(objekt);
     }
 
     @Override
-    public <T> T vonJson(String json, Class<T> klasse) {
+    public <T> T deserialisieren(String json, Class<T> klasse) {
         return this.gson.fromJson(json, klasse);
     }
 }

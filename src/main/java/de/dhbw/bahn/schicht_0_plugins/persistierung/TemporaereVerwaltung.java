@@ -17,8 +17,8 @@ public class TemporaereVerwaltung<T extends Identifizierbar> implements Verwaltu
     }
 
     @Override
-    public boolean hatEntitaet(T entitaet) {
-        return zuweisungsTabelle.containsKey(entitaet.holeIdentifizierer());
+    public boolean hatEntitaet(String identifizierer) {
+        return zuweisungsTabelle.containsKey(identifizierer);
     }
 
     @Override
@@ -32,8 +32,8 @@ public class TemporaereVerwaltung<T extends Identifizierbar> implements Verwaltu
     }
 
     @Override
-    public void loescheEntitaet(T entitaet) {
-        this.zuweisungsTabelle.remove(entitaet.holeIdentifizierer());
+    public void loescheEntitaet(String identifizierer) {
+        this.zuweisungsTabelle.remove(identifizierer);
     }
 
     @Override
