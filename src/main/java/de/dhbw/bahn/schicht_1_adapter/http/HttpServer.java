@@ -1,4 +1,4 @@
-package de.dhbw.bahn.schicht_0_plugins.http;
+package de.dhbw.bahn.schicht_1_adapter.http;
 
 public interface HttpServer {
     int holePort();
@@ -10,6 +10,7 @@ public interface HttpServer {
     void legeLos(String host, int port);
 
     void halteAn();
+
 
     void registriereHttpRueckruf(HttpRoute route, HttpRueckruf rueckruf);
 }

@@ -1,8 +1,8 @@
-package de.dhbw.bahn.schicht_0_plugins.http;
+package de.dhbw.bahn.schicht_1_adapter.http;
 
 public class HttpRoute {
-    private String pfad;
-    private HttpAnfragemethode anfragemethode;
+    private final String pfad;
+    private final HttpAnfragemethode anfragemethode;
 
     public HttpRoute(String pfad, HttpAnfragemethode anfragemethode) {
         this.pfad = pfad;

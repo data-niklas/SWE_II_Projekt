@@ -1,23 +1,48 @@
 package de.dhbw.bahn.schicht_2_anwendung.anwendungsfaelle;
 
-import de.dhbw.bahn.schicht_2_anwendung.EntitaetenVerwaltung;
+import de.dhbw.bahn.schicht_2_anwendung.Verwaltung;
 import de.dhbw.bahn.schicht_3_domaene.Bahnhof;
 import de.dhbw.bahn.schicht_3_domaene.Strecke;
 import de.dhbw.bahn.schicht_3_domaene.Zug;
 import de.dhbw.bahn.schicht_4_abstraktion.DuplikatFehler;
 
+import java.util.List;
 import java.util.MissingResourceException;
 
 public class EntitaetenAufsicht {
 
-    private final EntitaetenVerwaltung<Strecke> streckenVerwaltung;
-    private final EntitaetenVerwaltung<Zug> zugVerwaltung;
-    private final EntitaetenVerwaltung<Bahnhof> bahnhofVerwaltung;
+    private final Verwaltung<Bahnhof> bahnhofVerwaltung;
+    private final Verwaltung<Strecke> streckenVerwaltung;
+    private final Verwaltung<Zug> zugVerwaltung;
 
-    public EntitaetenAufsicht(EntitaetenVerwaltung<Strecke> streckenVerwaltung, EntitaetenVerwaltung<Zug> zugVerwaltung, EntitaetenVerwaltung<Bahnhof> bahnhofsVerwaltung) {
+    public EntitaetenAufsicht(Verwaltung<Bahnhof> bahnhofsVerwaltung, Verwaltung<Strecke> streckenVerwaltung, Verwaltung<Zug> zugVerwaltung) {
         this.streckenVerwaltung = streckenVerwaltung;
         this.zugVerwaltung = zugVerwaltung;
         this.bahnhofVerwaltung = bahnhofsVerwaltung;
+    }
+
+    public List<Zug> holeZuege() {
+        return this.zugVerwaltung.holeEntitaeten();
+    }
+
+    public List<Strecke> holeStrecken() {
+        return this.streckenVerwaltung.holeEntitaeten();
+    }
+
+    public List<Bahnhof> holeBahnhoefe() {
+        return this.bahnhofVerwaltung.holeEntitaeten();
+    }
+
+    public Zug holeZug(String zugNummer) {
+        return this.zugVerwaltung.holeEntitaet(zugNummer);
+    }
+
+    public Bahnhof holeBahnhof(String name) {
+        return this.bahnhofVerwaltung.holeEntitaet(name);
+    }
+
+    public Strecke holeStrecke(String bezeichnung) {
+        return this.streckenVerwaltung.holeEntitaet(bezeichnung);
     }
 
     public void streckeHinzufuegen(Strecke strecke) {

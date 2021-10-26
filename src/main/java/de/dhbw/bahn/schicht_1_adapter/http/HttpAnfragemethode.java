@@ -1,4 +1,4 @@
-package de.dhbw.bahn.schicht_0_plugins.http;
+package de.dhbw.bahn.schicht_1_adapter.http;
 
 public enum HttpAnfragemethode {
     GET,
@@ -9,5 +9,5 @@ public enum HttpAnfragemethode {
     DELETE,
     TRACE,
     OPTIONS,
-    CONNECT;
+    CONNECT
 }

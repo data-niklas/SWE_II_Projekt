@@ -1,9 +1,9 @@
-package de.dhbw.bahn.schicht_0_plugins.http;
+package de.dhbw.bahn.schicht_1_adapter.http;
 
 public class HttpAntwort {
-    private int status;
-    private String koerper;
-    private String koerperTyp;
+    private final int status;
+    private final String koerper;
+    private final String koerperTyp;
 
     public HttpAntwort(int status, String koerper, String koerperTyp) {
         this.status = status;

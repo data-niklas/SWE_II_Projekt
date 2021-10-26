@@ -2,9 +2,11 @@ package de.dhbw.bahn.schicht_0_plugins.http;
 
 import com.sun.net.httpserver.HttpExchange;
 import com.sun.net.httpserver.HttpHandler;
+import de.dhbw.bahn.schicht_1_adapter.http.*;
 
 import java.io.*;
 import java.net.InetSocketAddress;
+import java.net.URLDecoder;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -12,7 +14,7 @@ public class EinfacherHttpServer implements HttpServer, HttpHandler {
 
     private int port;
     private String host;
-    private Map<HttpRoute, HttpRueckruf> rueckrufTabelle;
+    private final Map<HttpRoute, HttpRueckruf> rueckrufTabelle;
     private boolean laeuft;
 
     private com.sun.net.httpserver.HttpServer httpServer;
@@ -43,17 +45,15 @@ public class EinfacherHttpServer implements HttpServer, HttpHandler {
             this.httpServer = com.sun.net.httpserver.HttpServer.create(new InetSocketAddress(this.host, this.port), 0);
             this.registriereKontext();
             this.httpServer.setExecutor(null);
-            this.httpServer.start();
             this.laeuft = true;
+            this.httpServer.start();
         } catch (IOException e) {
             e.printStackTrace();
         }
     }
 
     private void registriereKontext() {
-        this.rueckrufTabelle.keySet().forEach(route -> {
-            this.httpServer.createContext(route.holePfad(), this);
-        });
+        this.rueckrufTabelle.keySet().forEach(route -> this.httpServer.createContext(route.holePfad(), this));
     }
 
     @Override
@@ -75,9 +75,20 @@ public class EinfacherHttpServer implements HttpServer, HttpHandler {
     @Override
     public void handle(HttpExchange exchange) {
         System.out.println("Exchange: " + exchange.getHttpContext().getPath());
-        HttpRoute route = new HttpRoute(exchange.getHttpContext().getPath(), HttpAnfragemethode.valueOf(exchange.getRequestMethod()));
+        String pfad = exchange.getHttpContext().getPath();
+        String query = exchange.getRequestURI().getQuery();
+
+        HttpRoute route = new HttpRoute(pfad, HttpAnfragemethode.valueOf(exchange.getRequestMethod()));
         if (!this.rueckrufTabelle.containsKey(route)) {
             this.verarbeiteHttpAntwort(exchange, new HttpAntwort(404, "Not Found", "text/plain"));
+            return;
+        }
+
+        Map<String, String> parameter = null;
+        try {
+            parameter = leseParameter(query);
+        } catch (UnsupportedEncodingException e) {
+            this.verarbeiteHttpAntwort(exchange, new HttpAntwort(500, "Internal server error", "text/plain"));
             return;
         }
 
@@ -90,8 +101,22 @@ public class EinfacherHttpServer implements HttpServer, HttpHandler {
             // todo: exception
             return;
         }
-        HttpAntwort antwort = rueckruf.bearbeiteAnfrage(route, koerper);
+        HttpAntwort antwort = rueckruf.bearbeiteAnfrage(route, koerper, parameter);
         this.verarbeiteHttpAntwort(exchange, antwort);
+    }
+
+    private Map<String, String> leseParameter(String query) throws UnsupportedEncodingException {
+        Map<String, String> parameter = new HashMap<>();
+        if (query == null) return parameter;
+        String[] parameterPaare = query.split("&");
+        for (String paar : parameterPaare) {
+            String[] paarTeile = paar.split("=");
+            String schluessel = URLDecoder.decode(paarTeile[0], "utf-8");
+            String wert = URLDecoder.decode(paarTeile[1], "utf-8");
+            parameter.put(schluessel, wert);
+        }
+
+        return parameter;
     }
 
     private void verarbeiteHttpAntwort(HttpExchange exchange, HttpAntwort antwort) {

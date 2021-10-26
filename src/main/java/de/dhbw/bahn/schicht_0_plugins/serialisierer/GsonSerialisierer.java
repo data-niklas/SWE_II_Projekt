@@ -1,24 +1,23 @@
 package de.dhbw.bahn.schicht_0_plugins.serialisierer;
 
 import com.google.gson.Gson;
+import de.dhbw.bahn.schicht_1_adapter.serialisierer.Serialisierer;
 
-public class GsonSerialisierer<T> implements Serialisierer<T> {
+public class GsonSerialisierer implements Serialisierer {
 
     private final Gson gson;
-    private final Class<T> type;
 
-    public GsonSerialisierer(Class<T> type) {
+    public GsonSerialisierer() {
         this.gson = new Gson();
-        this.type = type;
     }
 
     @Override
-    public String zuJson(T objekt) {
+    public <T> String zuJson(T objekt) {
         return this.gson.toJson(objekt);
     }
 
     @Override
-    public T vonJson(String json) {
-        return this.gson.fromJson(json, this.type);
+    public <T> T vonJson(String json, Class<T> klasse) {
+        return this.gson.fromJson(json, klasse);
     }
 }

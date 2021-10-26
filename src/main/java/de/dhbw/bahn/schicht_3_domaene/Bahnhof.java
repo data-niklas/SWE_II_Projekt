@@ -4,7 +4,11 @@ import de.dhbw.bahn.schicht_4_abstraktion.dijkstra.Knoten;
 
 public class Bahnhof implements Knoten {
 
-    private String name;
+    private final String name;
+
+    public Bahnhof(String name) {
+        this.name = name;
+    }
 
     @Override
     public boolean equals(Knoten andererKnoten) {
