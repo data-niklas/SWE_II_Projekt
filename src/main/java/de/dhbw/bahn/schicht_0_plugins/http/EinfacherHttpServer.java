@@ -74,41 +74,31 @@ public class EinfacherHttpServer implements HttpServer, HttpHandler {
 
     @Override
     public void handle(HttpExchange exchange) {
+        HttpAntwort antwort;
+        try {
+            antwort = this.verarbeiteAnfrage(exchange);
+        } catch (IOException e) {
+            antwort = new HttpAntwort(500, "Internal server error", MimeTyp.SCHLICHT);
+        }
+        this.verarbeiteHttpAntwort(exchange, antwort);
+    }
+
+    private HttpAntwort verarbeiteAnfrage(HttpExchange exchange) throws IOException {
         System.out.println(exchange.getRequestMethod() + " Anfrage an " + exchange.getHttpContext().getPath());
+
         String pfad = exchange.getHttpContext().getPath();
-        String query = exchange.getRequestURI().getQuery();
 
         HttpRoute route = new HttpRoute(pfad, HttpAnfragemethode.valueOf(exchange.getRequestMethod()));
         if (!this.rueckrufTabelle.containsKey(route)) {
-            this.verarbeiteHttpAntwort(exchange, new HttpAntwort(404, "Not Found", MimeTyp.SCHLICHT));
-            return;
+            return new HttpAntwort(404, "Not Found", MimeTyp.SCHLICHT);
         }
-
-        Map<String, String> parameter = null;
-        try {
-            parameter = leseParameter(query);
-        } catch (UnsupportedEncodingException e) {
-            this.verarbeiteHttpAntwort(exchange, new HttpAntwort(500, "Internal server error", MimeTyp.SCHLICHT));
-            return;
-        }
-
         HttpRueckruf rueckruf = this.rueckrufTabelle.get(route);
-        String koerper;
-        try {
-            koerper = leseKoerper(exchange.getRequestBody());
-        } catch (IOException e) {
-            e.printStackTrace();
-            // todo: exception
-            return;
-        }
-        HttpAntwort antwort;
-        try {
-            antwort = rueckruf.bearbeiteAnfrage(route, koerper, parameter);
-        } catch (Exception e) {
-            this.verarbeiteHttpAntwort(exchange, new HttpAntwort(500, e.getMessage(), MimeTyp.SCHLICHT));
-            return;
-        }
-        this.verarbeiteHttpAntwort(exchange, antwort);
+
+        String query = exchange.getRequestURI().getQuery();
+        Map<String, String> parameter = leseParameter(query);
+        String koerper = leseKoerper(exchange.getRequestBody());
+
+        return rueckruf.bearbeiteAnfrage(route, koerper, parameter);
     }
 
     private Map<String, String> leseParameter(String query) throws UnsupportedEncodingException {
