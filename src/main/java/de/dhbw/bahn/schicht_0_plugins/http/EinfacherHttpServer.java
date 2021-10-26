@@ -74,7 +74,7 @@ public class EinfacherHttpServer implements HttpServer, HttpHandler {
 
     @Override
     public void handle(HttpExchange exchange) {
-        System.out.println("Exchange: " + exchange.getHttpContext().getPath());
+        System.out.println(exchange.getRequestMethod() + " Anfrage an " + exchange.getHttpContext().getPath());
         String pfad = exchange.getHttpContext().getPath();
         String query = exchange.getRequestURI().getQuery();
 
@@ -127,6 +127,7 @@ public class EinfacherHttpServer implements HttpServer, HttpHandler {
 
     private void verarbeiteHttpAntwort(HttpExchange exchange, HttpAntwort antwort) {
         try {
+            exchange.getResponseHeaders().add("Content-Type", antwort.holeKoerperTyp().holeWert() + "; charset=utf-8");
             exchange.sendResponseHeaders(antwort.holeStatus(), antwort.holeKoerper().getBytes().length);
             this.schreibeKoerper(exchange.getResponseBody(), antwort.holeKoerper());
         } catch (IOException e) {

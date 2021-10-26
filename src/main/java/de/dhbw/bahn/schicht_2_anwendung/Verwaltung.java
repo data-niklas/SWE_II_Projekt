@@ -11,6 +11,8 @@ public interface Verwaltung<T extends Identifizierbar> {
 
     void persistiereEntitaet(T entitaet);
 
+    void aktualisiereEntitaet(T entitaet);
+
     void loescheEntitaet(String identifizierer);
 
     List<T> holeEntitaeten();

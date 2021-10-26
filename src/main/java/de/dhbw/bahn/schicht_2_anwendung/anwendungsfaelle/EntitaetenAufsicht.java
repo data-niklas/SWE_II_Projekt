@@ -34,6 +34,7 @@ public class EntitaetenAufsicht {
         return this.bahnhofVerwaltung.holeEntitaeten();
     }
 
+
     public Zug holeZug(String zugNummer) {
         return this.zugVerwaltung.holeEntitaet(zugNummer);
     }
@@ -45,6 +46,7 @@ public class EntitaetenAufsicht {
     public Strecke holeStrecke(String bezeichnung) {
         return this.streckenVerwaltung.holeEntitaet(bezeichnung);
     }
+
 
     public void streckeHinzufuegen(Strecke strecke) {
         if (streckenVerwaltung.hatEntitaet(strecke.holeIdentifizierer()))
@@ -76,6 +78,45 @@ public class EntitaetenAufsicht {
 
         this.zugVerwaltung.persistiereEntitaet(zug);
     }
+
+
+    public void aktualisiereBahnhof(Bahnhof bahnhof) {
+        if (!bahnhofVerwaltung.hatEntitaet(bahnhof.holeIdentifizierer()))
+            throw new MissingResourceException("Bahnhof mit diesem Namen existiert nicht.",
+                    Bahnhof.class.getSimpleName(),
+                    bahnhof.holeIdentifizierer());
+
+        bahnhofVerwaltung.aktualisiereEntitaet(bahnhof);
+    }
+
+    public void aktualisiereStrecke(Strecke strecke) {
+        if (!streckenVerwaltung.hatEntitaet(strecke.holeIdentifizierer()))
+            throw new MissingResourceException("Strecke mit dieser Bezeichnung existiert nicht.",
+                    Strecke.class.getSimpleName(),
+                    strecke.holeIdentifizierer());
+
+        if (!bahnhofVerwaltung.hatEntitaet(strecke.holeStartBahnhof().holeIdentifizierer()))
+            throw new MissingResourceException("Der Startbahnhof der Strecke ist nicht vorhanden.",
+                    Bahnhof.class.getSimpleName(),
+                    strecke.holeStartBahnhof().holeIdentifizierer());
+
+        if (!bahnhofVerwaltung.hatEntitaet(strecke.holeEndBahnhof().holeIdentifizierer()))
+            throw new MissingResourceException("Der Endbahnhof der Strecke ist nicht vorhanden.",
+                    Bahnhof.class.getSimpleName(),
+                    strecke.holeEndBahnhof().holeIdentifizierer());
+
+        streckenVerwaltung.aktualisiereEntitaet(strecke);
+    }
+
+    public void aktualisiereZug(Zug zug) {
+        if (!this.zugVerwaltung.hatEntitaet(zug.holeIdentifizierer()))
+            throw new MissingResourceException("Zug mit dieser Zugnummer existiert nicht.",
+                    Strecke.class.getSimpleName(),
+                    zug.holeIdentifizierer());
+
+        zugVerwaltung.aktualisiereEntitaet(zug);
+    }
+
 
     public void bahnhofLoeschen(String name) {
         if (!this.bahnhofVerwaltung.hatEntitaet(name))

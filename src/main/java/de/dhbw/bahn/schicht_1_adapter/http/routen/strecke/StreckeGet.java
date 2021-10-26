@@ -12,8 +12,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
-public class StreckenGet extends StreckenRoute {
-    public StreckenGet(Serialisierer streckenSerialisierer, EntitaetenAufsicht aufsicht) {
+public class StreckeGet extends StreckeRoute {
+    public StreckeGet(Serialisierer streckenSerialisierer, EntitaetenAufsicht aufsicht) {
         super(streckenSerialisierer, aufsicht);
     }
 

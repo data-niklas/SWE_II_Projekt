@@ -8,9 +8,9 @@ import de.dhbw.bahn.schicht_2_anwendung.anwendungsfaelle.EntitaetenAufsicht;
 
 import java.util.Map;
 
-public class StreckenDelete extends StreckenRoute {
+public class StreckeDelete extends StreckeRoute {
 
-    public StreckenDelete(Serialisierer streckenSerialisierer, EntitaetenAufsicht aufsicht) {
+    public StreckeDelete(Serialisierer streckenSerialisierer, EntitaetenAufsicht aufsicht) {
         super(streckenSerialisierer, aufsicht);
     }
 

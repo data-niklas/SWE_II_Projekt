@@ -32,6 +32,11 @@ public class TemporaereVerwaltung<T extends Identifizierbar> implements Verwaltu
     }
 
     @Override
+    public void aktualisiereEntitaet(T entitaet) {
+        this.zuweisungsTabelle.put(entitaet.holeIdentifizierer(), entitaet);
+    }
+
+    @Override
     public void loescheEntitaet(String identifizierer) {
         this.zuweisungsTabelle.remove(identifizierer);
     }
