@@ -31,7 +31,7 @@ public class Strecke implements Identifizierbar {
         this.setzeMaximalGeschwindigkeit(maximalGeschwindigkeit);
     }
 
-    private void setzeMaximalGeschwindigkeit(double maximalGeschwindigkeit) {
+    public void setzeMaximalGeschwindigkeit(double maximalGeschwindigkeit) {
         if (maximalGeschwindigkeit < 0)
             throw new IllegalArgumentException("Die Maximalgeschwindigkeit muss positiv sein.");
         this.maximalGeschwindigkeit = maximalGeschwindigkeit;
