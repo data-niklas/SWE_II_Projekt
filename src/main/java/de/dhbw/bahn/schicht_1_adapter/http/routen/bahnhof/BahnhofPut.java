@@ -3,12 +3,9 @@ package de.dhbw.bahn.schicht_1_adapter.http.routen.bahnhof;
 import de.dhbw.bahn.schicht_1_adapter.http.HttpAntwort;
 import de.dhbw.bahn.schicht_1_adapter.http.HttpRoute;
 import de.dhbw.bahn.schicht_1_adapter.http.MimeTyp;
-import de.dhbw.bahn.schicht_1_adapter.http.ressourcen.StreckenRessource;
-import de.dhbw.bahn.schicht_1_adapter.http.routen.strecke.StreckeRoute;
 import de.dhbw.bahn.schicht_1_adapter.serialisierer.Serialisierer;
 import de.dhbw.bahn.schicht_2_anwendung.anwendungsfaelle.EntitaetenAufsicht;
 import de.dhbw.bahn.schicht_3_domaene.Bahnhof;
-import de.dhbw.bahn.schicht_3_domaene.Strecke;
 
 import java.util.Map;
 

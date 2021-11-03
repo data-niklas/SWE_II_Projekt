@@ -11,7 +11,7 @@ public class StreckenRessource {
 
     private final Set<ZugTyp> erlaubteZugTypen;
     private final boolean freigegeben;
-    private double maximalGeschwindigkeit;
+    private final double maximalGeschwindigkeit;
 
     public StreckenRessource(String bezeichnung, String startBahnhof, String endBahnhof, double laenge, Set<ZugTyp> erlaubteZugTypen, boolean freigegeben, double maximalGeschwindigkeit) {
         this.bezeichnung = bezeichnung;

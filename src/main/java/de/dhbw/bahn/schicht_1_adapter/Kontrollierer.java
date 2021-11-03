@@ -6,6 +6,7 @@ import de.dhbw.bahn.schicht_1_adapter.http.HttpServer;
 import de.dhbw.bahn.schicht_1_adapter.http.routen.bahnhof.BahnhofDelete;
 import de.dhbw.bahn.schicht_1_adapter.http.routen.bahnhof.BahnhofGet;
 import de.dhbw.bahn.schicht_1_adapter.http.routen.bahnhof.BahnhofPost;
+import de.dhbw.bahn.schicht_1_adapter.http.routen.berechnungen.KuerzesteStreckeGet;
 import de.dhbw.bahn.schicht_1_adapter.http.routen.strecke.StreckeDelete;
 import de.dhbw.bahn.schicht_1_adapter.http.routen.strecke.StreckeGet;
 import de.dhbw.bahn.schicht_1_adapter.http.routen.strecke.StreckePost;
@@ -33,6 +34,7 @@ public class Kontrollierer {
         this.registriereZug();
         this.registriereBahnhof();
         this.registriereStrecken();
+        this.registriereBerechnungen();
     }
 
     private void registriereZug() {
@@ -52,6 +54,10 @@ public class Kontrollierer {
         this.server.registriereHttpRueckruf(new HttpRoute("/strecke", HttpAnfragemethode.GET), new StreckeGet(this.serialisierer, this.aufsicht));
         this.server.registriereHttpRueckruf(new HttpRoute("/strecke", HttpAnfragemethode.POST), new StreckePost(this.serialisierer, this.aufsicht));
         this.server.registriereHttpRueckruf(new HttpRoute("/strecke", HttpAnfragemethode.DELETE), new StreckeDelete(this.serialisierer, this.aufsicht));
+    }
+
+    private void registriereBerechnungen() {
+        this.server.registriereHttpRueckruf(new HttpRoute("/kuerzester-weg", HttpAnfragemethode.GET), new KuerzesteStreckeGet(this.serialisierer, this.aufsicht));
     }
 
     public void legeLos(String host, int port) {

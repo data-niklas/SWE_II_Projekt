@@ -23,8 +23,8 @@
 | /zug                      | PUT     | Aktualisieren der Details eines Zuges                     |
 | /zug?id=zugnummer         | DELETE  | Loeschen des Zuges mit der Zugnummer                      |
 |                           |         |                                                           |
-| /kuerzester-weg?start=startbahnhof&ziel=zielbahnhof | GET      | Berechne den kuerzesten Weg zwischen dem Startbahnhof und dem Zielbahnhof |
-| /schnellster-weg?start=startbahnhof&ziel=zielbahnhof?zug=zugnummer | GET      | Berechne den schnellsten Weg zwischen dem Startbahnhof und dem Zielbahnhof mit dem Zug mit der Zugnummer |
+| /kuerzester-weg?start=startbahnhof&ziel=zielbahnhof&zug=zugnummer | GET      | Berechne den kuerzesten Weg zwischen dem Startbahnhof und dem Zielbahnhof mit dem Zug mit der Zugnummer |
+| /schnellster-weg?start=startbahnhof&ziel=zielbahnhof&zug=zugnummer | GET      | Berechne den schnellsten Weg zwischen dem Startbahnhof und dem Zielbahnhof mit dem Zug mit der Zugnummer |
 |                           |         |                                                           |
 
 ## Voraussetzungen

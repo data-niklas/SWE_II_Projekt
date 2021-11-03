@@ -1,6 +1,6 @@
 package de.dhbw.bahn.schicht_2_anwendung.anwendungsfaelle;
 
-import de.dhbw.bahn.schicht_0_plugins.persistierung.TemporaereVerwaltung;
+import de.dhbw.bahn.schicht_2_anwendung.Verwaltung;
 import de.dhbw.bahn.schicht_3_domaene.*;
 import de.dhbw.bahn.schicht_4_abstraktion.dijkstra.Dijkstra;
 
@@ -8,10 +8,10 @@ import java.util.List;
 
 public class StreckenBerechner {
 
-    private final TemporaereVerwaltung<Bahnhof> bahnhofsVerwaltung;
-    private final TemporaereVerwaltung<Strecke> streckenVerwaltung;
+    private final Verwaltung<Bahnhof> bahnhofsVerwaltung;
+    private final Verwaltung<Strecke> streckenVerwaltung;
 
-    public StreckenBerechner(TemporaereVerwaltung<Bahnhof> bahnhofsVerwaltung, TemporaereVerwaltung<Strecke> streckenVerwaltung) {
+    public StreckenBerechner(Verwaltung<Bahnhof> bahnhofsVerwaltung, Verwaltung<Strecke> streckenVerwaltung) {
         this.bahnhofsVerwaltung = bahnhofsVerwaltung;
         this.streckenVerwaltung = streckenVerwaltung;
     }

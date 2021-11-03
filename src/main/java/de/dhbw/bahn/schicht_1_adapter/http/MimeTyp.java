@@ -4,7 +4,7 @@ public enum MimeTyp {
     SCHLICHT("text/plain"),
     JSON("application/json");
 
-    private String wert;
+    private final String wert;
 
     MimeTyp(String wert) {
         this.wert = wert;
