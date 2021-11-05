@@ -94,7 +94,7 @@ public class DijkstraTest {
         dijkstra = new Dijkstra();
         dijkstra.initialisiereGraphen(graph);
         //
-        List<Kante> weg = (List<Kante>) dijkstra.kuerzesterWeg(graph.sucheKnoten("A"), graph.sucheKnoten("B"));
+        List<Kante> weg = (List<Kante>) dijkstra.berechneWeg(graph.sucheKnoten("A"), graph.sucheKnoten("B"));
         //
         Assert.assertEquals(2, weg.size());
         assertKanteGleich(weg.get(0), "A", "C");

@@ -1,10 +1,9 @@
-package de.dhbw.bahn.schicht_2_anwendung.anwendungsfaelle;
+package de.dhbw.bahn.schicht_2_anwendung.crud;
 
-import de.dhbw.bahn.schicht_2_anwendung.Verwaltung;
+import de.dhbw.bahn.schicht_2_anwendung.DuplikatFehler;
 import de.dhbw.bahn.schicht_3_domaene.Bahnhof;
 import de.dhbw.bahn.schicht_3_domaene.Strecke;
 import de.dhbw.bahn.schicht_3_domaene.Zug;
-import de.dhbw.bahn.schicht_2_anwendung.DuplikatFehler;
 
 import java.util.List;
 import java.util.MissingResourceException;

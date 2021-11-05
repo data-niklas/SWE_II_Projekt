@@ -5,8 +5,8 @@ import java.util.List;
 
 public class MockGraph implements Graph {
 
-    private List<Knoten> knoten;
-    private List<Kante> kanten;
+    private final List<Knoten> knoten;
+    private final List<Kante> kanten;
 
     public MockGraph() {
         knoten = new ArrayList<>();

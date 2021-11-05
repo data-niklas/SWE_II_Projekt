@@ -1,7 +1,9 @@
-package de.dhbw.bahn.schicht_2_anwendung.anwendungsfaelle;
+package de.dhbw.bahn.schicht_2_anwendung.wegfinder;
 
-import de.dhbw.bahn.schicht_2_anwendung.Verwaltung;
-import de.dhbw.bahn.schicht_3_domaene.*;
+import de.dhbw.bahn.schicht_2_anwendung.crud.Verwaltung;
+import de.dhbw.bahn.schicht_3_domaene.Bahnhof;
+import de.dhbw.bahn.schicht_3_domaene.Strecke;
+import de.dhbw.bahn.schicht_3_domaene.Zug;
 
 import java.util.List;
 
@@ -9,24 +11,24 @@ public class StreckenBerechner {
 
     private final Verwaltung<Bahnhof> bahnhofsVerwaltung;
     private final Verwaltung<Strecke> streckenVerwaltung;
-    private final KuerzesterWegeFinder kuerzesterWegeFinder;
+    private final WegFinder wegFinder;
 
-    public StreckenBerechner(Verwaltung<Bahnhof> bahnhofsVerwaltung, Verwaltung<Strecke> streckenVerwaltung, KuerzesterWegeFinder kuerzesterWegeFinder) {
+    public StreckenBerechner(Verwaltung<Bahnhof> bahnhofsVerwaltung, Verwaltung<Strecke> streckenVerwaltung, WegFinder wegFinder) {
         this.bahnhofsVerwaltung = bahnhofsVerwaltung;
         this.streckenVerwaltung = streckenVerwaltung;
-        this.kuerzesterWegeFinder = kuerzesterWegeFinder;
+        this.wegFinder = wegFinder;
     }
 
     public List<GraphStrecke> berechneKuerzesteStrecke(Bahnhof start, Bahnhof ende, Zug zug) {
         StreckenNetz streckenNetz = baueKuerzesteStreckeNetz(zug);
-        this.kuerzesterWegeFinder.initialisiereGraphen(streckenNetz);
-        return (List<GraphStrecke>) this.kuerzesterWegeFinder.kuerzesterWeg(start, ende);
+        this.wegFinder.initialisiereGraphen(streckenNetz);
+        return (List<GraphStrecke>) this.wegFinder.berechneWeg(start, ende);
     }
 
     public List<GraphStrecke> berechneKuerzesteZeitStrecke(Bahnhof start, Bahnhof ende, Zug zug) {
         StreckenNetz streckenNetz = baueKuerzesteZeitNetz(zug);
-        this.kuerzesterWegeFinder.initialisiereGraphen(streckenNetz);
-        return (List<GraphStrecke>) this.kuerzesterWegeFinder.kuerzesterWeg(start, ende);
+        this.wegFinder.initialisiereGraphen(streckenNetz);
+        return (List<GraphStrecke>) this.wegFinder.berechneWeg(start, ende);
     }
 
     private StreckenNetz baueKuerzesteStreckeNetz(Zug zug) {

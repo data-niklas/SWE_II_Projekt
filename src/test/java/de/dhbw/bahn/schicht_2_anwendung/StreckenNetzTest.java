@@ -1,6 +1,10 @@
-package de.dhbw.bahn.schicht_3_domaene;
+package de.dhbw.bahn.schicht_2_anwendung;
 
-import de.dhbw.bahn.schicht_2_anwendung.DuplikatFehler;
+import de.dhbw.bahn.schicht_2_anwendung.wegfinder.GraphStrecke;
+import de.dhbw.bahn.schicht_2_anwendung.wegfinder.StreckenNetz;
+import de.dhbw.bahn.schicht_3_domaene.Bahnhof;
+import de.dhbw.bahn.schicht_3_domaene.Strecke;
+import de.dhbw.bahn.schicht_3_domaene.ZugTyp;
 import org.junit.Assert;
 import org.junit.Test;
 
@@ -9,18 +13,18 @@ import java.util.Set;
 
 public class StreckenNetzTest {
 
-    private static StreckenNetz initialisiereStreckenNetz(){
+    private static StreckenNetz initialisiereStreckenNetz() {
         return new StreckenNetz();
     }
 
-    private static Strecke initialisiereStrecke(){
+    private static Strecke initialisiereStrecke() {
         Set<ZugTyp> zugTypen = new HashSet<>();
         zugTypen.add(ZugTyp.S);
         zugTypen.add(ZugTyp.IC);
         return new Strecke("", 0, 0, zugTypen, false, new Bahnhof("a"), new Bahnhof("b"));
     }
 
-    private static GraphStrecke initialisiereGraphStrecke(){
+    private static GraphStrecke initialisiereGraphStrecke() {
         return new GraphStrecke(initialisiereStrecke()) {
             @Override
             public double holeGewichtung() {
@@ -29,8 +33,13 @@ public class StreckenNetzTest {
         };
     }
 
+    private static void fuegeKnotenHinzu(StreckenNetz netz) {
+        netz.bahnhofHinzufuegen(new Bahnhof("a"));
+        netz.bahnhofHinzufuegen(new Bahnhof("b"));
+    }
+
     @Test
-    public void holeWerteTest(){
+    public void holeWerteTest() {
         StreckenNetz netz = initialisiereStreckenNetz();
 
         Assert.assertEquals(0, netz.holeKanten().size());
@@ -38,51 +47,42 @@ public class StreckenNetzTest {
     }
 
     @Test
-    public void neuerBahnhof(){
+    public void neuerBahnhof() {
         StreckenNetz netz = initialisiereStreckenNetz();
 
-        try{
+        try {
             netz.bahnhofHinzufuegen(new Bahnhof("a"));
-        }
-        catch(Error e){
+        } catch (Error e) {
             Assert.fail();
         }
         Assert.assertTrue(netz.sucheBahnhof("a").isPresent());
     }
 
     @Test
-    public void neuerBahnhofDuplikat(){
+    public void neuerBahnhofDuplikat() {
         StreckenNetz netz = initialisiereStreckenNetz();
 
-        try{
+        try {
             netz.bahnhofHinzufuegen(new Bahnhof("a"));
-        }
-        catch(Error e){
+        } catch (Error e) {
             Assert.fail();
         }
-        try{
+        try {
             netz.bahnhofHinzufuegen(new Bahnhof("a"));
             Assert.fail();
+        } catch (DuplikatFehler ignored) {
         }
-        catch(DuplikatFehler ignored){
-        }
-    }
-
-    private static void fuegeKnotenHinzu(StreckenNetz netz){
-        netz.bahnhofHinzufuegen(new Bahnhof("a"));
-        netz.bahnhofHinzufuegen(new Bahnhof("b"));
     }
 
     @Test
-    public void neueStrecke(){
+    public void neueStrecke() {
         StreckenNetz netz = initialisiereStreckenNetz();
 
         fuegeKnotenHinzu(netz);
 
-        try{
+        try {
             netz.streckeHinzufuegen(initialisiereGraphStrecke());
-        }
-        catch(Error e){
+        } catch (Error e) {
             Assert.fail();
         }
     }

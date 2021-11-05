@@ -2,7 +2,7 @@ package de.dhbw.bahn.schicht_1_adapter.http.routen.zug;
 
 import de.dhbw.bahn.schicht_1_adapter.http.HttpRueckruf;
 import de.dhbw.bahn.schicht_1_adapter.serialisierer.Serialisierer;
-import de.dhbw.bahn.schicht_2_anwendung.anwendungsfaelle.EntitaetenAufsicht;
+import de.dhbw.bahn.schicht_2_anwendung.crud.EntitaetenAufsicht;
 
 public abstract class ZugRoute implements HttpRueckruf {
     protected final Serialisierer zugSerialisierer;

@@ -3,18 +3,15 @@ package de.dhbw.bahn.schicht_3_domaene;
 import org.junit.Assert;
 import org.junit.Test;
 
-import java.util.HashSet;
-import java.util.Set;
-
 public class ZugTest {
 
-    private static Zug initialisiereZug(){
+    private static Zug initialisiereZug() {
         return new Zug(0, ZugTyp.IC, 0, 0);
     }
 
 
     @Test
-    public void holeWerteTest(){
+    public void holeWerteTest() {
         Zug cut = initialisiereZug();
 
         Assert.assertEquals(0, cut.holeZugNummer());
@@ -24,7 +21,7 @@ public class ZugTest {
     }
 
     @Test
-    public void setzeVerbrauch(){
+    public void setzeVerbrauch() {
         Zug cut = initialisiereZug();
 
         cut.setzeVerbrauch(42);
@@ -34,22 +31,22 @@ public class ZugTest {
     }
 
     @Test
-    public void setzeHoechstGeschwindigkeit(){
+    public void setzeHoechstGeschwindigkeit() {
         Zug cut = initialisiereZug();
 
         cut.setzeHoechstGeschwindigkeit(42);
 
         Assert.assertEquals(42, cut.holeHoechstGeschwindigkeit(), Double.MIN_VALUE);
     }
+
     @Test
-    public void setzeVerbrauchFehlerhaft(){
+    public void setzeVerbrauchFehlerhaft() {
         Zug cut = initialisiereZug();
 
         try {
             cut.setzeVerbrauch(-1);
             Assert.fail("Verbrauch darf nicht negativ sein!");
-        }
-        catch(IllegalArgumentException ignored){
+        } catch (IllegalArgumentException ignored) {
 
         }
 
@@ -57,14 +54,13 @@ public class ZugTest {
     }
 
     @Test
-    public void setzeHoechstGeschwindigkeitFehlerhaft(){
+    public void setzeHoechstGeschwindigkeitFehlerhaft() {
         Zug cut = initialisiereZug();
 
         try {
             cut.setzeHoechstGeschwindigkeit(-1);
             Assert.fail("Hoechstgeschwindigkeit darf nicht negativ sein!");
-        }
-        catch(IllegalArgumentException ignored){
+        } catch (IllegalArgumentException ignored) {
 
         }
     }

@@ -1,6 +1,6 @@
 package de.dhbw.bahn.schicht_1_adapter.http.ressourcen;
 
-import de.dhbw.bahn.schicht_2_anwendung.Verwaltung;
+import de.dhbw.bahn.schicht_2_anwendung.crud.Verwaltung;
 import de.dhbw.bahn.schicht_3_domaene.Bahnhof;
 import de.dhbw.bahn.schicht_3_domaene.Strecke;
 

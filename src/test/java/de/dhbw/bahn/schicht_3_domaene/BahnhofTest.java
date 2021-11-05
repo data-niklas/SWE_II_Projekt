@@ -5,12 +5,12 @@ import org.junit.Test;
 
 public class BahnhofTest {
 
-    private static Bahnhof initialisiereBahnhof(){
+    private static Bahnhof initialisiereBahnhof() {
         return new Bahnhof("");
     }
 
     @Test
-    public void holeWerteTest(){
+    public void holeWerteTest() {
         Bahnhof cut = initialisiereBahnhof();
 
         Assert.assertEquals("", cut.holeName());
@@ -18,7 +18,7 @@ public class BahnhofTest {
     }
 
     @Test
-    public void bahnhofVergleich(){
+    public void bahnhofVergleich() {
         Bahnhof cut = initialisiereBahnhof();
 
         Assert.assertTrue(cut.equals(initialisiereBahnhof()));

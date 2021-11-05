@@ -1,13 +1,13 @@
 package de.dhbw.bahn.schicht_0_plugins.algorithmen;
 
-import de.dhbw.bahn.schicht_2_anwendung.anwendungsfaelle.KuerzesterWegeFinder;
+import de.dhbw.bahn.schicht_2_anwendung.wegfinder.WegFinder;
 import de.dhbw.bahn.schicht_4_abstraktion.graph.Graph;
 import de.dhbw.bahn.schicht_4_abstraktion.graph.Kante;
 import de.dhbw.bahn.schicht_4_abstraktion.graph.Knoten;
 
 import java.util.*;
 
-public class Dijkstra implements KuerzesterWegeFinder {
+public class Dijkstra implements WegFinder {
     private Graph graph;
     private Knoten aktuellerKnoten;
     private Map<Knoten, DijkstraKnotenDaten> distanzTabelle;
@@ -20,7 +20,7 @@ public class Dijkstra implements KuerzesterWegeFinder {
         this.graph = graph;
     }
 
-    public List<? extends Kante> kuerzesterWeg(Knoten start, Knoten end) {
+    public List<? extends Kante> berechneWeg(Knoten start, Knoten end) {
         if(this.graph == null)
             return Collections.emptyList();
 

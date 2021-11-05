@@ -1,4 +1,4 @@
-package de.dhbw.bahn.schicht_2_anwendung;
+package de.dhbw.bahn.schicht_2_anwendung.crud;
 
 import de.dhbw.bahn.schicht_4_abstraktion.Identifizierbar;
 

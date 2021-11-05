@@ -16,21 +16,21 @@ import de.dhbw.bahn.schicht_1_adapter.http.routen.zug.ZugGet;
 import de.dhbw.bahn.schicht_1_adapter.http.routen.zug.ZugPost;
 import de.dhbw.bahn.schicht_1_adapter.http.routen.zug.ZugPut;
 import de.dhbw.bahn.schicht_1_adapter.serialisierer.Serialisierer;
-import de.dhbw.bahn.schicht_2_anwendung.anwendungsfaelle.EntitaetenAufsicht;
-import de.dhbw.bahn.schicht_2_anwendung.anwendungsfaelle.KuerzesterWegeFinder;
+import de.dhbw.bahn.schicht_2_anwendung.crud.EntitaetenAufsicht;
+import de.dhbw.bahn.schicht_2_anwendung.wegfinder.WegFinder;
 
 public class Kontrollierer {
 
     private final HttpServer server;
     private final Serialisierer serialisierer;
     private final EntitaetenAufsicht aufsicht;
-    private final KuerzesterWegeFinder kuerzesterWegeFinder;
+    private final WegFinder wegFinder;
 
-    public Kontrollierer(HttpServer server, Serialisierer serialisierer, EntitaetenAufsicht aufsicht, KuerzesterWegeFinder kuerzesterWegeFinder) {
+    public Kontrollierer(HttpServer server, Serialisierer serialisierer, EntitaetenAufsicht aufsicht, WegFinder wegFinder) {
         this.server = server;
         this.serialisierer = serialisierer;
         this.aufsicht = aufsicht;
-        this.kuerzesterWegeFinder = kuerzesterWegeFinder;
+        this.wegFinder = wegFinder;
         this.registriereRouten();
     }
 
@@ -61,8 +61,8 @@ public class Kontrollierer {
     }
 
     private void registriereBerechnungen() {
-        this.server.registriereHttpRueckruf(new HttpRoute("/kuerzester-weg", HttpAnfragemethode.GET), new KuerzesteStreckeGet(this.serialisierer, this.aufsicht, this.kuerzesterWegeFinder));
-        this.server.registriereHttpRueckruf(new HttpRoute("/schnellster-weg", HttpAnfragemethode.GET), new SchnellsteStreckeGet(this.serialisierer, this.aufsicht, this.kuerzesterWegeFinder));
+        this.server.registriereHttpRueckruf(new HttpRoute("/kuerzester-weg", HttpAnfragemethode.GET), new KuerzesteStreckeGet(this.serialisierer, this.aufsicht, this.wegFinder));
+        this.server.registriereHttpRueckruf(new HttpRoute("/schnellster-weg", HttpAnfragemethode.GET), new SchnellsteStreckeGet(this.serialisierer, this.aufsicht, this.wegFinder));
     }
 
     public void legeLos(String host, int port) {

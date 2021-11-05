@@ -1,6 +1,7 @@
-package de.dhbw.bahn.schicht_3_domaene;
+package de.dhbw.bahn.schicht_2_anwendung.wegfinder;
 
 import de.dhbw.bahn.schicht_2_anwendung.DuplikatFehler;
+import de.dhbw.bahn.schicht_3_domaene.Bahnhof;
 import de.dhbw.bahn.schicht_4_abstraktion.graph.Graph;
 
 import java.util.ArrayList;

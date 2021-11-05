@@ -8,7 +8,7 @@ import java.util.Set;
 
 public class StreckeTest {
 
-    private static Strecke initialisiereStrecke(){
+    private static Strecke initialisiereStrecke() {
         Set<ZugTyp> zugTypen = new HashSet<>();
         zugTypen.add(ZugTyp.S);
         zugTypen.add(ZugTyp.IC);
@@ -16,7 +16,7 @@ public class StreckeTest {
     }
 
     @Test
-    public void holeWerteTest(){
+    public void holeWerteTest() {
         Strecke cut = initialisiereStrecke();
 
         Assert.assertEquals("", cut.holeBezeichnung());
@@ -25,27 +25,27 @@ public class StreckeTest {
         Set<ZugTyp> zugTypen = cut.holeErlaubteZugTypen();
         Assert.assertEquals(2, zugTypen.size());
         Assert.assertTrue(zugTypen.contains(ZugTyp.S));
-        Assert.assertTrue( zugTypen.contains(ZugTyp.IC));
+        Assert.assertTrue(zugTypen.contains(ZugTyp.IC));
         Assert.assertTrue(new Bahnhof("a").equals(cut.holeStartBahnhof()));
         Assert.assertTrue(new Bahnhof("b").equals(cut.holeEndBahnhof()));
     }
 
     @Test
-    public void setzeMaximalgeschwindigkeit(){
+    public void setzeMaximalgeschwindigkeit() {
         Strecke cut = initialisiereStrecke();
 
         cut.setzeMaximalGeschwindigkeit(42);
 
         Assert.assertEquals(cut.holeMaximalGeschwindigkeit(), 42, Double.MIN_VALUE);
     }
+
     @Test
-    public void setzeMaximalgeschwindigkeitFehlerhaft(){
+    public void setzeMaximalgeschwindigkeitFehlerhaft() {
         Strecke cut = initialisiereStrecke();
         try {
             cut.setzeMaximalGeschwindigkeit(-1);
             Assert.fail("Maximalgeschwindigkeit darf nicht negativ sein!");
-        }
-        catch(IllegalArgumentException ignored){
+        } catch (IllegalArgumentException ignored) {
 
         }
     }

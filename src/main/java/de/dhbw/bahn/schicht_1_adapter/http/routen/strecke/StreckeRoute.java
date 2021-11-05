@@ -3,7 +3,7 @@ package de.dhbw.bahn.schicht_1_adapter.http.routen.strecke;
 import de.dhbw.bahn.schicht_1_adapter.http.HttpRueckruf;
 import de.dhbw.bahn.schicht_1_adapter.http.ressourcen.StreckenRessourcenKonvertierer;
 import de.dhbw.bahn.schicht_1_adapter.serialisierer.Serialisierer;
-import de.dhbw.bahn.schicht_2_anwendung.anwendungsfaelle.EntitaetenAufsicht;
+import de.dhbw.bahn.schicht_2_anwendung.crud.EntitaetenAufsicht;
 
 public abstract class StreckeRoute implements HttpRueckruf {
     protected final Serialisierer streckenSerialisierer;

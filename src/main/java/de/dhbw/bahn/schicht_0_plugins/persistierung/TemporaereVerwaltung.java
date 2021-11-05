@@ -1,6 +1,6 @@
 package de.dhbw.bahn.schicht_0_plugins.persistierung;
 
-import de.dhbw.bahn.schicht_2_anwendung.Verwaltung;
+import de.dhbw.bahn.schicht_2_anwendung.crud.Verwaltung;
 import de.dhbw.bahn.schicht_4_abstraktion.Identifizierbar;
 
 import java.util.ArrayList;

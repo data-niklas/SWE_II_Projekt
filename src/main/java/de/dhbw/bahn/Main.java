@@ -7,9 +7,9 @@ import de.dhbw.bahn.schicht_0_plugins.serialisierer.GsonSerialisierer;
 import de.dhbw.bahn.schicht_1_adapter.Kontrollierer;
 import de.dhbw.bahn.schicht_1_adapter.http.HttpServer;
 import de.dhbw.bahn.schicht_1_adapter.serialisierer.Serialisierer;
-import de.dhbw.bahn.schicht_2_anwendung.Verwaltung;
-import de.dhbw.bahn.schicht_2_anwendung.anwendungsfaelle.EntitaetenAufsicht;
-import de.dhbw.bahn.schicht_2_anwendung.anwendungsfaelle.KuerzesterWegeFinder;
+import de.dhbw.bahn.schicht_2_anwendung.crud.Verwaltung;
+import de.dhbw.bahn.schicht_2_anwendung.crud.EntitaetenAufsicht;
+import de.dhbw.bahn.schicht_2_anwendung.wegfinder.WegFinder;
 import de.dhbw.bahn.schicht_3_domaene.Bahnhof;
 import de.dhbw.bahn.schicht_3_domaene.Strecke;
 import de.dhbw.bahn.schicht_3_domaene.Zug;
@@ -25,7 +25,7 @@ public class Main {
 
         EntitaetenAufsicht aufsicht = new EntitaetenAufsicht(bahnhofVerwaltung, streckenVerwaltung, zugVerwaltung);
 
-        KuerzesterWegeFinder wegeFinder = new Dijkstra();
+        WegFinder wegeFinder = new Dijkstra();
 
         Kontrollierer kontrollierer = new Kontrollierer(server, serialisierer, aufsicht, wegeFinder);
         kontrollierer.legeLos("localhost", 8080);
