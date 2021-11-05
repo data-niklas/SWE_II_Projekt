@@ -1,6 +1,6 @@
 package de.dhbw.bahn.schicht_3_domaene;
 
-import de.dhbw.bahn.schicht_4_abstraktion.dijkstra.Knoten;
+import de.dhbw.bahn.schicht_4_abstraktion.graph.Knoten;
 
 public class Bahnhof implements Knoten {
 

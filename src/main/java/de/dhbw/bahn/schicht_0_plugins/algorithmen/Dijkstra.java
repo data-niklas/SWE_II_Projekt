@@ -1,17 +1,44 @@
-package de.dhbw.bahn.schicht_4_abstraktion.dijkstra;
+package de.dhbw.bahn.schicht_0_plugins.algorithmen;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import de.dhbw.bahn.schicht_2_anwendung.anwendungsfaelle.KuerzesterWegeFinder;
+import de.dhbw.bahn.schicht_4_abstraktion.graph.Graph;
+import de.dhbw.bahn.schicht_4_abstraktion.graph.Kante;
+import de.dhbw.bahn.schicht_4_abstraktion.graph.Knoten;
 
-public class Dijkstra {
-    private final Graph graph;
+import java.util.*;
+
+public class Dijkstra implements KuerzesterWegeFinder {
+    private Graph graph;
     private Knoten aktuellerKnoten;
     private Map<Knoten, DijkstraKnotenDaten> distanzTabelle;
 
-    public Dijkstra(Graph graph) {
+    public Dijkstra() {
+    }
+
+    @Override
+    public void initialisiereGraphen(Graph graph) {
         this.graph = graph;
+    }
+
+    public List<? extends Kante> kuerzesterWeg(Knoten start, Knoten end) {
+        if(this.graph == null)
+            return Collections.emptyList();
+
+        initialisiereDistanzTabelle();
+        waehleKnoten(start);
+        distanzTabelle.get(start).setzeDistanz(0);
+
+        while (!aktuellerKnoten.equals(end)) {
+            berechneDistanzen();
+            Knoten neuerKnoten = findeUnbearbeitetenMinimalenKnoten();
+            if (neuerKnoten == null) {
+                // Keinen Weg gefunden :(
+                return new ArrayList<>();
+            }
+            waehleKnoten(neuerKnoten);
+        }
+
+        return bauWeg(start, end);
     }
 
     private void initialisiereDistanzTabelle() {
@@ -71,23 +98,7 @@ public class Dijkstra {
         aktuellerKnoten = knoten;
     }
 
-    public List<? extends Kante> kuerzesterWeg(Knoten start, Knoten end) {
-        initialisiereDistanzTabelle();
-        waehleKnoten(start);
-        distanzTabelle.get(start).setzeDistanz(0);
 
-        while (!aktuellerKnoten.equals(end)) {
-            berechneDistanzen();
-            Knoten neuerKnoten = findeUnbearbeitetenMinimalenKnoten();
-            if (neuerKnoten == null) {
-                // Keinen Weg gefunden :(
-                return new ArrayList<>();
-            }
-            waehleKnoten(neuerKnoten);
-        }
-
-        return bauWeg(start, end);
-    }
 
     private Knoten vorgeangerKnoten(Knoten knoten) {
         return distanzTabelle.get(knoten).holeVon();

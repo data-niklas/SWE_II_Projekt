@@ -2,7 +2,6 @@ package de.dhbw.bahn.schicht_2_anwendung.anwendungsfaelle;
 
 import de.dhbw.bahn.schicht_2_anwendung.Verwaltung;
 import de.dhbw.bahn.schicht_3_domaene.*;
-import de.dhbw.bahn.schicht_4_abstraktion.dijkstra.Dijkstra;
 
 import java.util.List;
 
@@ -10,25 +9,24 @@ public class StreckenBerechner {
 
     private final Verwaltung<Bahnhof> bahnhofsVerwaltung;
     private final Verwaltung<Strecke> streckenVerwaltung;
+    private final KuerzesterWegeFinder kuerzesterWegeFinder;
 
-    public StreckenBerechner(Verwaltung<Bahnhof> bahnhofsVerwaltung, Verwaltung<Strecke> streckenVerwaltung) {
+    public StreckenBerechner(Verwaltung<Bahnhof> bahnhofsVerwaltung, Verwaltung<Strecke> streckenVerwaltung, KuerzesterWegeFinder kuerzesterWegeFinder) {
         this.bahnhofsVerwaltung = bahnhofsVerwaltung;
         this.streckenVerwaltung = streckenVerwaltung;
+        this.kuerzesterWegeFinder = kuerzesterWegeFinder;
     }
-
 
     public List<GraphStrecke> berechneKuerzesteStrecke(Bahnhof start, Bahnhof ende, Zug zug) {
         StreckenNetz streckenNetz = baueKuerzesteStreckeNetz(zug);
-        Dijkstra dijkstra = new Dijkstra(streckenNetz);
-        List<GraphStrecke> weg = (List<GraphStrecke>) dijkstra.kuerzesterWeg(start, ende);
-        return weg;
+        this.kuerzesterWegeFinder.initialisiereGraphen(streckenNetz);
+        return (List<GraphStrecke>) this.kuerzesterWegeFinder.kuerzesterWeg(start, ende);
     }
 
     public List<GraphStrecke> berechneKuerzesteZeitStrecke(Bahnhof start, Bahnhof ende, Zug zug) {
         StreckenNetz streckenNetz = baueKuerzesteZeitNetz(zug);
-        Dijkstra dijkstra = new Dijkstra(streckenNetz);
-        List<GraphStrecke> weg = (List<GraphStrecke>) dijkstra.kuerzesterWeg(start, ende);
-        return weg;
+        this.kuerzesterWegeFinder.initialisiereGraphen(streckenNetz);
+        return (List<GraphStrecke>) this.kuerzesterWegeFinder.kuerzesterWeg(start, ende);
     }
 
     private StreckenNetz baueKuerzesteStreckeNetz(Zug zug) {

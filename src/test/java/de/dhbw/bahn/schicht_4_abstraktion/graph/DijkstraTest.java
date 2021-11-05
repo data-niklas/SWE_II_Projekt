@@ -1,5 +1,6 @@
-package de.dhbw.bahn.schicht_4_abstraktion.dijkstra;
+package de.dhbw.bahn.schicht_4_abstraktion.graph;
 
+import de.dhbw.bahn.schicht_0_plugins.algorithmen.Dijkstra;
 import org.junit.Assert;
 import org.junit.Test;
 
@@ -90,7 +91,8 @@ public class DijkstraTest {
     public void einfacherGewichtungsTest() {
         //Init
         MockGraph graph = mockGraph3();
-        dijkstra = new Dijkstra(graph);
+        dijkstra = new Dijkstra();
+        dijkstra.initialisiereGraphen(graph);
         //
         List<Kante> weg = (List<Kante>) dijkstra.kuerzesterWeg(graph.sucheKnoten("A"), graph.sucheKnoten("B"));
         //

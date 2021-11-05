@@ -1,6 +1,6 @@
 package de.dhbw.bahn.schicht_3_domaene;
 
-import de.dhbw.bahn.schicht_4_abstraktion.DuplikatFehler;
+import de.dhbw.bahn.schicht_2_anwendung.DuplikatFehler;
 import org.junit.Assert;
 import org.junit.Test;
 

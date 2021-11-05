@@ -17,17 +17,20 @@ import de.dhbw.bahn.schicht_1_adapter.http.routen.zug.ZugPost;
 import de.dhbw.bahn.schicht_1_adapter.http.routen.zug.ZugPut;
 import de.dhbw.bahn.schicht_1_adapter.serialisierer.Serialisierer;
 import de.dhbw.bahn.schicht_2_anwendung.anwendungsfaelle.EntitaetenAufsicht;
+import de.dhbw.bahn.schicht_2_anwendung.anwendungsfaelle.KuerzesterWegeFinder;
 
 public class Kontrollierer {
 
     private final HttpServer server;
     private final Serialisierer serialisierer;
     private final EntitaetenAufsicht aufsicht;
+    private final KuerzesterWegeFinder kuerzesterWegeFinder;
 
-    public Kontrollierer(HttpServer server, Serialisierer serialisierer, EntitaetenAufsicht aufsicht) {
+    public Kontrollierer(HttpServer server, Serialisierer serialisierer, EntitaetenAufsicht aufsicht, KuerzesterWegeFinder kuerzesterWegeFinder) {
         this.server = server;
         this.serialisierer = serialisierer;
         this.aufsicht = aufsicht;
+        this.kuerzesterWegeFinder = kuerzesterWegeFinder;
         this.registriereRouten();
     }
 
@@ -58,8 +61,8 @@ public class Kontrollierer {
     }
 
     private void registriereBerechnungen() {
-        this.server.registriereHttpRueckruf(new HttpRoute("/kuerzester-weg", HttpAnfragemethode.GET), new KuerzesteStreckeGet(this.serialisierer, this.aufsicht));
-        this.server.registriereHttpRueckruf(new HttpRoute("/schnellster-weg", HttpAnfragemethode.GET), new SchnellsteStreckeGet(this.serialisierer, this.aufsicht));
+        this.server.registriereHttpRueckruf(new HttpRoute("/kuerzester-weg", HttpAnfragemethode.GET), new KuerzesteStreckeGet(this.serialisierer, this.aufsicht, this.kuerzesterWegeFinder));
+        this.server.registriereHttpRueckruf(new HttpRoute("/schnellster-weg", HttpAnfragemethode.GET), new SchnellsteStreckeGet(this.serialisierer, this.aufsicht, this.kuerzesterWegeFinder));
     }
 
     public void legeLos(String host, int port) {

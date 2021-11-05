@@ -6,6 +6,7 @@ import de.dhbw.bahn.schicht_1_adapter.http.HttpRueckruf;
 import de.dhbw.bahn.schicht_1_adapter.http.MimeTyp;
 import de.dhbw.bahn.schicht_1_adapter.serialisierer.Serialisierer;
 import de.dhbw.bahn.schicht_2_anwendung.anwendungsfaelle.EntitaetenAufsicht;
+import de.dhbw.bahn.schicht_2_anwendung.anwendungsfaelle.KuerzesterWegeFinder;
 import de.dhbw.bahn.schicht_2_anwendung.anwendungsfaelle.StreckenBerechner;
 import de.dhbw.bahn.schicht_3_domaene.Bahnhof;
 import de.dhbw.bahn.schicht_3_domaene.Strecke;
@@ -24,10 +25,10 @@ public abstract class StreckenBerechnungRoute implements HttpRueckruf {
     protected final EntitaetenAufsicht aufsicht;
     protected final StreckenBerechner streckenBerechner;
 
-    public StreckenBerechnungRoute(Serialisierer serialisierer, EntitaetenAufsicht aufsicht) {
+    public StreckenBerechnungRoute(Serialisierer serialisierer, EntitaetenAufsicht aufsicht, KuerzesterWegeFinder kuerzesterWegeFinder) {
         this.serialisierer = serialisierer;
         this.aufsicht = aufsicht;
-        this.streckenBerechner = new StreckenBerechner(aufsicht.holeBahnhofVerwaltung(), aufsicht.holeStreckenVerwaltung());
+        this.streckenBerechner = new StreckenBerechner(aufsicht.holeBahnhofVerwaltung(), aufsicht.holeStreckenVerwaltung(), kuerzesterWegeFinder);
     }
 
     @Override
