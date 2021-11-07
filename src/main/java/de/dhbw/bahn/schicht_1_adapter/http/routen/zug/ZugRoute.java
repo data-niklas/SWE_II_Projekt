@@ -1,10 +1,10 @@
 package de.dhbw.bahn.schicht_1_adapter.http.routen.zug;
 
-import de.dhbw.bahn.schicht_1_adapter.http.HttpRueckruf;
+import de.dhbw.bahn.schicht_1_adapter.http.EventRueckruf;
 import de.dhbw.bahn.schicht_1_adapter.serialisierer.Serialisierer;
 import de.dhbw.bahn.schicht_2_anwendung.crud.EntitaetenAufsicht;
 
-public abstract class ZugRoute implements HttpRueckruf {
+public abstract class ZugRoute implements EventRueckruf {
     protected final Serialisierer zugSerialisierer;
     protected final EntitaetenAufsicht aufsicht;
 

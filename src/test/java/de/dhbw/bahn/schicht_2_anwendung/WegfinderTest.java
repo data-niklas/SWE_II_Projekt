@@ -1,15 +1,19 @@
-package de.dhbw.bahn.schicht_4_abstraktion.graph;
+package de.dhbw.bahn.schicht_2_anwendung;
 
 import de.dhbw.bahn.schicht_0_plugins.algorithmen.Dijkstra;
+import de.dhbw.bahn.schicht_2_anwendung.wegfinder.WegFinder;
+import de.dhbw.bahn.schicht_4_abstraktion.graph.Kante;
+import de.dhbw.bahn.schicht_4_abstraktion.graph.MockGraph;
+import de.dhbw.bahn.schicht_4_abstraktion.graph.MockKnoten;
 import org.junit.Assert;
 import org.junit.Test;
 
 import java.util.List;
 
-public class DijkstraTest {
+public class WegfinderTest {
 
     //CUT
-    private Dijkstra dijkstra;
+    private WegFinder wegfinder;
 
     //Maximal 24
     private static void initialisiereKnoten(MockGraph graph, int anzahl) {
@@ -88,13 +92,13 @@ public class DijkstraTest {
 
 
     @Test
-    public void einfacherGewichtungsTest() {
+    public void einfacherDijkstraGewichtungsTest() {
         //Init
         MockGraph graph = mockGraph3();
-        dijkstra = new Dijkstra();
-        dijkstra.initialisiereGraphen(graph);
+        wegfinder = new Dijkstra();
+        wegfinder.initialisiereGraphen(graph);
         //
-        List<Kante> weg = (List<Kante>) dijkstra.berechneWeg(graph.sucheKnoten("A"), graph.sucheKnoten("B"));
+        List<Kante> weg = (List<Kante>) wegfinder.berechneWeg(graph.sucheKnoten("A"), graph.sucheKnoten("B"));
         //
         Assert.assertEquals(2, weg.size());
         assertKanteGleich(weg.get(0), "A", "C");

@@ -10,14 +10,15 @@ import java.net.URLDecoder;
 import java.util.HashMap;
 import java.util.Map;
 
-public class EinfacherHttpServer implements HttpServer, HttpHandler {
+public class EinfacherHttpServer implements Darstellung, HttpHandler {
 
-    private final Map<HttpRoute, HttpRueckruf> rueckrufTabelle;
+    private final Map<Event, EventRueckruf> rueckrufTabelle;
     private int port;
     private String host;
     private boolean laeuft;
 
     private com.sun.net.httpserver.HttpServer httpServer;
+    private Map<String, String> konfiguration;
 
     public EinfacherHttpServer() {
         laeuft = false;
@@ -26,21 +27,32 @@ public class EinfacherHttpServer implements HttpServer, HttpHandler {
         host = "localhost";
     }
 
-    @Override
-    public int holePort() {
-        return this.port;
+
+    private void registriereKontext() {
+        this.rueckrufTabelle.keySet().forEach(route -> this.httpServer.createContext(route.holeName(), this));
     }
 
     @Override
-    public String holeHost() {
-        return this.host;
+    public void halteAn() {
+        this.laeuft = false;
+        this.httpServer.stop(0);
     }
 
     @Override
-    public void legeLos(String host, int port) {
-        this.host = host;
-        this.port = port;
+    public Map<String, String> holeKonfiguration() {
+        return this.konfiguration;
+    }
 
+    @Override
+    public synchronized boolean holeLaeuft() {
+        return this.laeuft;
+    }
+
+    @Override
+    public void legeLos(Map<String, String> konfiguration) {
+        this.konfiguration = konfiguration;
+        if (konfiguration.containsKey("host"))this.host = konfiguration.get("host");
+        if (konfiguration.containsKey("port"))this.port = Integer.parseInt(konfiguration.get("port"));
         try {
             this.httpServer = com.sun.net.httpserver.HttpServer.create(new InetSocketAddress(this.host, this.port), 0);
             this.registriereKontext();
@@ -52,47 +64,44 @@ public class EinfacherHttpServer implements HttpServer, HttpHandler {
         }
     }
 
-    private void registriereKontext() {
-        this.rueckrufTabelle.keySet().forEach(route -> this.httpServer.createContext(route.holePfad(), this));
-    }
-
     @Override
-    public void halteAn() {
-        this.laeuft = false;
-        this.httpServer.stop(0);
-    }
-
-    @Override
-    public synchronized boolean holeLaeuft() {
-        return this.laeuft;
-    }
-
-    @Override
-    public void registriereHttpRueckruf(HttpRoute route, HttpRueckruf rueckruf) {
+    public void registriereEventRueckruf(Event route, EventRueckruf rueckruf) {
         this.rueckrufTabelle.put(route, rueckruf);
     }
 
     @Override
     public void handle(HttpExchange exchange) {
-        HttpAntwort antwort;
+        EventAntwort antwort;
         try {
             antwort = this.verarbeiteAnfrage(exchange);
         } catch (IOException e) {
-            antwort = new HttpAntwort(500, "Internal server error", MimeTyp.SCHLICHT);
+            antwort = new EventAntwort(500, "Internal server error", MimeTyp.SCHLICHT);
         }
         this.verarbeiteHttpAntwort(exchange, antwort);
     }
 
-    private HttpAntwort verarbeiteAnfrage(HttpExchange exchange) throws IOException {
+    private EventTyp httpMethodeZuEventTyp(String httpMethode){
+        switch (httpMethode){
+            case "GET": return EventTyp.LESEN;
+            case "PUT": return EventTyp.AKTUALISIEREN;
+            case "POST": return EventTyp.ERSTELLEN;
+            case "DELETE": return EventTyp.LOESCHEN;
+            default: return null;
+        }
+    }
+
+    private EventAntwort verarbeiteAnfrage(HttpExchange exchange) throws IOException {
         System.out.println(exchange.getRequestMethod() + " Anfrage an " + exchange.getHttpContext().getPath());
 
         String pfad = exchange.getHttpContext().getPath();
 
-        HttpRoute route = new HttpRoute(pfad, HttpAnfragemethode.valueOf(exchange.getRequestMethod()));
+        EventTyp eventTyp = httpMethodeZuEventTyp(exchange.getRequestMethod());
+        if (eventTyp == null)return new EventAntwort(404, "Diese Anfragemethode wird nicht unterstützt", MimeTyp.SCHLICHT);
+        Event route = new Event(pfad, eventTyp);
         if (!this.rueckrufTabelle.containsKey(route)) {
-            return new HttpAntwort(404, "Not Found", MimeTyp.SCHLICHT);
+            return new EventAntwort(404, "Not Found", MimeTyp.SCHLICHT);
         }
-        HttpRueckruf rueckruf = this.rueckrufTabelle.get(route);
+        EventRueckruf rueckruf = this.rueckrufTabelle.get(route);
 
         String query = exchange.getRequestURI().getQuery();
         Map<String, String> parameter = leseParameter(query);
@@ -115,7 +124,7 @@ public class EinfacherHttpServer implements HttpServer, HttpHandler {
         return parameter;
     }
 
-    private void verarbeiteHttpAntwort(HttpExchange exchange, HttpAntwort antwort) {
+    private void verarbeiteHttpAntwort(HttpExchange exchange, EventAntwort antwort) {
         try {
             exchange.getResponseHeaders().add("Content-Type", antwort.holeKoerperTyp().holeWert() + "; charset=utf-8");
             exchange.sendResponseHeaders(antwort.holeStatus(), antwort.holeKoerper().getBytes().length);

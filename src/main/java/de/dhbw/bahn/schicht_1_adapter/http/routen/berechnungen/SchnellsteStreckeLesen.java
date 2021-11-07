@@ -11,9 +11,9 @@ import de.dhbw.bahn.schicht_3_domaene.Zug;
 import java.util.List;
 import java.util.stream.Collectors;
 
-public class SchnellsteStreckeGet extends StreckenBerechnungRoute {
+public class SchnellsteStreckeLesen extends StreckenBerechnungRoute {
 
-    public SchnellsteStreckeGet(Serialisierer serialisierer, EntitaetenAufsicht aufsicht, WegFinder wegFinder) {
+    public SchnellsteStreckeLesen(Serialisierer serialisierer, EntitaetenAufsicht aufsicht, WegFinder wegFinder) {
         super(serialisierer, aufsicht, wegFinder);
     }
 

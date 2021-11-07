@@ -1,7 +1,7 @@
 package de.dhbw.bahn.schicht_1_adapter.http.routen.bahnhof;
 
-import de.dhbw.bahn.schicht_1_adapter.http.HttpAntwort;
-import de.dhbw.bahn.schicht_1_adapter.http.HttpRoute;
+import de.dhbw.bahn.schicht_1_adapter.http.EventAntwort;
+import de.dhbw.bahn.schicht_1_adapter.http.Event;
 import de.dhbw.bahn.schicht_1_adapter.http.MimeTyp;
 import de.dhbw.bahn.schicht_1_adapter.serialisierer.Serialisierer;
 import de.dhbw.bahn.schicht_2_anwendung.crud.EntitaetenAufsicht;
@@ -10,13 +10,13 @@ import de.dhbw.bahn.schicht_3_domaene.Bahnhof;
 import java.util.List;
 import java.util.Map;
 
-public class BahnhofGet extends BahnhofRoute {
-    public BahnhofGet(Serialisierer bahnhofSerialisierer, EntitaetenAufsicht aufsicht) {
+public class BahnhofLesen extends BahnhofRoute {
+    public BahnhofLesen(Serialisierer bahnhofSerialisierer, EntitaetenAufsicht aufsicht) {
         super(bahnhofSerialisierer, aufsicht);
     }
 
     @Override
-    public HttpAntwort bearbeiteAnfrage(HttpRoute route, String koerper, Map<String, String> parameter) {
+    public EventAntwort bearbeiteAnfrage(Event route, String koerper, Map<String, String> parameter) {
         String antwort;
         if (parameter.containsKey("id")) {
             String bahnhofName = parameter.get("id");
@@ -27,7 +27,7 @@ public class BahnhofGet extends BahnhofRoute {
             antwort = this.bahnhofSerialisierer.serialisieren(bahnhoefe);
         }
 
-        return new HttpAntwort(200, antwort, MimeTyp.JSON);
+        return new EventAntwort(200, antwort, MimeTyp.JSON);
     }
 
 }
