@@ -1,0 +1,10 @@
+
+{
+    "bezeichnung": "Ein Huepferle",
+    "startBahnhof": "Stuttgart",
+    "endBahnhof": "Karlsruhe",
+    "laenge": 4,
+    "erlaubteZugTypen": ["IC", "RB", "IRE"],
+    "freigegeben": true,
+    "maximalGeschwindigkeit": 20
+}

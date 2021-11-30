@@ -1,0 +1,9 @@
+{
+    "bezeichnung": "HIGH speed Schwarzwaldbahn",
+    "startBahnhof": "Karlsruhe",
+    "endBahnhof": "Friedrichshafen",
+    "laenge": 346.1,
+    "erlaubteZugTypen": ["IC", "RB", "IRE"],
+    "freigegeben": true,
+    "maximalGeschwindigkeit": 80
+}

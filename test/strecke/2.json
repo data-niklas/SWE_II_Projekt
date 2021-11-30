@@ -1,0 +1,10 @@
+
+{
+    "bezeichnung": "Elektrifizierte Bodenseebahn",
+    "startBahnhof": "Friedrichshafen",
+    "endBahnhof": "Stuttgart",
+    "laenge": 700,
+    "erlaubteZugTypen": ["IC", "RB", "IRE"],
+    "freigegeben": true,
+    "maximalGeschwindigkeit": 80
+}

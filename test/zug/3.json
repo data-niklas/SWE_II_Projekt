@@ -1,0 +1,6 @@
+{
+    "zugNummer": 666,
+    "zugTyp": "ICE",
+    "hoechstGeschwindigkeit": 42000,
+    "verbrauch": 70
+}
