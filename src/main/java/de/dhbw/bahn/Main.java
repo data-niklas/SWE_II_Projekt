@@ -29,7 +29,6 @@ public class Main {
         Verwaltung<Bahnhof> bahnhofVerwaltung = new TemporaereVerwaltung<>();
         Verwaltung<Strecke> streckenVerwaltung = new TemporaereVerwaltung<>();
         Verwaltung<Zug> zugVerwaltung = new TemporaereVerwaltung<>();
-        bahnhofVerwaltung.persistiereEntitaet(new Bahnhof("aaaaaaaaa"));
 
         EntitaetenAufsicht aufsicht = new EntitaetenAufsicht(bahnhofVerwaltung, streckenVerwaltung, zugVerwaltung);
 

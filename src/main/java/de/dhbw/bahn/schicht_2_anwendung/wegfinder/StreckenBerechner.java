@@ -32,7 +32,9 @@ public class StreckenBerechner {
     public List<Strecke> berechneKuerzesteZeitStrecke(Bahnhof start, Bahnhof ende, Zug zug) {
         StreckenNetz streckenNetz = baueKuerzesteZeitNetz(zug);
         this.wegFinder.initialisiereGraphen(streckenNetz);
-        List<StreckenKante> weg = (List<StreckenKante>) this.wegFinder.berechneWeg(new BahnhofsKnoten(start), new BahnhofsKnoten(ende));
+        BahnhofsKnoten startKnoten = new BahnhofsKnoten(start);
+        BahnhofsKnoten endKnoten = new BahnhofsKnoten(ende);
+        List<StreckenKante> weg = (List<StreckenKante>) this.wegFinder.berechneWeg(startKnoten, endKnoten);
         return weg.stream().map(StreckenKante::holeStrecke).collect(Collectors.toList());
     }
 
