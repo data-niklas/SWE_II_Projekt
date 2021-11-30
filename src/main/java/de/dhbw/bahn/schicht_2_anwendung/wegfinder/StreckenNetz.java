@@ -11,8 +11,8 @@ import java.util.Optional;
 
 public class StreckenNetz implements Graph {
 
-    private final List<Bahnhof> bahnhofsListe;
-    private final List<GraphStrecke> streckenListe;
+    private final List<BahnhofsKnoten> bahnhofsListe;
+    private final List<StreckenKante> streckenListe;
 
     public StreckenNetz() {
         this.bahnhofsListe = new ArrayList<>();
@@ -20,34 +20,34 @@ public class StreckenNetz implements Graph {
     }
 
     @Override
-    public List<Bahnhof> holeKnoten() {
+    public List<BahnhofsKnoten> holeKnoten() {
         return this.bahnhofsListe;
     }
 
     @Override
-    public List<GraphStrecke> holeKanten() {
+    public List<StreckenKante> holeKanten() {
         return this.streckenListe;
     }
 
-    public Optional<Bahnhof> sucheBahnhof(String name) {
-        for (Bahnhof b : this.bahnhofsListe) {
+    public Optional<BahnhofsKnoten> sucheBahnhof(String name) {
+        for (BahnhofsKnoten b : this.bahnhofsListe) {
             if (b.holeIdentifizierer().equals(name))
                 return Optional.of(b);
         }
         return Optional.empty();
     }
 
-    public Optional<GraphStrecke> sucheStrecke(String bezeichnung) {
-        for (GraphStrecke s : this.streckenListe) {
+    public Optional<StreckenKante> sucheStrecke(String bezeichnung) {
+        for (StreckenKante s : this.streckenListe) {
             if (s.holeIdentifizierer().equals(bezeichnung))
                 return Optional.of(s);
         }
         return Optional.empty();
     }
 
-    public List<GraphStrecke> sucheStrecke(Bahnhof startBahnhof, Bahnhof endBahnhof) {
-        List<GraphStrecke> strecken = new ArrayList<>();
-        for (GraphStrecke s : this.streckenListe) {
+    public List<StreckenKante> sucheStrecke(Bahnhof startBahnhof, Bahnhof endBahnhof) {
+        List<StreckenKante> strecken = new ArrayList<>();
+        for (StreckenKante s : this.streckenListe) {
             boolean hinrichtung = s.holeStartKnoten().equals(startBahnhof) && s.holeEndKnoten().equals(endBahnhof);
             boolean rueckrichtung = s.holeStartKnoten().equals(endBahnhof) && s.holeEndKnoten().equals(startBahnhof);
             if (hinrichtung || rueckrichtung)
@@ -56,7 +56,7 @@ public class StreckenNetz implements Graph {
         return strecken;
     }
 
-    public void streckeHinzufuegen(GraphStrecke strecke) {
+    public void streckeHinzufuegen(StreckenKante strecke) {
         if (sucheStrecke(strecke.holeIdentifizierer()).isPresent())
             throw new DuplikatFehler("Eine Strecke mit diesem Identifizierer ist bereits vorhanden.");
 
@@ -73,7 +73,7 @@ public class StreckenNetz implements Graph {
         this.streckenListe.add(strecke);
     }
 
-    public void bahnhofHinzufuegen(Bahnhof bahnhof) {
+    public void bahnhofHinzufuegen(BahnhofsKnoten bahnhof) {
         if (sucheBahnhof(bahnhof.holeIdentifizierer()).isPresent())
             throw new DuplikatFehler("Ein Bahnhof mit diesem Identifizierer ist bereits vorhanden.");
 

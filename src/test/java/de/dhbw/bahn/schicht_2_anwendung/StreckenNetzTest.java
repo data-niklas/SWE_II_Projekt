@@ -1,6 +1,7 @@
 package de.dhbw.bahn.schicht_2_anwendung;
 
-import de.dhbw.bahn.schicht_2_anwendung.wegfinder.GraphStrecke;
+import de.dhbw.bahn.schicht_2_anwendung.wegfinder.BahnhofsKnoten;
+import de.dhbw.bahn.schicht_2_anwendung.wegfinder.StreckenKante;
 import de.dhbw.bahn.schicht_2_anwendung.wegfinder.StreckenNetz;
 import de.dhbw.bahn.schicht_3_domaene.Bahnhof;
 import de.dhbw.bahn.schicht_3_domaene.Strecke;
@@ -24,8 +25,8 @@ public class StreckenNetzTest {
         return new Strecke("", 0, 0, zugTypen, false, new Bahnhof("a"), new Bahnhof("b"));
     }
 
-    private static GraphStrecke initialisiereGraphStrecke() {
-        return new GraphStrecke(initialisiereStrecke()) {
+    private static StreckenKante initialisiereGraphStrecke() {
+        return new StreckenKante(initialisiereStrecke(), new BahnhofsKnoten(new Bahnhof("a")), new BahnhofsKnoten(new Bahnhof("b"))) {
             @Override
             public double holeGewichtung() {
                 return 42;
@@ -34,8 +35,8 @@ public class StreckenNetzTest {
     }
 
     private static void fuegeKnotenHinzu(StreckenNetz netz) {
-        netz.bahnhofHinzufuegen(new Bahnhof("a"));
-        netz.bahnhofHinzufuegen(new Bahnhof("b"));
+        netz.bahnhofHinzufuegen(new BahnhofsKnoten(new Bahnhof("a")));
+        netz.bahnhofHinzufuegen(new BahnhofsKnoten(new Bahnhof("b")));
     }
 
     @Test
@@ -51,7 +52,7 @@ public class StreckenNetzTest {
         StreckenNetz netz = initialisiereStreckenNetz();
 
         try {
-            netz.bahnhofHinzufuegen(new Bahnhof("a"));
+            netz.bahnhofHinzufuegen(new BahnhofsKnoten(new Bahnhof("a")));
         } catch (Error e) {
             Assert.fail();
         }
@@ -63,12 +64,12 @@ public class StreckenNetzTest {
         StreckenNetz netz = initialisiereStreckenNetz();
 
         try {
-            netz.bahnhofHinzufuegen(new Bahnhof("a"));
+            netz.bahnhofHinzufuegen(new BahnhofsKnoten(new Bahnhof("a")));
         } catch (Error e) {
             Assert.fail();
         }
         try {
-            netz.bahnhofHinzufuegen(new Bahnhof("a"));
+            netz.bahnhofHinzufuegen(new BahnhofsKnoten(new Bahnhof("a")));
             Assert.fail();
         } catch (DuplikatFehler ignored) {
         }

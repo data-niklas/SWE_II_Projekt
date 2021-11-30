@@ -6,6 +6,7 @@ import de.dhbw.bahn.schicht_3_domaene.Strecke;
 import de.dhbw.bahn.schicht_3_domaene.Zug;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 public class StreckenBerechner {
 
@@ -19,29 +20,34 @@ public class StreckenBerechner {
         this.wegFinder = wegFinder;
     }
 
-    public List<GraphStrecke> berechneKuerzesteStrecke(Bahnhof start, Bahnhof ende, Zug zug) {
+    public List<Strecke> berechneKuerzesteStrecke(Bahnhof start, Bahnhof ende, Zug zug) {
         StreckenNetz streckenNetz = baueKuerzesteStreckeNetz(zug);
         this.wegFinder.initialisiereGraphen(streckenNetz);
-        return (List<GraphStrecke>) this.wegFinder.berechneWeg(start, ende);
+        BahnhofsKnoten startKnoten = new BahnhofsKnoten(start);
+        BahnhofsKnoten endKnoten = new BahnhofsKnoten(ende);
+        List<StreckenKante> weg = (List<StreckenKante>) this.wegFinder.berechneWeg(startKnoten, endKnoten);
+        return weg.stream().map(StreckenKante::holeStrecke).collect(Collectors.toList());
     }
 
-    public List<GraphStrecke> berechneKuerzesteZeitStrecke(Bahnhof start, Bahnhof ende, Zug zug) {
+    public List<Strecke> berechneKuerzesteZeitStrecke(Bahnhof start, Bahnhof ende, Zug zug) {
         StreckenNetz streckenNetz = baueKuerzesteZeitNetz(zug);
         this.wegFinder.initialisiereGraphen(streckenNetz);
-        return (List<GraphStrecke>) this.wegFinder.berechneWeg(start, ende);
+        List<StreckenKante> weg = (List<StreckenKante>) this.wegFinder.berechneWeg(new BahnhofsKnoten(start), new BahnhofsKnoten(ende));
+        return weg.stream().map(StreckenKante::holeStrecke).collect(Collectors.toList());
     }
 
     private StreckenNetz baueKuerzesteStreckeNetz(Zug zug) {
         StreckenNetz netz = new StreckenNetz();
         for (Bahnhof bahnhof : bahnhofsVerwaltung.holeEntitaeten()) {
-            netz.bahnhofHinzufuegen(bahnhof);
+            netz.bahnhofHinzufuegen(new BahnhofsKnoten(bahnhof));
         }
         for (Strecke strecke : streckenVerwaltung.holeEntitaeten()) {
             if (!strecke.istFreigegeben() || !strecke.holeErlaubteZugTypen().contains(zug.holeZugTyp())) {
                 continue;
             }
-
-            GraphStrecke streckeGraph = new GraphStrecke(strecke) {
+            BahnhofsKnoten start = new BahnhofsKnoten(strecke.holeStartBahnhof());
+            BahnhofsKnoten ende = new BahnhofsKnoten(strecke.holeEndBahnhof());
+            StreckenKante streckeGraph = new StreckenKante(strecke, start, ende) {
                 @Override
                 public double holeGewichtung() {
                     return this.holeStrecke().holeLaenge();
@@ -55,19 +61,21 @@ public class StreckenBerechner {
     private StreckenNetz baueKuerzesteZeitNetz(final Zug zug) {
         StreckenNetz netz = new StreckenNetz();
         for (Bahnhof bahnhof : bahnhofsVerwaltung.holeEntitaeten()) {
-            netz.bahnhofHinzufuegen(bahnhof);
+            netz.bahnhofHinzufuegen(new BahnhofsKnoten(bahnhof));
         }
         for (Strecke strecke : streckenVerwaltung.holeEntitaeten()) {
             if (!strecke.istFreigegeben() || !strecke.holeErlaubteZugTypen().contains(zug.holeZugTyp())) {
                 continue;
             }
-
-            GraphStrecke streckeGraph = new GraphStrecke(strecke) {
+            BahnhofsKnoten start = new BahnhofsKnoten(strecke.holeStartBahnhof());
+            BahnhofsKnoten ende = new BahnhofsKnoten(strecke.holeEndBahnhof());
+            StreckenKante streckeGraph = new StreckenKante(strecke, start, ende) {
                 @Override
                 public double holeGewichtung() {
                     double fahrGeschwindigkeit = Math.min(zug.holeHoechstGeschwindigkeit(), this.holeStrecke().holeMaximalGeschwindigkeit());
-                    double zeitGewichtung = this.holeStrecke().holeLaenge() / fahrGeschwindigkeit;
-                    return zeitGewichtung;
+                    if (fahrGeschwindigkeit == 0)
+                        return Double.MAX_VALUE;
+                    return this.holeStrecke().holeLaenge() / fahrGeschwindigkeit;
                 }
             };
             netz.streckeHinzufuegen(streckeGraph);
