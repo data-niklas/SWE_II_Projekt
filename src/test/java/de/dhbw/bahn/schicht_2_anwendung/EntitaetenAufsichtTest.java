@@ -103,16 +103,7 @@ public class EntitaetenAufsichtTest {
         EntitaetenAufsicht cut = new EntitaetenAufsicht(mockVerwaltungBahnhof, mockVerwaltungStrecke, mockVerwaltungZug);
 
         //Act
-        try {
-            cut.streckeHinzufuegen(testStrecke);
-
-            //Assert
-            Assert.fail("Bahnhoefe sollten nicht im System vorhanden sein!");
-        }
-        catch (MissingResourceException ignored){
-            //Error is expected
-            //Assert
-        }
+        Assert.assertThrows(MissingResourceException.class, ()-> cut.streckeHinzufuegen(testStrecke));
 
 
         //Verify
@@ -145,7 +136,7 @@ public class EntitaetenAufsichtTest {
         Verwaltung<Strecke> mockVerwaltungStrecke = EasyMock.createMock(Verwaltung.class);
         Verwaltung<Zug> mockVerwaltungZug = EasyMock.createMock(Verwaltung.class);
 
-        //EasyMock.expect(mockVerwaltungBahnhof.hatEntitaet(startBahnhof.holeIdentifizierer())).andReturn(false).once();
+        EasyMock.expect(mockVerwaltungBahnhof.hatEntitaet(startBahnhof.holeIdentifizierer())).andReturn(true).once();
         EasyMock.expect(mockVerwaltungBahnhof.hatEntitaet(endBahnhof.holeIdentifizierer())).andReturn(false).once();
 
         EasyMock.expect(mockVerwaltungStrecke.hatEntitaet(testStrecke.holeIdentifizierer())).andReturn(false).once();
@@ -155,16 +146,7 @@ public class EntitaetenAufsichtTest {
         EntitaetenAufsicht cut = new EntitaetenAufsicht(mockVerwaltungBahnhof, mockVerwaltungStrecke, mockVerwaltungZug);
 
         //Act
-        try {
-            cut.streckeHinzufuegen(testStrecke);
-
-            //Assert
-            Assert.fail("Bahnhoefe sollten nicht im System vorhanden sein!");
-        }
-        catch (MissingResourceException ignored){
-            //Error is expected
-            //Assert
-        }
+        Assert.assertThrows(MissingResourceException.class, ()-> cut.streckeHinzufuegen(testStrecke));
 
 
         //Verify
@@ -204,16 +186,7 @@ public class EntitaetenAufsichtTest {
         EntitaetenAufsicht cut = new EntitaetenAufsicht(mockVerwaltungBahnhof, mockVerwaltungStrecke, mockVerwaltungZug);
 
         //Act
-        try {
-            cut.streckeHinzufuegen(testStrecke);
-
-            //Assert
-            Assert.fail("Strecke sollte bereits im System vorhanden sein!");
-        }
-        catch (DuplikatFehler ignored){
-            //Error is expected
-            //Assert
-        }
+        Assert.assertThrows(DuplikatFehler.class, ()-> cut.streckeHinzufuegen(testStrecke));
 
 
         //Verify
