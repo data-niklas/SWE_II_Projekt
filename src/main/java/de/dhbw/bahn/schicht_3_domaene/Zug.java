@@ -2,6 +2,8 @@ package de.dhbw.bahn.schicht_3_domaene;
 
 import de.dhbw.bahn.schicht_4_abstraktion.Identifizierbar;
 
+import java.util.Objects;
+
 public class Zug implements Identifizierbar {
 
     private final int zugNummer;
@@ -47,5 +49,17 @@ public class Zug implements Identifizierbar {
         if (verbrauch < 0)
             throw new IllegalArgumentException("Der Verbrauch muss positiv sein.");
         this.verbrauch = verbrauch;
+    }
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof Zug)) return false;
+        Zug zug = (Zug) o;
+        return Objects.equals(holeIdentifizierer(), zug.holeIdentifizierer());
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(holeIdentifizierer());
     }
 }

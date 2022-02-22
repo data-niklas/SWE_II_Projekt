@@ -2,6 +2,7 @@ package de.dhbw.bahn.schicht_3_domaene;
 
 import de.dhbw.bahn.schicht_4_abstraktion.Identifizierbar;
 
+import java.util.Objects;
 import java.util.Set;
 
 public class Strecke implements Identifizierbar {
@@ -69,5 +70,18 @@ public class Strecke implements Identifizierbar {
 
     public double holeMaximalGeschwindigkeit() {
         return maximalGeschwindigkeit;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof Strecke)) return false;
+        Strecke strecke = (Strecke) o;
+        return Objects.equals(holeIdentifizierer(), strecke.holeIdentifizierer());
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(holeIdentifizierer());
     }
 }
