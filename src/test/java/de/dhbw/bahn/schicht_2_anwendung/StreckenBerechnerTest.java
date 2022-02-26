@@ -9,18 +9,22 @@ import de.dhbw.bahn.schicht_3_domaene.ZugTyp;
 import de.dhbw.bahn.schicht_4_abstraktion.graph.Kante;
 import org.easymock.EasyMock;
 import org.easymock.IExpectationSetters;
-import org.junit.Assert;
-import org.junit.Test;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.api.Test;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
 import java.util.TreeSet;
 
+@DisplayName("StreckenBerechner Use-Case")
 public class StreckenBerechnerTest {
 
     @Test
+    @DisplayName("berechneKuerzesteStrecke().")
     public void berechneKuerzesteStrecke(){
+        //Capture
         Verwaltung<Bahnhof> mockBahnhofsVerwaltung = EasyMock.mock(Verwaltung.class);
         Verwaltung<Strecke> mockStreckenVerwaltung = EasyMock.mock(Verwaltung.class);
         WegFinder mockWegFinder = EasyMock.mock(WegFinder.class);
@@ -87,15 +91,17 @@ public class StreckenBerechnerTest {
         List<Strecke> ergebnis = cut.berechneKuerzesteStrecke(startBahnhof, endBahnhof, testZug);
 
         //Assert
-        Assert.assertEquals(1, ergebnis.size());
-        Assert.assertEquals(testStrecke, ergebnis.get(0));
+        Assertions.assertEquals(1, ergebnis.size());
+        Assertions.assertEquals(testStrecke, ergebnis.get(0));
 
         //Verify
         EasyMock.verify(mockBahnhofsVerwaltung, mockStreckenVerwaltung, mockWegFinder);
     }
 
     @Test
+    @DisplayName("berechneKuerzesteZeitStrecke().")
     public void berechneKuerzesteZeitStrecke(){
+        //Capture
         Verwaltung<Bahnhof> mockBahnhofsVerwaltung = EasyMock.mock(Verwaltung.class);
         Verwaltung<Strecke> mockStreckenVerwaltung = EasyMock.mock(Verwaltung.class);
         WegFinder mockWegFinder = EasyMock.mock(WegFinder.class);
@@ -163,8 +169,8 @@ public class StreckenBerechnerTest {
         List<Strecke> ergebnis = cut.berechneKuerzesteZeitStrecke(startBahnhof, endBahnhof, testZug);
 
         //Assert
-        Assert.assertEquals(1, ergebnis.size());
-        Assert.assertEquals(testStrecke, ergebnis.get(0));
+        Assertions.assertEquals(1, ergebnis.size());
+        Assertions.assertEquals(testStrecke, ergebnis.get(0));
 
         //Verify
         EasyMock.verify(mockBahnhofsVerwaltung, mockStreckenVerwaltung, mockWegFinder);

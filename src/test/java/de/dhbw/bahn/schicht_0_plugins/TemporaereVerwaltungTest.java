@@ -4,12 +4,15 @@ import de.dhbw.bahn.schicht_0_plugins.persistierung.TemporaereVerwaltung;
 import de.dhbw.bahn.schicht_3_domaene.Bahnhof;
 import de.dhbw.bahn.schicht_3_domaene.Zug;
 import de.dhbw.bahn.schicht_3_domaene.ZugTyp;
-import org.junit.Assert;
-import org.junit.Test;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.api.Test;
 
+@DisplayName("TemporaereVerwaltung Plugin")
 public class TemporaereVerwaltungTest {
 
     @Test
+    @DisplayName("Entitaet soll persistiert werden. Nur unechte Persistenz wird gefordert.")
     public void entitaetPersistieren(){
         //Arrange
         Bahnhof testBahnhof = new Bahnhof("Test Bahnhof");
@@ -21,11 +24,12 @@ public class TemporaereVerwaltungTest {
         boolean hatEntitaetNachPersistenz = cut.hatEntitaet(testBahnhof.holeIdentifizierer());
 
         //Assert
-        Assert.assertEquals(false, hatEntitaetBevorPersistenz);
-        Assert.assertEquals(true, hatEntitaetNachPersistenz);
+        Assertions.assertEquals(false, hatEntitaetBevorPersistenz);
+        Assertions.assertEquals(true, hatEntitaetNachPersistenz);
     }
 
     @Test
+    @DisplayName("Entitaet soll nach loeschen nicht mehr existent sein.")
     public void entitaetLoeschen(){
         //Arrange
         Bahnhof testBahnhof = new Bahnhof("Test Bahnhof");
@@ -38,11 +42,12 @@ public class TemporaereVerwaltungTest {
         boolean hatEntitaetNachPersistenz = cut.hatEntitaet(testBahnhof.holeIdentifizierer());
 
         //Assert
-        Assert.assertEquals(true, hatEntitaetBevorPersistenz);
-        Assert.assertEquals(false, hatEntitaetNachPersistenz);
+        Assertions.assertEquals(true, hatEntitaetBevorPersistenz);
+        Assertions.assertEquals(false, hatEntitaetNachPersistenz);
     }
 
     @Test
+    @DisplayName("Kann eine Entitaet aktualisiert werden.")
     public void entitaetAktualisieren(){
         //Arrange
         int zugNummer = 666;
@@ -62,7 +67,7 @@ public class TemporaereVerwaltungTest {
         double nachfolgenderVerbrauch = cut.holeEntitaet(testZug.holeIdentifizierer()).holeVerbrauch();
 
         //Assert
-        Assert.assertEquals(zugVerbrauch, vorherigerVerbrauch, Double.MIN_VALUE);
-        Assert.assertEquals(zugNeuerVerbrauch, nachfolgenderVerbrauch, Double.MIN_VALUE);
+        Assertions.assertEquals(zugVerbrauch, vorherigerVerbrauch, Double.MIN_VALUE);
+        Assertions.assertEquals(zugNeuerVerbrauch, nachfolgenderVerbrauch, Double.MIN_VALUE);
     }
 }

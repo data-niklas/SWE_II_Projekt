@@ -1,4 +1,4 @@
-package de.dhbw.bahn.schicht_2_anwendung;
+package de.dhbw.bahn.schicht_0_plugins;
 
 import de.dhbw.bahn.schicht_0_plugins.algorithmen.Dijkstra;
 import de.dhbw.bahn.schicht_2_anwendung.wegfinder.BahnhofsKnoten;
@@ -8,16 +8,19 @@ import de.dhbw.bahn.schicht_3_domaene.Bahnhof;
 import de.dhbw.bahn.schicht_3_domaene.Strecke;
 import de.dhbw.bahn.schicht_3_domaene.ZugTyp;
 import de.dhbw.bahn.schicht_4_abstraktion.graph.Kante;
-import org.junit.Assert;
-import org.junit.Test;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.api.Test;
 
 import java.util.List;
 import java.util.Set;
 import java.util.TreeSet;
 
+@DisplayName("Dijkstra Wegsuche Plugin")
 public class DijkstraTest {
 
     @Test
+    @DisplayName("Wegsuche von A nach A. Umwege sollen ignoriert werden.")
     public void reflexivitätTest(){
         //Arrange
         StreckenNetz graph = new StreckenNetz();
@@ -55,7 +58,7 @@ public class DijkstraTest {
 
         //Assert
         //Kein Weg wird erwartet, da kein Weg zu sich selbst benötigt wird
-        Assert.assertEquals(0, wege.size());
+        Assertions.assertEquals(0, wege.size());
     }
 
 }
