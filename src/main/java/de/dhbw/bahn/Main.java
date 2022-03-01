@@ -2,7 +2,7 @@ package de.dhbw.bahn;
 
 import de.dhbw.bahn.schicht_0_plugins.algorithmen.Dijkstra;
 import de.dhbw.bahn.schicht_0_plugins.http.EinfacherHttpServer;
-import de.dhbw.bahn.schicht_0_plugins.persistierung.TemporaereVerwaltung;
+import de.dhbw.bahn.schicht_0_plugins.persistenz.TemporaereVerwaltung;
 import de.dhbw.bahn.schicht_0_plugins.serialisierer.GsonSerialisierer;
 import de.dhbw.bahn.schicht_1_adapter.Kontrollierer;
 import de.dhbw.bahn.schicht_1_adapter.http.Darstellung;

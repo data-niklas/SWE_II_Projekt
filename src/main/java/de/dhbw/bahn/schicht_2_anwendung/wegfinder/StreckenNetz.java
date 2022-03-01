@@ -45,17 +45,6 @@ public class StreckenNetz implements Graph {
         return Optional.empty();
     }
 
-    public List<StreckenKante> sucheStrecke(Bahnhof startBahnhof, Bahnhof endBahnhof) {
-        List<StreckenKante> strecken = new ArrayList<>();
-        for (StreckenKante s : this.streckenListe) {
-            boolean hinrichtung = s.holeStartKnoten().equals(startBahnhof) && s.holeEndKnoten().equals(endBahnhof);
-            boolean rueckrichtung = s.holeStartKnoten().equals(endBahnhof) && s.holeEndKnoten().equals(startBahnhof);
-            if (hinrichtung || rueckrichtung)
-                strecken.add(s);
-        }
-        return strecken;
-    }
-
     public void streckeHinzufuegen(StreckenKante strecke) {
         if (sucheStrecke(strecke.holeIdentifizierer()).isPresent())
             throw new DuplikatFehler("Eine Strecke mit diesem Identifizierer ist bereits vorhanden.");

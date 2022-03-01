@@ -1,4 +1,4 @@
-package de.dhbw.bahn.schicht_0_plugins.persistierung;
+package de.dhbw.bahn.schicht_0_plugins.persistenz;
 
 import de.dhbw.bahn.schicht_2_anwendung.crud.Verwaltung;
 import de.dhbw.bahn.schicht_4_abstraktion.Identifizierbar;
