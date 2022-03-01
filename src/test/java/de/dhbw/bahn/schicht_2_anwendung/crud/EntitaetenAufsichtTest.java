@@ -1,5 +1,6 @@
-package de.dhbw.bahn.schicht_2_anwendung;
+package de.dhbw.bahn.schicht_2_anwendung.crud;
 
+import de.dhbw.bahn.schicht_2_anwendung.DuplikatFehler;
 import de.dhbw.bahn.schicht_2_anwendung.crud.EntitaetenAufsicht;
 import de.dhbw.bahn.schicht_2_anwendung.crud.Verwaltung;
 import de.dhbw.bahn.schicht_3_domaene.Bahnhof;
@@ -191,7 +192,6 @@ public class EntitaetenAufsichtTest {
 
         //Act
         Assertions.assertThrows(DuplikatFehler.class, ()-> cut.streckeHinzufuegen(testStrecke));
-
 
         //Verify
         EasyMock.verify(mockVerwaltungBahnhof, mockVerwaltungStrecke, mockVerwaltungZug);

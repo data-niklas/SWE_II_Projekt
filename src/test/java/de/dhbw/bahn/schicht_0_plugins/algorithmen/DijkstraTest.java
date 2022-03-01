@@ -1,4 +1,4 @@
-package de.dhbw.bahn.schicht_0_plugins;
+package de.dhbw.bahn.schicht_0_plugins.algorithmen;
 
 import de.dhbw.bahn.schicht_0_plugins.algorithmen.Dijkstra;
 import de.dhbw.bahn.schicht_2_anwendung.wegfinder.BahnhofsKnoten;
@@ -21,7 +21,7 @@ public class DijkstraTest {
 
     @Test
     @DisplayName("Wegsuche von A nach A. Umwege sollen ignoriert werden.")
-    public void reflexivitätTest(){
+    public void reflexivitaetTest(){
         //Arrange
         StreckenNetz graph = new StreckenNetz();
         Bahnhof testBahnhof = new Bahnhof("Test Bahnhof");

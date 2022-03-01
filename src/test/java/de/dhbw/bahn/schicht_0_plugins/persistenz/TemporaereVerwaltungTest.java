@@ -1,6 +1,5 @@
-package de.dhbw.bahn.schicht_0_plugins;
+package de.dhbw.bahn.schicht_0_plugins.persistenz;
 
-import de.dhbw.bahn.schicht_0_plugins.persistierung.TemporaereVerwaltung;
 import de.dhbw.bahn.schicht_3_domaene.Bahnhof;
 import de.dhbw.bahn.schicht_3_domaene.Zug;
 import de.dhbw.bahn.schicht_3_domaene.ZugTyp;
@@ -24,12 +23,12 @@ public class TemporaereVerwaltungTest {
         boolean hatEntitaetNachPersistenz = cut.hatEntitaet(testBahnhof.holeIdentifizierer());
 
         //Assert
-        Assertions.assertEquals(false, hatEntitaetBevorPersistenz);
-        Assertions.assertEquals(true, hatEntitaetNachPersistenz);
+        Assertions.assertFalse(hatEntitaetBevorPersistenz);
+        Assertions.assertTrue(hatEntitaetNachPersistenz);
     }
 
     @Test
-    @DisplayName("Entitaet soll nach loeschen nicht mehr existent sein.")
+    @DisplayName("Entitaet soll nach Loeschen nicht mehr existent sein.")
     public void entitaetLoeschen(){
         //Arrange
         Bahnhof testBahnhof = new Bahnhof("Test Bahnhof");
@@ -42,8 +41,8 @@ public class TemporaereVerwaltungTest {
         boolean hatEntitaetNachPersistenz = cut.hatEntitaet(testBahnhof.holeIdentifizierer());
 
         //Assert
-        Assertions.assertEquals(true, hatEntitaetBevorPersistenz);
-        Assertions.assertEquals(false, hatEntitaetNachPersistenz);
+        Assertions.assertTrue(hatEntitaetBevorPersistenz);
+        Assertions.assertFalse(hatEntitaetNachPersistenz);
     }
 
     @Test

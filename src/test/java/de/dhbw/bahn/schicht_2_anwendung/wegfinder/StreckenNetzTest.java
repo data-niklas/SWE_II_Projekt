@@ -1,4 +1,4 @@
-package de.dhbw.bahn.schicht_2_anwendung;
+package de.dhbw.bahn.schicht_2_anwendung.wegfinder;
 
 import de.dhbw.bahn.schicht_2_anwendung.wegfinder.BahnhofsKnoten;
 import de.dhbw.bahn.schicht_2_anwendung.wegfinder.StreckenKante;
