@@ -107,7 +107,7 @@ public class EntitaetenAufsichtTest {
         //Arrange
         EntitaetenAufsicht cut = new EntitaetenAufsicht(mockVerwaltungBahnhof, mockVerwaltungStrecke, mockVerwaltungZug);
 
-        //Act
+        //Act, Assert
         Assertions.assertThrows(MissingResourceException.class, ()-> cut.streckeHinzufuegen(testStrecke));
 
         //Verify
@@ -149,7 +149,7 @@ public class EntitaetenAufsichtTest {
         //Arrange
         EntitaetenAufsicht cut = new EntitaetenAufsicht(mockVerwaltungBahnhof, mockVerwaltungStrecke, mockVerwaltungZug);
 
-        //Act
+        //Act, Assert
         Assertions.assertThrows(MissingResourceException.class, ()-> cut.streckeHinzufuegen(testStrecke));
 
 
@@ -190,7 +190,7 @@ public class EntitaetenAufsichtTest {
         //Arrange
         EntitaetenAufsicht cut = new EntitaetenAufsicht(mockVerwaltungBahnhof, mockVerwaltungStrecke, mockVerwaltungZug);
 
-        //Act
+        //Act, Assert
         Assertions.assertThrows(DuplikatFehler.class, ()-> cut.streckeHinzufuegen(testStrecke));
 
         //Verify
