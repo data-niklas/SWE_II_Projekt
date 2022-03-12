@@ -1,0 +1,2024 @@
+package de.dhbw.bahn.schicht_2_anwendung.crud;
+import de.dhbw.bahn.schicht_3_domaene.Bahnhof;
+import de.dhbw.bahn.schicht_2_anwendung.DuplikatFehler;
+import de.dhbw.bahn.schicht_3_domaene.Strecke;
+import de.dhbw.bahn.schicht_3_domaene.Zug;
+import java.util.List;
+import java.util.MissingResourceException;
+public class EntitaetenAufsicht {
+    private final Verwaltung<Bahnhof> bahnhofVerwaltung;
+    private final Verwaltung<Strecke> streckenVerwaltung;
+    private final Verwaltung<Zug> zugVerwaltung;
+    public EntitaetenAufsicht(Verwaltung<Bahnhof> bahnhofsVerwaltung, Verwaltung<Strecke> streckenVerwaltung, Verwaltung<Zug> zugVerwaltung) {
+        this.streckenVerwaltung = streckenVerwaltung;
+        this.zugVerwaltung = zugVerwaltung;
+        this.bahnhofVerwaltung = bahnhofsVerwaltung;
+    }
+    public List<Zug> holeZuege() {
+        return this.zugVerwaltung.holeEntitaeten();
+    }
+    public List<Strecke> holeStrecken() {
+        return this.streckenVerwaltung.holeEntitaeten();
+    }
+    public List<Bahnhof> holeBahnhoefe() {
+        return this.bahnhofVerwaltung.holeEntitaeten();
+    }
+    public Zug holeZug(String zugNummer) {
+        return this.zugVerwaltung.holeEntitaet(zugNummer);
+    }
+    public Bahnhof holeBahnhof(String name) {
+        return this.bahnhofVerwaltung.holeEntitaet(name);
+    }
+    public Strecke holeStrecke(String bezeichnung) {
+        return this.streckenVerwaltung.holeEntitaet(bezeichnung);
+    }
+    public void streckeHinzufuegen(Strecke strecke) {
+        if (streckenVerwaltung.hatEntitaet(strecke.holeIdentifizierer()))
+            throw new DuplikatFehler("Eine Strecke mit diesem Identifizierer ist bereits vorhanden.");
+        if (!bahnhofVerwaltung.hatEntitaet(strecke.holeStartBahnhof().holeIdentifizierer()))
+            throw new MissingResourceException("Der Startbahnhof der Strecke ist nicht vorhanden.",
+                    Bahnhof.class.getSimpleName(),
+                    strecke.holeStartBahnhof().holeIdentifizierer());
+        if (!bahnhofVerwaltung.hatEntitaet(strecke.holeEndBahnhof().holeIdentifizierer()))
+            throw new MissingResourceException("Der Endbahnhof der Strecke ist nicht vorhanden.",
+                    Bahnhof.class.getSimpleName(),
+                    strecke.holeEndBahnhof().holeIdentifizierer());
+        this.streckenVerwaltung.persistiereEntitaet(strecke);
+    }
+    public void bahnhofHinzufuegen(Bahnhof bahnhof) {
+        if (bahnhofVerwaltung.hatEntitaet(bahnhof.holeIdentifizierer()))
+            throw new DuplikatFehler("Ein Bahnhof mit diesem Identifizierer ist bereits vorhanden.");
+        this.bahnhofVerwaltung.persistiereEntitaet(bahnhof);
+    }
+    public void zugHinzufuegen(Zug zug) {
+        if (zugVerwaltung.hatEntitaet(zug.holeIdentifizierer()))
+            throw new DuplikatFehler("Ein Zug mit diesem Identifizierer ist bereits vorhanden.");
+        this.zugVerwaltung.persistiereEntitaet(zug);
+    }
+    public void aktualisiereBahnhof(Bahnhof bahnhof) {
+        if (!bahnhofVerwaltung.hatEntitaet(bahnhof.holeIdentifizierer()))
+            throw new MissingResourceException("Bahnhof mit diesem Namen existiert nicht.",
+                    Bahnhof.class.getSimpleName(),
+                    bahnhof.holeIdentifizierer());
+        bahnhofVerwaltung.aktualisiereEntitaet(bahnhof);
+    }
+    public void aktualisiereStrecke(Strecke strecke) {
+        if (!streckenVerwaltung.hatEntitaet(strecke.holeIdentifizierer()))
+            throw new MissingResourceException("Strecke mit dieser Bezeichnung existiert nicht.",
+                    Strecke.class.getSimpleName(),
+                    strecke.holeIdentifizierer());
+        if (!bahnhofVerwaltung.hatEntitaet(strecke.holeStartBahnhof().holeIdentifizierer()))
+            throw new MissingResourceException("Der Startbahnhof der Strecke ist nicht vorhanden.",
+                    Bahnhof.class.getSimpleName(),
+                    strecke.holeStartBahnhof().holeIdentifizierer());
+        if (!bahnhofVerwaltung.hatEntitaet(strecke.holeEndBahnhof().holeIdentifizierer()))
+            throw new MissingResourceException("Der Endbahnhof der Strecke ist nicht vorhanden.",
+                    Bahnhof.class.getSimpleName(),
+                    strecke.holeEndBahnhof().holeIdentifizierer());
+        streckenVerwaltung.aktualisiereEntitaet(strecke);
+    }
+    public void aktualisiereZug(Zug zug) {
+        if (!this.zugVerwaltung.hatEntitaet(zug.holeIdentifizierer()))
+            throw new MissingResourceException("Zug mit dieser Zugnummer existiert nicht.",
+                    Strecke.class.getSimpleName(),
+                    zug.holeIdentifizierer());
+        zugVerwaltung.aktualisiereEntitaet(zug);
+    }
+    public void bahnhofLoeschen(String name) {
+        if (!this.bahnhofVerwaltung.hatEntitaet(name))
+            throw new MissingResourceException("Bahnhof mit diesem Namen existiert nicht.",
+                    Bahnhof.class.getSimpleName(),
+                    name);
+        this.bahnhofVerwaltung.loescheEntitaet(name);
+    }
+    public void streckeLoeschen(String bezeichnung) {
+        if (!this.streckenVerwaltung.hatEntitaet(bezeichnung))
+            throw new MissingResourceException("Strecke mit dieser Bezeichnung existiert nicht.",
+                    Strecke.class.getSimpleName(),
+                    bezeichnung);
+        this.streckenVerwaltung.loescheEntitaet(bezeichnung);
+    }
+    public void zugLoeschen(String zugNummer) {
+        if (!this.zugVerwaltung.hatEntitaet(zugNummer))
+            throw new MissingResourceException("Zug mit dieser Zugnummer existiert nicht.",
+                    Strecke.class.getSimpleName(),
+                    zugNummer);
+        this.zugVerwaltung.loescheEntitaet(zugNummer);
+    }
+    public Verwaltung<Bahnhof> holeBahnhofVerwaltung() {
+        return bahnhofVerwaltung;
+    }
+    public Verwaltung<Strecke> holeStreckenVerwaltung() {
+        return streckenVerwaltung;
+    }
+    public Verwaltung<Zug> holeZugVerwaltung() {
+        return zugVerwaltung;
+    }
+}
+package de.dhbw.bahn.schicht_2_anwendung.crud;
+import de.dhbw.bahn.schicht_4_abstraktion.Identifizierbar;
+import java.util.List;
+public interface Verwaltung<T extends Identifizierbar> {
+    boolean hatEntitaet(String identifizierer);
+    T holeEntitaet(String identifizierer);
+    void persistiereEntitaet(T entitaet);
+    void aktualisiereEntitaet(T entitaet);
+    void loescheEntitaet(String identifizierer);
+    List<T> holeEntitaeten();
+}
+package de.dhbw.bahn.schicht_2_anwendung;
+public class DuplikatFehler extends RuntimeException {
+    public DuplikatFehler(String message) {
+        super(message);
+    }
+}
+package de.dhbw.bahn.schicht_2_anwendung.wegfinder;
+import de.dhbw.bahn.schicht_2_anwendung.crud.Verwaltung;
+import de.dhbw.bahn.schicht_3_domaene.Bahnhof;
+import de.dhbw.bahn.schicht_3_domaene.Strecke;
+import de.dhbw.bahn.schicht_3_domaene.Zug;
+import java.util.List;
+import java.util.stream.Collectors;
+public class StreckenBerechner {
+    private final Verwaltung<Bahnhof> bahnhofsVerwaltung;
+    private final Verwaltung<Strecke> streckenVerwaltung;
+    private final WegFinder wegFinder;
+    public StreckenBerechner(Verwaltung<Bahnhof> bahnhofsVerwaltung, Verwaltung<Strecke> streckenVerwaltung, WegFinder wegFinder) {
+        this.bahnhofsVerwaltung = bahnhofsVerwaltung;
+        this.streckenVerwaltung = streckenVerwaltung;
+        this.wegFinder = wegFinder;
+    }
+    public List<Strecke> berechneKuerzesteStrecke(Bahnhof start, Bahnhof ende, Zug zug) {
+        StreckenNetz streckenNetz = baueKuerzesteStreckeNetz(zug);
+        this.wegFinder.initialisiereGraphen(streckenNetz);
+        BahnhofsKnoten startKnoten = new BahnhofsKnoten(start);
+        BahnhofsKnoten endKnoten = new BahnhofsKnoten(ende);
+        List<StreckenKante> weg = (List<StreckenKante>) this.wegFinder.berechneWeg(startKnoten, endKnoten);
+        return weg.stream().map(StreckenKante::holeStrecke).collect(Collectors.toList());
+    }
+    public List<Strecke> berechneKuerzesteZeitStrecke(Bahnhof start, Bahnhof ende, Zug zug) {
+        StreckenNetz streckenNetz = baueKuerzesteZeitNetz(zug);
+        this.wegFinder.initialisiereGraphen(streckenNetz);
+        BahnhofsKnoten startKnoten = new BahnhofsKnoten(start);
+        BahnhofsKnoten endKnoten = new BahnhofsKnoten(ende);
+        List<StreckenKante> weg = (List<StreckenKante>) this.wegFinder.berechneWeg(startKnoten, endKnoten);
+        return weg.stream().map(StreckenKante::holeStrecke).collect(Collectors.toList());
+    }
+    private StreckenNetz baueKuerzesteStreckeNetz(Zug zug) {
+        StreckenNetz netz = new StreckenNetz();
+        for (Bahnhof bahnhof : bahnhofsVerwaltung.holeEntitaeten()) {
+            netz.bahnhofHinzufuegen(new BahnhofsKnoten(bahnhof));
+        }
+        for (Strecke strecke : streckenVerwaltung.holeEntitaeten()) {
+            if (!strecke.istFreigegeben() || !strecke.holeErlaubteZugTypen().contains(zug.holeZugTyp())) {
+                continue;
+            }
+            BahnhofsKnoten start = new BahnhofsKnoten(strecke.holeStartBahnhof());
+            BahnhofsKnoten ende = new BahnhofsKnoten(strecke.holeEndBahnhof());
+            StreckenKante streckeGraph = new StreckenKante(strecke, start, ende) {
+                @Override
+                public double holeGewichtung() {
+                    return this.holeStrecke().holeLaenge();
+                }
+            };
+            netz.streckeHinzufuegen(streckeGraph);
+        }
+        return netz;
+    }
+    private StreckenNetz baueKuerzesteZeitNetz(final Zug zug) {
+        StreckenNetz netz = new StreckenNetz();
+        for (Bahnhof bahnhof : bahnhofsVerwaltung.holeEntitaeten()) {
+            netz.bahnhofHinzufuegen(new BahnhofsKnoten(bahnhof));
+        }
+        for (Strecke strecke : streckenVerwaltung.holeEntitaeten()) {
+            if (!strecke.istFreigegeben() || !strecke.holeErlaubteZugTypen().contains(zug.holeZugTyp())) {
+                continue;
+            }
+            BahnhofsKnoten start = new BahnhofsKnoten(strecke.holeStartBahnhof());
+            BahnhofsKnoten ende = new BahnhofsKnoten(strecke.holeEndBahnhof());
+            StreckenKante streckeGraph = new StreckenKante(strecke, start, ende) {
+                @Override
+                public double holeGewichtung() {
+                    double fahrGeschwindigkeit = Math.min(zug.holeHoechstGeschwindigkeit(), this.holeStrecke().holeMaximalGeschwindigkeit());
+                    if (fahrGeschwindigkeit == 0)
+                        return Double.MAX_VALUE;
+                    return this.holeStrecke().holeLaenge() / fahrGeschwindigkeit;
+                }
+            };
+            netz.streckeHinzufuegen(streckeGraph);
+        }
+        return netz;
+    }
+}
+package de.dhbw.bahn.schicht_2_anwendung.wegfinder;
+import de.dhbw.bahn.schicht_2_anwendung.DuplikatFehler;
+import de.dhbw.bahn.schicht_3_domaene.Bahnhof;
+import de.dhbw.bahn.schicht_4_abstraktion.graph.Graph;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.MissingResourceException;
+import java.util.Optional;
+public class StreckenNetz implements Graph {
+    private final List<BahnhofsKnoten> bahnhofsListe;
+    private final List<StreckenKante> streckenListe;
+    public StreckenNetz() {
+        this.bahnhofsListe = new ArrayList<>();
+        this.streckenListe = new ArrayList<>();
+    }
+    @Override
+    public List<BahnhofsKnoten> holeKnoten() {
+        return this.bahnhofsListe;
+    }
+    @Override
+    public List<StreckenKante> holeKanten() {
+        return this.streckenListe;
+    }
+    public Optional<BahnhofsKnoten> sucheBahnhof(String name) {
+        for (BahnhofsKnoten b : this.bahnhofsListe) {
+            if (b.holeIdentifizierer().equals(name))
+                return Optional.of(b);
+        }
+        return Optional.empty();
+    }
+    public Optional<StreckenKante> sucheStrecke(String bezeichnung) {
+        for (StreckenKante s : this.streckenListe) {
+            if (s.holeIdentifizierer().equals(bezeichnung))
+                return Optional.of(s);
+        }
+        return Optional.empty();
+    }
+    public void streckeHinzufuegen(StreckenKante strecke) {
+        if (sucheStrecke(strecke.holeIdentifizierer()).isPresent())
+            throw new DuplikatFehler("Eine Strecke mit diesem Identifizierer ist bereits vorhanden.");
+        if (!sucheBahnhof(strecke.holeStartKnoten().holeIdentifizierer()).isPresent())
+            throw new MissingResourceException("Der Startbahnhof der Strecke ist nicht vorhanden.",
+                    Bahnhof.class.getSimpleName(),
+                    strecke.holeStartKnoten().holeIdentifizierer());
+        if (!sucheBahnhof(strecke.holeEndKnoten().holeIdentifizierer()).isPresent())
+            throw new MissingResourceException("Der Endbahnhof der Strecke ist nicht vorhanden.",
+                    Bahnhof.class.getSimpleName(),
+                    strecke.holeEndKnoten().holeIdentifizierer());
+        this.streckenListe.add(strecke);
+    }
+    public void bahnhofHinzufuegen(BahnhofsKnoten bahnhof) {
+        if (sucheBahnhof(bahnhof.holeIdentifizierer()).isPresent())
+            throw new DuplikatFehler("Ein Bahnhof mit diesem Identifizierer ist bereits vorhanden.");
+        this.bahnhofsListe.add(bahnhof);
+    }
+}
+package de.dhbw.bahn.schicht_2_anwendung.wegfinder;
+import de.dhbw.bahn.schicht_4_abstraktion.graph.Graph;
+import de.dhbw.bahn.schicht_4_abstraktion.graph.Kante;
+import de.dhbw.bahn.schicht_4_abstraktion.graph.Knoten;
+import java.util.List;
+public interface WegFinder {
+    void initialisiereGraphen(Graph graph);
+    List<? extends Kante> berechneWeg(Knoten start, Knoten end);
+}
+package de.dhbw.bahn.schicht_2_anwendung.wegfinder;
+import de.dhbw.bahn.schicht_3_domaene.Bahnhof;
+import de.dhbw.bahn.schicht_4_abstraktion.graph.Knoten;
+import java.util.Objects;
+public class BahnhofsKnoten implements Knoten {
+    private final Bahnhof bahnhof;
+    public BahnhofsKnoten(Bahnhof bahnhof) {
+        this.bahnhof = bahnhof;
+    }
+    public Bahnhof holeBahnhof() {
+        return bahnhof;
+    }
+    @Override
+    public boolean equals(Knoten andererKnoten) {
+        return holeIdentifizierer().equals(andererKnoten.holeIdentifizierer());
+    }
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        BahnhofsKnoten that = (BahnhofsKnoten) o;
+        return Objects.equals(bahnhof, that.bahnhof);
+    }
+    @Override
+    public int hashCode() {
+        return Objects.hash(bahnhof);
+    }
+    @Override
+    public String holeIdentifizierer() {
+        return this.bahnhof.holeIdentifizierer();
+    }
+}
+package de.dhbw.bahn.schicht_2_anwendung.wegfinder;
+import de.dhbw.bahn.schicht_3_domaene.Strecke;
+import de.dhbw.bahn.schicht_4_abstraktion.graph.Kante;
+import de.dhbw.bahn.schicht_4_abstraktion.graph.Knoten;
+public abstract class StreckenKante implements Kante {
+    private final Strecke strecke;
+    private final BahnhofsKnoten startBahnhof;
+    private final BahnhofsKnoten endBahnhof;
+    public StreckenKante(Strecke strecke, BahnhofsKnoten startBahnhof, BahnhofsKnoten endBahnhof) {
+        this.strecke = strecke;
+        this.startBahnhof = startBahnhof;
+        this.endBahnhof = endBahnhof;
+    }
+    public Strecke holeStrecke() {
+        return strecke;
+    }
+    @Override
+    public BahnhofsKnoten holeStartKnoten() {
+        return this.startBahnhof;
+    }
+    @Override
+    public Knoten holeEndKnoten() {
+        return this.endBahnhof;
+    }
+    @Override
+    public String holeIdentifizierer() {
+        return this.strecke.holeIdentifizierer();
+    }
+}
+package de.dhbw.bahn;
+import de.dhbw.bahn.schicht_0_plugins.algorithmen.Dijkstra;
+import de.dhbw.bahn.schicht_0_plugins.http.EinfacherHttpServer;
+import de.dhbw.bahn.schicht_0_plugins.persistenz.TemporaereVerwaltung;
+import de.dhbw.bahn.schicht_0_plugins.serialisierer.GsonSerialisierer;
+import de.dhbw.bahn.schicht_1_adapter.Kontrollierer;
+import de.dhbw.bahn.schicht_1_adapter.http.Darstellung;
+import de.dhbw.bahn.schicht_1_adapter.serialisierer.Serialisierer;
+import de.dhbw.bahn.schicht_2_anwendung.crud.Verwaltung;
+import de.dhbw.bahn.schicht_2_anwendung.crud.EntitaetenAufsicht;
+import de.dhbw.bahn.schicht_2_anwendung.wegfinder.WegFinder;
+import de.dhbw.bahn.schicht_3_domaene.Bahnhof;
+import de.dhbw.bahn.schicht_3_domaene.Strecke;
+import de.dhbw.bahn.schicht_3_domaene.Zug;
+import java.util.HashMap;
+import java.util.Map;
+public class Main {
+    public static void main(String[] args) {
+        Map<String, String> konfiguration = new HashMap<>();
+        konfiguration.put("host", "localhost");
+        konfiguration.put("port", "8081");
+        Darstellung server = new EinfacherHttpServer();
+        Serialisierer serialisierer = new GsonSerialisierer();
+        Verwaltung<Bahnhof> bahnhofVerwaltung = new TemporaereVerwaltung<>();
+        Verwaltung<Strecke> streckenVerwaltung = new TemporaereVerwaltung<>();
+        Verwaltung<Zug> zugVerwaltung = new TemporaereVerwaltung<>();
+        EntitaetenAufsicht aufsicht = new EntitaetenAufsicht(bahnhofVerwaltung, streckenVerwaltung, zugVerwaltung);
+        WegFinder wegeFinder = new Dijkstra();
+        Kontrollierer kontrollierer = new Kontrollierer(server, serialisierer, aufsicht, wegeFinder);
+        kontrollierer.legeLos(konfiguration);
+    }
+}
+package de.dhbw.bahn.schicht_3_domaene;
+import de.dhbw.bahn.schicht_4_abstraktion.Identifizierbar;
+import java.util.Objects;
+import java.util.Set;
+public class Strecke implements Identifizierbar {
+    private final String bezeichnung;
+    private final Bahnhof startBahnhof;
+    private final Bahnhof endBahnhof;
+    private final double laenge;
+    private final Set<ZugTyp> erlaubteZugTypen;
+    private final boolean freigegeben;
+    private double maximalGeschwindigkeit;
+    public Strecke(String bezeichnung,
+                   double laenge,
+                   double maximalGeschwindigkeit,
+                   Set<ZugTyp> erlaubteZugTypen,
+                   boolean freigegeben,
+                   Bahnhof startBahnhof,
+                   Bahnhof endBahnhof) {
+        this.bezeichnung = bezeichnung;
+        this.startBahnhof = startBahnhof;
+        this.endBahnhof = endBahnhof;
+        this.laenge = laenge;
+        this.erlaubteZugTypen = erlaubteZugTypen;
+        this.freigegeben = freigegeben;
+        this.setzeMaximalGeschwindigkeit(maximalGeschwindigkeit);
+    }
+    public void setzeMaximalGeschwindigkeit(double maximalGeschwindigkeit) {
+        if (maximalGeschwindigkeit < 0)
+            throw new IllegalArgumentException("Die Maximalgeschwindigkeit muss positiv sein.");
+        this.maximalGeschwindigkeit = maximalGeschwindigkeit;
+    }
+    public String holeBezeichnung() {
+        return bezeichnung;
+    }
+    public Bahnhof holeStartBahnhof() {
+        return startBahnhof;
+    }
+    public Bahnhof holeEndBahnhof() {
+        return endBahnhof;
+    }
+    public double holeLaenge() {
+        return this.laenge;
+    }
+    @Override
+    public String holeIdentifizierer() {
+        return this.bezeichnung;
+    }
+    public Set<ZugTyp> holeErlaubteZugTypen() {
+        return erlaubteZugTypen;
+    }
+    public boolean istFreigegeben() {
+        return freigegeben;
+    }
+    public double holeMaximalGeschwindigkeit() {
+        return maximalGeschwindigkeit;
+    }
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof Strecke)) return false;
+        Strecke strecke = (Strecke) o;
+        return Objects.equals(holeIdentifizierer(), strecke.holeIdentifizierer());
+    }
+    @Override
+    public int hashCode() {
+        return Objects.hash(holeIdentifizierer());
+    }
+}
+package de.dhbw.bahn.schicht_3_domaene;
+import de.dhbw.bahn.schicht_4_abstraktion.Identifizierbar;
+import java.util.Objects;
+public class Zug implements Identifizierbar {
+    private final int zugNummer;
+    private final ZugTyp zugTyp;
+    private double hoechstGeschwindigkeit;
+    private double verbrauch; // Verbrauch an Kraftstoff pro 100 km
+    public Zug(int zugNummer, ZugTyp zugTyp, double hoechstGeschwindigkeit, double verbrauch) {
+        this.zugNummer = zugNummer;
+        this.zugTyp = zugTyp;
+        this.setzeHoechstGeschwindigkeit(hoechstGeschwindigkeit);
+        this.setzeVerbrauch(verbrauch);
+    }
+    @Override
+    public String holeIdentifizierer() {
+        return Integer.toString(this.zugNummer);
+    }
+    public int holeZugNummer() {
+        return zugNummer;
+    }
+    public ZugTyp holeZugTyp() {
+        return zugTyp;
+    }
+    public double holeHoechstGeschwindigkeit() {
+        return hoechstGeschwindigkeit;
+    }
+    public double holeVerbrauch() {
+        return verbrauch;
+    }
+    public void setzeHoechstGeschwindigkeit(double hoechstGeschwindigkeit) {
+        if (hoechstGeschwindigkeit < 0)
+            throw new IllegalArgumentException("Die Hoechstgeschwindigkeit muss positiv sein.");
+        this.hoechstGeschwindigkeit = hoechstGeschwindigkeit;
+    }
+    public void setzeVerbrauch(double verbrauch) {
+        if (verbrauch < 0)
+            throw new IllegalArgumentException("Der Verbrauch muss positiv sein.");
+        this.verbrauch = verbrauch;
+    }
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof Zug)) return false;
+        Zug zug = (Zug) o;
+        return Objects.equals(holeIdentifizierer(), zug.holeIdentifizierer());
+    }
+    @Override
+    public int hashCode() {
+        return Objects.hash(holeIdentifizierer());
+    }
+}
+package de.dhbw.bahn.schicht_3_domaene;
+public enum ZugTyp {
+    ICE,
+    IC,
+    IRE,
+    IR,
+    RB,
+    S,
+}
+package de.dhbw.bahn.schicht_3_domaene;
+import de.dhbw.bahn.schicht_4_abstraktion.Identifizierbar;
+import java.util.Objects;
+public class Bahnhof implements Identifizierbar {
+    private final String name;
+    public Bahnhof(String name) {
+        this.name = name;
+    }
+    public String holeName() {
+        return name;
+    }
+    @Override
+    public String holeIdentifizierer() {
+        return this.name;
+    }
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof Bahnhof)) return false;
+        Bahnhof bahnhof = (Bahnhof) o;
+        return Objects.equals(holeIdentifizierer(), bahnhof.holeIdentifizierer());
+    }
+    @Override
+    public int hashCode() {
+        return Objects.hash(holeIdentifizierer());
+    }
+}
+package de.dhbw.bahn.schicht_4_abstraktion;
+public interface Identifizierbar {
+    String holeIdentifizierer();
+}
+package de.dhbw.bahn.schicht_4_abstraktion.graph;
+import java.util.List;
+public interface Graph {
+    List<? extends Knoten> holeKnoten();
+    List<? extends Kante> holeKanten();
+}
+package de.dhbw.bahn.schicht_4_abstraktion.graph;
+import de.dhbw.bahn.schicht_4_abstraktion.Identifizierbar;
+public interface Kante extends Identifizierbar {
+    Knoten holeStartKnoten();
+    Knoten holeEndKnoten();
+    double holeGewichtung();
+}
+package de.dhbw.bahn.schicht_4_abstraktion.graph;
+import de.dhbw.bahn.schicht_4_abstraktion.Identifizierbar;
+public interface Knoten extends Identifizierbar {
+    boolean equals(Knoten andererKnoten);
+}
+package de.dhbw.bahn.schicht_1_adapter;
+import de.dhbw.bahn.schicht_1_adapter.http.EventTyp;
+import de.dhbw.bahn.schicht_1_adapter.http.Event;
+import de.dhbw.bahn.schicht_1_adapter.http.Darstellung;
+import de.dhbw.bahn.schicht_1_adapter.http.routen.bahnhof.BahnhofLoeschen;
+import de.dhbw.bahn.schicht_1_adapter.http.routen.bahnhof.BahnhofLesen;
+import de.dhbw.bahn.schicht_1_adapter.http.routen.bahnhof.BahnhofErstellen;
+import de.dhbw.bahn.schicht_1_adapter.http.routen.berechnungen.KuerzesteStreckeLesen;
+import de.dhbw.bahn.schicht_1_adapter.http.routen.berechnungen.SchnellsteStreckeLesen;
+import de.dhbw.bahn.schicht_1_adapter.http.routen.strecke.StreckeLoeschen;
+import de.dhbw.bahn.schicht_1_adapter.http.routen.strecke.StreckeLesen;
+import de.dhbw.bahn.schicht_1_adapter.http.routen.strecke.StreckeErstellen;
+import de.dhbw.bahn.schicht_1_adapter.http.routen.zug.ZugLoeschen;
+import de.dhbw.bahn.schicht_1_adapter.http.routen.zug.ZugLesen;
+import de.dhbw.bahn.schicht_1_adapter.http.routen.zug.ZugErstellen;
+import de.dhbw.bahn.schicht_1_adapter.http.routen.zug.ZugAktualisieren;
+import de.dhbw.bahn.schicht_1_adapter.serialisierer.Serialisierer;
+import de.dhbw.bahn.schicht_2_anwendung.crud.EntitaetenAufsicht;
+import de.dhbw.bahn.schicht_2_anwendung.wegfinder.WegFinder;
+import java.util.Map;
+public class Kontrollierer {
+    private final Darstellung server;
+    private final Serialisierer serialisierer;
+    private final EntitaetenAufsicht aufsicht;
+    private final WegFinder wegFinder;
+    public Kontrollierer(Darstellung server, Serialisierer serialisierer, EntitaetenAufsicht aufsicht, WegFinder wegFinder) {
+        this.server = server;
+        this.serialisierer = serialisierer;
+        this.aufsicht = aufsicht;
+        this.wegFinder = wegFinder;
+        this.registriereRouten();
+    }
+    private void registriereRouten() {
+        this.registriereZug();
+        this.registriereBahnhof();
+        this.registriereStrecken();
+        this.registriereBerechnungen();
+    }
+    private void registriereZug() {
+        this.server.registriereEventRueckruf(new Event("/zug", EventTyp.LESEN), new ZugLesen(this.serialisierer, this.aufsicht));
+        this.server.registriereEventRueckruf(new Event("/zug", EventTyp.ERSTELLEN), new ZugErstellen(this.serialisierer, this.aufsicht));
+        this.server.registriereEventRueckruf(new Event("/zug", EventTyp.AKTUALISIEREN), new ZugAktualisieren(this.serialisierer, this.aufsicht));
+        this.server.registriereEventRueckruf(new Event("/zug", EventTyp.LOESCHEN), new ZugLoeschen(this.serialisierer, this.aufsicht));
+    }
+    private void registriereBahnhof() {
+        this.server.registriereEventRueckruf(new Event("/bahnhof", EventTyp.LESEN), new BahnhofLesen(this.serialisierer, this.aufsicht));
+        this.server.registriereEventRueckruf(new Event("/bahnhof", EventTyp.ERSTELLEN), new BahnhofErstellen(this.serialisierer, this.aufsicht));
+        this.server.registriereEventRueckruf(new Event("/bahnhof", EventTyp.LOESCHEN), new BahnhofLoeschen(this.serialisierer, this.aufsicht));
+    }
+    private void registriereStrecken() {
+        this.server.registriereEventRueckruf(new Event("/strecke", EventTyp.LESEN), new StreckeLesen(this.serialisierer, this.aufsicht));
+        this.server.registriereEventRueckruf(new Event("/strecke", EventTyp.ERSTELLEN), new StreckeErstellen(this.serialisierer, this.aufsicht));
+        this.server.registriereEventRueckruf(new Event("/strecke", EventTyp.LOESCHEN), new StreckeLoeschen(this.serialisierer, this.aufsicht));
+    }
+    private void registriereBerechnungen() {
+        this.server.registriereEventRueckruf(new Event("/kuerzester-weg", EventTyp.LESEN), new KuerzesteStreckeLesen(this.serialisierer, this.aufsicht, this.wegFinder));
+        this.server.registriereEventRueckruf(new Event("/schnellster-weg", EventTyp.LESEN), new SchnellsteStreckeLesen(this.serialisierer, this.aufsicht, this.wegFinder));
+    }
+    public void legeLos(Map<String, String> konfiguration) {
+        this.server.legeLos(konfiguration);
+    }
+    public void halteAn() {
+        this.server.halteAn();
+    }
+}
+package de.dhbw.bahn.schicht_1_adapter.http;
+import java.util.Map;
+public interface Darstellung {
+    Map<String, String> holeKonfiguration();
+    boolean holeLaeuft();
+    void legeLos(Map<String, String> konfiguration);
+    void halteAn();
+    void registriereEventRueckruf(Event route, EventRueckruf rueckruf);
+}
+package de.dhbw.bahn.schicht_1_adapter.http;
+public class EventAntwort {
+    private final int status;
+    private final String koerper;
+    private final MimeTyp koerperTyp;
+    public EventAntwort(int status, String koerper, MimeTyp koerperTyp) {
+        this.status = status;
+        this.koerper = koerper;
+        this.koerperTyp = koerperTyp;
+    }
+    public int holeStatus() {
+        return status;
+    }
+    public String holeKoerper() {
+        return koerper;
+    }
+    public MimeTyp holeKoerperTyp() {
+        return koerperTyp;
+    }
+}
+package de.dhbw.bahn.schicht_1_adapter.http;
+public enum EventTyp {
+    LESEN,
+    ERSTELLEN,
+    AKTUALISIEREN,
+    LOESCHEN,
+}
+package de.dhbw.bahn.schicht_1_adapter.http;
+public class Event {
+    private final String name;
+    private final EventTyp typ;
+    public Event(String name, EventTyp typ) {
+        this.name = name;
+        this.typ = typ;
+    }
+    public String holeName() {
+        return name;
+    }
+    public EventTyp holeTyp() {
+        return typ;
+    }
+    @Override
+    public int hashCode() {
+        int hash = 7;
+        hash = 31 * hash + this.holeTyp().hashCode();
+        hash = 31 * hash + (this.holeName() == null ? 0 : this.holeName().hashCode());
+        return hash;
+    }
+    @Override
+    public boolean equals(Object obj) {
+        if (!(obj instanceof Event))
+            return false;
+        Event route2 = (Event) obj;
+        return route2.holeName().equals(this.holeName()) && route2.holeTyp().equals(this.holeTyp());
+    }
+}
+package de.dhbw.bahn.schicht_1_adapter.http.routen.berechnungen;
+import de.dhbw.bahn.schicht_1_adapter.serialisierer.Serialisierer;
+import de.dhbw.bahn.schicht_2_anwendung.crud.EntitaetenAufsicht;
+import de.dhbw.bahn.schicht_2_anwendung.wegfinder.WegFinder;
+import de.dhbw.bahn.schicht_3_domaene.Bahnhof;
+import de.dhbw.bahn.schicht_3_domaene.Strecke;
+import de.dhbw.bahn.schicht_3_domaene.Zug;
+import java.util.List;
+import java.util.stream.Collectors;
+public class SchnellsteStreckeLesen extends StreckenBerechnungRoute {
+    public SchnellsteStreckeLesen(Serialisierer serialisierer, EntitaetenAufsicht aufsicht, WegFinder wegFinder) {
+        super(serialisierer, aufsicht, wegFinder);
+    }
+    @Override
+    protected List<Strecke> berechne(Bahnhof startBahnhof, Bahnhof endBahnhof, Zug zug) {
+        return this.streckenBerechner.berechneKuerzesteZeitStrecke(startBahnhof, endBahnhof, zug);
+    }
+}
+package de.dhbw.bahn.schicht_1_adapter.http.routen.berechnungen;
+import de.dhbw.bahn.schicht_1_adapter.http.EventAntwort;
+import de.dhbw.bahn.schicht_1_adapter.http.Event;
+import de.dhbw.bahn.schicht_1_adapter.http.EventRueckruf;
+import de.dhbw.bahn.schicht_1_adapter.http.MimeTyp;
+import de.dhbw.bahn.schicht_1_adapter.serialisierer.Serialisierer;
+import de.dhbw.bahn.schicht_2_anwendung.crud.EntitaetenAufsicht;
+import de.dhbw.bahn.schicht_2_anwendung.wegfinder.WegFinder;
+import de.dhbw.bahn.schicht_2_anwendung.wegfinder.StreckenBerechner;
+import de.dhbw.bahn.schicht_3_domaene.Bahnhof;
+import de.dhbw.bahn.schicht_3_domaene.Strecke;
+import de.dhbw.bahn.schicht_3_domaene.Zug;
+import java.util.List;
+import java.util.Map;
+public abstract class StreckenBerechnungRoute implements EventRueckruf {
+    protected static final String PARAMETER_START_BAHNHOF = "start";
+    protected static final String PARAMETER_ZIEL_BAHNHOF = "ziel";
+    protected static final String PARAMETER_ZUG = "zug";
+    protected final Serialisierer serialisierer;
+    protected final EntitaetenAufsicht aufsicht;
+    protected final StreckenBerechner streckenBerechner;
+    public StreckenBerechnungRoute(Serialisierer serialisierer, EntitaetenAufsicht aufsicht, WegFinder wegFinder) {
+        this.serialisierer = serialisierer;
+        this.aufsicht = aufsicht;
+        this.streckenBerechner = new StreckenBerechner(aufsicht.holeBahnhofVerwaltung(), aufsicht.holeStreckenVerwaltung(), wegFinder);
+    }
+    @Override
+    public EventAntwort bearbeiteAnfrage(Event route, String koerper, Map<String, String> parameter) {
+        if (!pruefeParameter(parameter))
+            return new EventAntwort(400, "Schlechte Anfrage", MimeTyp.SCHLICHT);
+        Bahnhof startBahnhof = this.aufsicht.holeBahnhof(parameter.get(PARAMETER_START_BAHNHOF));
+        Bahnhof endBahnhof = this.aufsicht.holeBahnhof(parameter.get(PARAMETER_ZIEL_BAHNHOF));
+        Zug zug = this.aufsicht.holeZug(parameter.get(PARAMETER_ZUG));
+        if (startBahnhof == null || endBahnhof == null || zug == null)
+            return new EventAntwort(400, "Schlechte Anfrage", MimeTyp.SCHLICHT);
+        List<Strecke> strecken = this.berechne(startBahnhof, endBahnhof, zug);
+        String antwort = this.serialisierer.serialisieren(strecken);
+        return new EventAntwort(200, antwort, MimeTyp.JSON);
+    }
+    protected boolean pruefeParameter(Map<String, String> parameter) {
+        return parameter.containsKey(PARAMETER_START_BAHNHOF)
+                && parameter.containsKey(PARAMETER_ZIEL_BAHNHOF)
+                && parameter.containsKey(PARAMETER_ZUG);
+    }
+    protected abstract List<Strecke> berechne(Bahnhof startBahnhof, Bahnhof endBahnhof, Zug zug);
+}
+package de.dhbw.bahn.schicht_1_adapter.http.routen.berechnungen;
+import de.dhbw.bahn.schicht_1_adapter.serialisierer.Serialisierer;
+import de.dhbw.bahn.schicht_2_anwendung.crud.EntitaetenAufsicht;
+import de.dhbw.bahn.schicht_2_anwendung.wegfinder.StreckenKante;
+import de.dhbw.bahn.schicht_2_anwendung.wegfinder.WegFinder;
+import de.dhbw.bahn.schicht_3_domaene.Bahnhof;
+import de.dhbw.bahn.schicht_3_domaene.Strecke;
+import de.dhbw.bahn.schicht_3_domaene.Zug;
+import java.util.List;
+import java.util.stream.Collectors;
+public class KuerzesteStreckeLesen extends StreckenBerechnungRoute {
+    public KuerzesteStreckeLesen(Serialisierer serialisierer, EntitaetenAufsicht aufsicht, WegFinder wegFinder) {
+        super(serialisierer, aufsicht, wegFinder);
+    }
+    @Override
+    protected List<Strecke> berechne(Bahnhof startBahnhof, Bahnhof endBahnhof, Zug zug) {
+        return this.streckenBerechner.berechneKuerzesteStrecke(startBahnhof, endBahnhof, zug);
+    }
+}
+package de.dhbw.bahn.schicht_1_adapter.http.routen.bahnhof;
+import de.dhbw.bahn.schicht_1_adapter.http.EventAntwort;
+import de.dhbw.bahn.schicht_1_adapter.http.Event;
+import de.dhbw.bahn.schicht_1_adapter.http.MimeTyp;
+import de.dhbw.bahn.schicht_1_adapter.serialisierer.Serialisierer;
+import de.dhbw.bahn.schicht_2_anwendung.crud.EntitaetenAufsicht;
+import java.util.Map;
+public class BahnhofLoeschen extends BahnhofRoute {
+    public BahnhofLoeschen(Serialisierer bahnhofSerialisierer, EntitaetenAufsicht aufsicht) {
+        super(bahnhofSerialisierer, aufsicht);
+    }
+    @Override
+    public EventAntwort bearbeiteAnfrage(Event route, String koerper, Map<String, String> parameters) {
+        if (!parameters.containsKey("id")) {
+            return new EventAntwort(500, "Es muss eine ID übergeben werden", MimeTyp.SCHLICHT);
+        }
+        String bahnhofBezeichnung = parameters.get("id");
+        this.aufsicht.bahnhofLoeschen(bahnhofBezeichnung);
+        return new EventAntwort(200, "Erfolg", MimeTyp.SCHLICHT);
+    }
+}
+package de.dhbw.bahn.schicht_1_adapter.http.routen.bahnhof;
+import de.dhbw.bahn.schicht_1_adapter.http.EventRueckruf;
+import de.dhbw.bahn.schicht_1_adapter.serialisierer.Serialisierer;
+import de.dhbw.bahn.schicht_2_anwendung.crud.EntitaetenAufsicht;
+public abstract class BahnhofRoute implements EventRueckruf {
+    protected final Serialisierer bahnhofSerialisierer;
+    protected final EntitaetenAufsicht aufsicht;
+    protected BahnhofRoute(Serialisierer bahnhofSerialisierer, EntitaetenAufsicht aufsicht) {
+        this.bahnhofSerialisierer = bahnhofSerialisierer;
+        this.aufsicht = aufsicht;
+    }
+}
+package de.dhbw.bahn.schicht_1_adapter.http.routen.bahnhof;
+import de.dhbw.bahn.schicht_1_adapter.http.EventAntwort;
+import de.dhbw.bahn.schicht_1_adapter.http.Event;
+import de.dhbw.bahn.schicht_1_adapter.http.MimeTyp;
+import de.dhbw.bahn.schicht_1_adapter.serialisierer.Serialisierer;
+import de.dhbw.bahn.schicht_2_anwendung.crud.EntitaetenAufsicht;
+import de.dhbw.bahn.schicht_3_domaene.Bahnhof;
+import java.util.List;
+import java.util.Map;
+public class BahnhofLesen extends BahnhofRoute {
+    public BahnhofLesen(Serialisierer bahnhofSerialisierer, EntitaetenAufsicht aufsicht) {
+        super(bahnhofSerialisierer, aufsicht);
+    }
+    @Override
+    public EventAntwort bearbeiteAnfrage(Event route, String koerper, Map<String, String> parameter) {
+        String antwort;
+        if (parameter.containsKey("id")) {
+            String bahnhofName = parameter.get("id");
+            Bahnhof bahnhof = this.aufsicht.holeBahnhof(bahnhofName);
+            antwort = this.bahnhofSerialisierer.serialisieren(bahnhof);
+        } else {
+            List<Bahnhof> bahnhoefe = this.aufsicht.holeBahnhoefe();
+            antwort = this.bahnhofSerialisierer.serialisieren(bahnhoefe);
+        }
+        return new EventAntwort(200, antwort, MimeTyp.JSON);
+    }
+}
+package de.dhbw.bahn.schicht_1_adapter.http.routen.bahnhof;
+import de.dhbw.bahn.schicht_1_adapter.http.EventAntwort;
+import de.dhbw.bahn.schicht_1_adapter.http.Event;
+import de.dhbw.bahn.schicht_1_adapter.http.MimeTyp;
+import de.dhbw.bahn.schicht_1_adapter.serialisierer.Serialisierer;
+import de.dhbw.bahn.schicht_2_anwendung.crud.EntitaetenAufsicht;
+import de.dhbw.bahn.schicht_3_domaene.Bahnhof;
+import java.util.Map;
+public class BahnhofAktualisieren extends BahnhofRoute {
+    public BahnhofAktualisieren(Serialisierer bahnhofSerialisierer, EntitaetenAufsicht aufsicht) {
+        super(bahnhofSerialisierer, aufsicht);
+    }
+    @Override
+    public EventAntwort bearbeiteAnfrage(Event route, String koerper, Map<String, String> parameters) {
+        Bahnhof bahnhof = this.bahnhofSerialisierer.deserialisieren(koerper, Bahnhof.class);
+        this.aufsicht.aktualisiereBahnhof(bahnhof);
+        return new EventAntwort(200, "Erfolg", MimeTyp.SCHLICHT);
+    }
+}
+package de.dhbw.bahn.schicht_1_adapter.http.routen.bahnhof;
+import de.dhbw.bahn.schicht_1_adapter.http.EventAntwort;
+import de.dhbw.bahn.schicht_1_adapter.http.Event;
+import de.dhbw.bahn.schicht_1_adapter.http.MimeTyp;
+import de.dhbw.bahn.schicht_1_adapter.serialisierer.Serialisierer;
+import de.dhbw.bahn.schicht_2_anwendung.crud.EntitaetenAufsicht;
+import de.dhbw.bahn.schicht_3_domaene.Bahnhof;
+import java.util.Map;
+public class BahnhofErstellen extends BahnhofRoute {
+    public BahnhofErstellen(Serialisierer bahnhofSerialisierer, EntitaetenAufsicht aufsicht) {
+        super(bahnhofSerialisierer, aufsicht);
+    }
+    @Override
+    public EventAntwort bearbeiteAnfrage(Event route, String koerper, Map<String, String> parameters) {
+        Bahnhof bahnhof = this.bahnhofSerialisierer.deserialisieren(koerper, Bahnhof.class);
+        this.aufsicht.bahnhofHinzufuegen(bahnhof);
+        return new EventAntwort(200, "Erfolg", MimeTyp.SCHLICHT);
+    }
+}
+package de.dhbw.bahn.schicht_1_adapter.http.routen.zug;
+import de.dhbw.bahn.schicht_1_adapter.http.EventAntwort;
+import de.dhbw.bahn.schicht_1_adapter.http.Event;
+import de.dhbw.bahn.schicht_1_adapter.http.MimeTyp;
+import de.dhbw.bahn.schicht_1_adapter.serialisierer.Serialisierer;
+import de.dhbw.bahn.schicht_2_anwendung.crud.EntitaetenAufsicht;
+import de.dhbw.bahn.schicht_3_domaene.Zug;
+import java.util.List;
+import java.util.Map;
+public class ZugLesen extends ZugRoute {
+    public ZugLesen(Serialisierer zugSerialisierer, EntitaetenAufsicht aufsicht) {
+        super(zugSerialisierer, aufsicht);
+    }
+    @Override
+    public EventAntwort bearbeiteAnfrage(Event route, String koerper, Map<String, String> parameter) {
+        String antwort;
+        if (parameter.containsKey("id")) {
+            String zugId = parameter.get("id");
+            Zug zug = this.aufsicht.holeZug(zugId);
+            if (zug == null) {
+                return new EventAntwort(404, "Zug mit dieser ID nicht gefunden", MimeTyp.SCHLICHT);
+            }
+            antwort = this.zugSerialisierer.serialisieren(zug);
+        } else {
+            List<Zug> zuege = this.aufsicht.holeZuege();
+            antwort = this.zugSerialisierer.serialisieren(zuege);
+        }
+        return new EventAntwort(200, antwort, MimeTyp.JSON);
+    }
+}
+package de.dhbw.bahn.schicht_1_adapter.http.routen.zug;
+import de.dhbw.bahn.schicht_1_adapter.http.EventAntwort;
+import de.dhbw.bahn.schicht_1_adapter.http.Event;
+import de.dhbw.bahn.schicht_1_adapter.http.MimeTyp;
+import de.dhbw.bahn.schicht_1_adapter.serialisierer.Serialisierer;
+import de.dhbw.bahn.schicht_2_anwendung.crud.EntitaetenAufsicht;
+import de.dhbw.bahn.schicht_3_domaene.Zug;
+import java.util.Map;
+public class ZugAktualisieren extends ZugRoute {
+    public ZugAktualisieren(Serialisierer zugSerialisierer, EntitaetenAufsicht aufsicht) {
+        super(zugSerialisierer, aufsicht);
+    }
+    @Override
+    public EventAntwort bearbeiteAnfrage(Event route, String koerper, Map<String, String> parameter) {
+        if (parameter.containsKey("id")) {
+            return new EventAntwort(400, "PUT Aktion nicht mit Parameter moeglich.", MimeTyp.SCHLICHT);
+        }
+        Zug zug = this.zugSerialisierer.deserialisieren(koerper, Zug.class);
+        this.aufsicht.aktualisiereZug(zug);
+        return new EventAntwort(200, "Erfolg", MimeTyp.SCHLICHT);
+    }
+}
+package de.dhbw.bahn.schicht_1_adapter.http.routen.zug;
+import de.dhbw.bahn.schicht_1_adapter.http.EventRueckruf;
+import de.dhbw.bahn.schicht_1_adapter.serialisierer.Serialisierer;
+import de.dhbw.bahn.schicht_2_anwendung.crud.EntitaetenAufsicht;
+public abstract class ZugRoute implements EventRueckruf {
+    protected final Serialisierer zugSerialisierer;
+    protected final EntitaetenAufsicht aufsicht;
+    protected ZugRoute(Serialisierer zugSerialisierer, EntitaetenAufsicht aufsicht) {
+        this.zugSerialisierer = zugSerialisierer;
+        this.aufsicht = aufsicht;
+    }
+}
+package de.dhbw.bahn.schicht_1_adapter.http.routen.zug;
+import de.dhbw.bahn.schicht_1_adapter.http.EventAntwort;
+import de.dhbw.bahn.schicht_1_adapter.http.Event;
+import de.dhbw.bahn.schicht_1_adapter.http.MimeTyp;
+import de.dhbw.bahn.schicht_1_adapter.serialisierer.Serialisierer;
+import de.dhbw.bahn.schicht_2_anwendung.crud.EntitaetenAufsicht;
+import java.util.Map;
+public class ZugLoeschen extends ZugRoute {
+    public ZugLoeschen(Serialisierer zugSerialisierer, EntitaetenAufsicht aufsicht) {
+        super(zugSerialisierer, aufsicht);
+    }
+    @Override
+    public EventAntwort bearbeiteAnfrage(Event route, String koerper, Map<String, String> parameters) {
+        if (!parameters.containsKey("id")) {
+            return new EventAntwort(500, "Es muss eine ID übergeben werden", MimeTyp.SCHLICHT);
+        }
+        String zugNummer = parameters.get("id");
+        this.aufsicht.zugLoeschen(zugNummer);
+        return new EventAntwort(200, "Erfolg", MimeTyp.SCHLICHT);
+    }
+}
+package de.dhbw.bahn.schicht_1_adapter.http.routen.zug;
+import de.dhbw.bahn.schicht_1_adapter.http.EventAntwort;
+import de.dhbw.bahn.schicht_1_adapter.http.Event;
+import de.dhbw.bahn.schicht_1_adapter.http.MimeTyp;
+import de.dhbw.bahn.schicht_1_adapter.serialisierer.Serialisierer;
+import de.dhbw.bahn.schicht_2_anwendung.crud.EntitaetenAufsicht;
+import de.dhbw.bahn.schicht_3_domaene.Zug;
+import java.util.Map;
+public class ZugErstellen extends ZugRoute {
+    public ZugErstellen(Serialisierer zugSerialisierer, EntitaetenAufsicht aufsicht) {
+        super(zugSerialisierer, aufsicht);
+    }
+    @Override
+    public EventAntwort bearbeiteAnfrage(Event route, String koerper, Map<String, String> parameters) {
+        Zug zug = this.zugSerialisierer.deserialisieren(koerper, Zug.class);
+        this.aufsicht.zugHinzufuegen(zug);
+        return new EventAntwort(200, "Erfolg", MimeTyp.SCHLICHT);
+    }
+}
+package de.dhbw.bahn.schicht_1_adapter.http.routen.strecke;
+import de.dhbw.bahn.schicht_1_adapter.http.EventAntwort;
+import de.dhbw.bahn.schicht_1_adapter.http.Event;
+import de.dhbw.bahn.schicht_1_adapter.http.MimeTyp;
+import de.dhbw.bahn.schicht_1_adapter.http.ressourcen.StreckenRessource;
+import de.dhbw.bahn.schicht_1_adapter.serialisierer.Serialisierer;
+import de.dhbw.bahn.schicht_2_anwendung.crud.EntitaetenAufsicht;
+import de.dhbw.bahn.schicht_3_domaene.Strecke;
+import java.util.Map;
+public class StreckeAktualisieren extends StreckeRoute {
+    public StreckeAktualisieren(Serialisierer streckenSerialisierer, EntitaetenAufsicht aufsicht) {
+        super(streckenSerialisierer, aufsicht);
+    }
+    @Override
+    public EventAntwort bearbeiteAnfrage(Event route, String koerper, Map<String, String> parameter) {
+        if (parameter.containsKey("id")) {
+            return new EventAntwort(400, "PUT Aktion nicht mit Parameter moeglich.", MimeTyp.SCHLICHT);
+        }
+        StreckenRessource streckenRessource = this.streckenSerialisierer.deserialisieren(koerper, StreckenRessource.class);
+        Strecke strecke = this.konvertierer.konvertiereZu(streckenRessource);
+        this.aufsicht.aktualisiereStrecke(strecke);
+        return new EventAntwort(200, "Erfolg", MimeTyp.SCHLICHT);
+    }
+}
+package de.dhbw.bahn.schicht_1_adapter.http.routen.strecke;
+import de.dhbw.bahn.schicht_1_adapter.http.EventAntwort;
+import de.dhbw.bahn.schicht_1_adapter.http.Event;
+import de.dhbw.bahn.schicht_1_adapter.http.MimeTyp;
+import de.dhbw.bahn.schicht_1_adapter.http.ressourcen.StreckenRessource;
+import de.dhbw.bahn.schicht_1_adapter.serialisierer.Serialisierer;
+import de.dhbw.bahn.schicht_2_anwendung.crud.EntitaetenAufsicht;
+import de.dhbw.bahn.schicht_3_domaene.Strecke;
+import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
+public class StreckeLesen extends StreckeRoute {
+    public StreckeLesen(Serialisierer streckenSerialisierer, EntitaetenAufsicht aufsicht) {
+        super(streckenSerialisierer, aufsicht);
+    }
+    @Override
+    public EventAntwort bearbeiteAnfrage(Event route, String koerper, Map<String, String> parameter) {
+        String antwort;
+        if (parameter.containsKey("id")) {
+            String id = parameter.get("id");
+            Strecke strecke = this.aufsicht.holeStrecke(id);
+            StreckenRessource streckenRessource = this.konvertierer.konvertiereVon(strecke);
+            antwort = this.streckenSerialisierer.serialisieren(streckenRessource);
+        } else {
+            List<Strecke> strecken = this.aufsicht.holeStrecken();
+            List<StreckenRessource> streckenRessourcen = strecken.stream().map(konvertierer::konvertiereVon).collect(Collectors.toList());
+            antwort = this.streckenSerialisierer.serialisieren(streckenRessourcen);
+        }
+        return new EventAntwort(200, antwort, MimeTyp.JSON);
+    }
+}
+package de.dhbw.bahn.schicht_1_adapter.http.routen.strecke;
+import de.dhbw.bahn.schicht_1_adapter.http.EventAntwort;
+import de.dhbw.bahn.schicht_1_adapter.http.Event;
+import de.dhbw.bahn.schicht_1_adapter.http.MimeTyp;
+import de.dhbw.bahn.schicht_1_adapter.serialisierer.Serialisierer;
+import de.dhbw.bahn.schicht_2_anwendung.crud.EntitaetenAufsicht;
+import java.util.Map;
+public class StreckeLoeschen extends StreckeRoute {
+    public StreckeLoeschen(Serialisierer streckenSerialisierer, EntitaetenAufsicht aufsicht) {
+        super(streckenSerialisierer, aufsicht);
+    }
+    @Override
+    public EventAntwort bearbeiteAnfrage(Event route, String koerper, Map<String, String> parameters) {
+        if (!parameters.containsKey("id")) {
+            return new EventAntwort(500, "Es muss eine ID übergeben werden", MimeTyp.SCHLICHT);
+        }
+        String id = parameters.get("id");
+        this.aufsicht.streckeLoeschen(id);
+        return new EventAntwort(200, "Erfolg", MimeTyp.SCHLICHT);
+    }
+}
+package de.dhbw.bahn.schicht_1_adapter.http.routen.strecke;
+import de.dhbw.bahn.schicht_1_adapter.http.EventRueckruf;
+import de.dhbw.bahn.schicht_1_adapter.http.ressourcen.StreckenRessourcenKonvertierer;
+import de.dhbw.bahn.schicht_1_adapter.serialisierer.Serialisierer;
+import de.dhbw.bahn.schicht_2_anwendung.crud.EntitaetenAufsicht;
+public abstract class StreckeRoute implements EventRueckruf {
+    protected final Serialisierer streckenSerialisierer;
+    protected final EntitaetenAufsicht aufsicht;
+    protected final StreckenRessourcenKonvertierer konvertierer;
+    protected StreckeRoute(Serialisierer streckenSerialisierer, EntitaetenAufsicht aufsicht) {
+        this.streckenSerialisierer = streckenSerialisierer;
+        this.aufsicht = aufsicht;
+        this.konvertierer = new StreckenRessourcenKonvertierer(aufsicht.holeBahnhofVerwaltung());
+    }
+}
+package de.dhbw.bahn.schicht_1_adapter.http.routen.strecke;
+import de.dhbw.bahn.schicht_1_adapter.http.EventAntwort;
+import de.dhbw.bahn.schicht_1_adapter.http.Event;
+import de.dhbw.bahn.schicht_1_adapter.http.MimeTyp;
+import de.dhbw.bahn.schicht_1_adapter.http.ressourcen.StreckenRessource;
+import de.dhbw.bahn.schicht_1_adapter.serialisierer.Serialisierer;
+import de.dhbw.bahn.schicht_2_anwendung.crud.EntitaetenAufsicht;
+import de.dhbw.bahn.schicht_3_domaene.Strecke;
+import java.util.Map;
+public class StreckeErstellen extends StreckeRoute {
+    public StreckeErstellen(Serialisierer streckenSerialisierer, EntitaetenAufsicht aufsicht) {
+        super(streckenSerialisierer, aufsicht);
+    }
+    @Override
+    public EventAntwort bearbeiteAnfrage(Event route, String koerper, Map<String, String> parameters) {
+        StreckenRessource streckenRessource = this.streckenSerialisierer.deserialisieren(koerper, StreckenRessource.class);
+        Strecke strecke = this.konvertierer.konvertiereZu(streckenRessource);
+        this.aufsicht.streckeHinzufuegen(strecke);
+        return new EventAntwort(200, "Erfolg", MimeTyp.SCHLICHT);
+    }
+}
+package de.dhbw.bahn.schicht_1_adapter.http;
+import java.util.Map;
+public interface EventRueckruf {
+    EventAntwort bearbeiteAnfrage(Event route, String koerper, Map<String, String> parameters);
+}
+package de.dhbw.bahn.schicht_1_adapter.http;
+public enum MimeTyp {
+    SCHLICHT("text/plain"),
+    JSON("application/json");
+    private final String wert;
+    MimeTyp(String wert) {
+        this.wert = wert;
+    }
+    public String holeWert() {
+        return this.wert;
+    }
+}
+package de.dhbw.bahn.schicht_1_adapter.http.ressourcen;
+public interface RessourcenKonvertierer<S, T> {
+    S konvertiereZu(T t);
+    T konvertiereVon(S s);
+}
+package de.dhbw.bahn.schicht_1_adapter.http.ressourcen;
+import de.dhbw.bahn.schicht_3_domaene.ZugTyp;
+import java.util.Set;
+public class StreckenRessource {
+    private final String bezeichnung;
+    private final String startBahnhof, endBahnhof;
+    private final double laenge;
+    private final Set<ZugTyp> erlaubteZugTypen;
+    private final boolean freigegeben;
+    private final double maximalGeschwindigkeit;
+    public StreckenRessource(String bezeichnung, String startBahnhof, String endBahnhof, double laenge, Set<ZugTyp> erlaubteZugTypen, boolean freigegeben, double maximalGeschwindigkeit) {
+        this.bezeichnung = bezeichnung;
+        this.startBahnhof = startBahnhof;
+        this.endBahnhof = endBahnhof;
+        this.laenge = laenge;
+        this.erlaubteZugTypen = erlaubteZugTypen;
+        this.freigegeben = freigegeben;
+        this.maximalGeschwindigkeit = maximalGeschwindigkeit;
+    }
+    public String holeBezeichnung() {
+        return bezeichnung;
+    }
+    public String holeStartBahnhof() {
+        return startBahnhof;
+    }
+    public String holeEndBahnhof() {
+        return endBahnhof;
+    }
+    public double holeLaenge() {
+        return laenge;
+    }
+    public Set<ZugTyp> holeErlaubteZugTypen() {
+        return erlaubteZugTypen;
+    }
+    public boolean isFreigegeben() {
+        return freigegeben;
+    }
+    public double holeMaximalGeschwindigkeit() {
+        return maximalGeschwindigkeit;
+    }
+}
+package de.dhbw.bahn.schicht_1_adapter.http.ressourcen;
+import de.dhbw.bahn.schicht_2_anwendung.crud.Verwaltung;
+import de.dhbw.bahn.schicht_3_domaene.Bahnhof;
+import de.dhbw.bahn.schicht_3_domaene.Strecke;
+import java.util.MissingResourceException;
+public class StreckenRessourcenKonvertierer implements RessourcenKonvertierer<Strecke, StreckenRessource> {
+    private final Verwaltung<Bahnhof> bahnhofVerwaltung;
+    public StreckenRessourcenKonvertierer(Verwaltung<Bahnhof> bahnhofVerwaltung) {
+        this.bahnhofVerwaltung = bahnhofVerwaltung;
+    }
+    @Override
+    public Strecke konvertiereZu(StreckenRessource streckenRessource) {
+        if (!bahnhofVerwaltung.hatEntitaet(streckenRessource.holeStartBahnhof())) {
+            throw new MissingResourceException("Startbahnhof konnte nicht gefunden werden.", Bahnhof.class.getSimpleName(), streckenRessource.holeStartBahnhof());
+        }
+        if (!bahnhofVerwaltung.hatEntitaet(streckenRessource.holeEndBahnhof())) {
+            throw new MissingResourceException("Endbahnhof konnte nicht gefunden werden.", Bahnhof.class.getSimpleName(), streckenRessource.holeEndBahnhof());
+        }
+        return new Strecke(
+                streckenRessource.holeBezeichnung(),
+                streckenRessource.holeLaenge(),
+                streckenRessource.holeMaximalGeschwindigkeit(),
+                streckenRessource.holeErlaubteZugTypen(),
+                streckenRessource.isFreigegeben(),
+                this.bahnhofVerwaltung.holeEntitaet(streckenRessource.holeStartBahnhof()),
+                this.bahnhofVerwaltung.holeEntitaet(streckenRessource.holeEndBahnhof())
+        );
+    }
+    @Override
+    public StreckenRessource konvertiereVon(Strecke strecke) {
+        return new StreckenRessource(
+                strecke.holeBezeichnung(),
+                strecke.holeStartBahnhof().holeIdentifizierer(),
+                strecke.holeEndBahnhof().holeIdentifizierer(),
+                strecke.holeLaenge(),
+                strecke.holeErlaubteZugTypen(),
+                strecke.istFreigegeben(),
+                strecke.holeMaximalGeschwindigkeit()
+        );
+    }
+}
+package de.dhbw.bahn.schicht_1_adapter.serialisierer;
+public interface Serialisierer {
+    <T> String serialisieren(T objekt);
+    <T> T deserialisieren(String etwas, Class<T> klasse);
+}
+package de.dhbw.bahn.schicht_0_plugins.persistenz;
+import de.dhbw.bahn.schicht_2_anwendung.crud.Verwaltung;
+import de.dhbw.bahn.schicht_4_abstraktion.Identifizierbar;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+public class TemporaereVerwaltung<T extends Identifizierbar> implements Verwaltung<T> {
+    protected Map<String, T> zuweisungsTabelle;
+    public TemporaereVerwaltung() {
+        this.zuweisungsTabelle = new HashMap<>();
+    }
+    @Override
+    public boolean hatEntitaet(String identifizierer) {
+        return zuweisungsTabelle.containsKey(identifizierer);
+    }
+    @Override
+    public T holeEntitaet(String identifizierer) {
+        return zuweisungsTabelle.get(identifizierer);
+    }
+    @Override
+    public void persistiereEntitaet(T entitaet) {
+        this.zuweisungsTabelle.put(entitaet.holeIdentifizierer(), entitaet);
+    }
+    @Override
+    public void aktualisiereEntitaet(T entitaet) {
+        this.zuweisungsTabelle.put(entitaet.holeIdentifizierer(), entitaet);
+    }
+    @Override
+    public void loescheEntitaet(String identifizierer) {
+        this.zuweisungsTabelle.remove(identifizierer);
+    }
+    @Override
+    public List<T> holeEntitaeten() {
+        return new ArrayList<>(zuweisungsTabelle.values());
+    }
+}
+package de.dhbw.bahn.schicht_0_plugins.http;
+import com.sun.net.httpserver.HttpExchange;
+import com.sun.net.httpserver.HttpHandler;
+import de.dhbw.bahn.schicht_1_adapter.http.*;
+import java.io.*;
+import java.net.InetSocketAddress;
+import java.net.URLDecoder;
+import java.util.HashMap;
+import java.util.Map;
+public class EinfacherHttpServer implements Darstellung, HttpHandler {
+    private final Map<Event, EventRueckruf> rueckrufTabelle;
+    private int port;
+    private String host;
+    private boolean laeuft;
+    private com.sun.net.httpserver.HttpServer httpServer;
+    private Map<String, String> konfiguration;
+    public EinfacherHttpServer() {
+        laeuft = false;
+        rueckrufTabelle = new HashMap<>();
+        port = 8080;
+        host = "localhost";
+    }
+    private void registriereKontext() {
+        this.rueckrufTabelle.keySet().forEach(route -> this.httpServer.createContext(route.holeName(), this));
+    }
+    @Override
+    public void halteAn() {
+        this.laeuft = false;
+        this.httpServer.stop(0);
+    }
+    @Override
+    public Map<String, String> holeKonfiguration() {
+        return this.konfiguration;
+    }
+    @Override
+    public synchronized boolean holeLaeuft() {
+        return this.laeuft;
+    }
+    @Override
+    public void legeLos(Map<String, String> konfiguration) {
+        this.konfiguration = konfiguration;
+        if (konfiguration.containsKey("host"))this.host = konfiguration.get("host");
+        if (konfiguration.containsKey("port"))this.port = Integer.parseInt(konfiguration.get("port"));
+        try {
+            this.httpServer = com.sun.net.httpserver.HttpServer.create(new InetSocketAddress(this.host, this.port), 0);
+            this.registriereKontext();
+            this.httpServer.setExecutor(null);
+            this.laeuft = true;
+            this.httpServer.start();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+    @Override
+    public void registriereEventRueckruf(Event route, EventRueckruf rueckruf) {
+        this.rueckrufTabelle.put(route, rueckruf);
+    }
+    @Override
+    public void handle(HttpExchange exchange) {
+        EventAntwort antwort;
+        try {
+            antwort = this.verarbeiteAnfrage(exchange);
+        } catch (IOException e) {
+            antwort = new EventAntwort(500, "Internal server error", MimeTyp.SCHLICHT);
+        }
+        this.verarbeiteHttpAntwort(exchange, antwort);
+    }
+    private EventTyp httpMethodeZuEventTyp(String httpMethode){
+        switch (httpMethode){
+            case "GET": return EventTyp.LESEN;
+            case "PUT": return EventTyp.AKTUALISIEREN;
+            case "POST": return EventTyp.ERSTELLEN;
+            case "DELETE": return EventTyp.LOESCHEN;
+            default: return null;
+        }
+    }
+    private EventAntwort verarbeiteAnfrage(HttpExchange exchange) throws IOException {
+        System.out.println(exchange.getRequestMethod() + " Anfrage an " + exchange.getHttpContext().getPath());
+        String pfad = exchange.getHttpContext().getPath();
+        EventTyp eventTyp = httpMethodeZuEventTyp(exchange.getRequestMethod());
+        if (eventTyp == null)return new EventAntwort(404, "Diese Anfragemethode wird nicht unterstützt", MimeTyp.SCHLICHT);
+        Event route = new Event(pfad, eventTyp);
+        if (!this.rueckrufTabelle.containsKey(route)) {
+            return new EventAntwort(404, "Not Found", MimeTyp.SCHLICHT);
+        }
+        EventRueckruf rueckruf = this.rueckrufTabelle.get(route);
+        String query = exchange.getRequestURI().getQuery();
+        Map<String, String> parameter = leseParameter(query);
+        String koerper = leseKoerper(exchange.getRequestBody());
+        return rueckruf.bearbeiteAnfrage(route, koerper, parameter);
+    }
+    private Map<String, String> leseParameter(String query) throws UnsupportedEncodingException {
+        Map<String, String> parameter = new HashMap<>();
+        if (query == null) return parameter;
+        String[] parameterPaare = query.split("&");
+        for (String paar : parameterPaare) {
+            String[] paarTeile = paar.split("=");
+            String schluessel = URLDecoder.decode(paarTeile[0], "utf-8");
+            String wert = URLDecoder.decode(paarTeile[1], "utf-8");
+            parameter.put(schluessel, wert);
+        }
+        return parameter;
+    }
+    private void verarbeiteHttpAntwort(HttpExchange exchange, EventAntwort antwort) {
+        try {
+            exchange.getResponseHeaders().add("Content-Type", antwort.holeKoerperTyp().holeWert() + "; charset=utf-8");
+            exchange.sendResponseHeaders(antwort.holeStatus(), antwort.holeKoerper().getBytes().length);
+            this.schreibeKoerper(exchange.getResponseBody(), antwort.holeKoerper());
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+    private void schreibeKoerper(OutputStream output, String koerper) throws IOException {
+        output.write(koerper.getBytes());
+        output.close();
+    }
+    private String leseKoerper(InputStream input) throws IOException {
+        BufferedReader reader = new BufferedReader(new InputStreamReader(input));
+        StringBuilder stringBuilder = new StringBuilder();
+        for (int ch; (ch = reader.read()) != -1; ) {
+            stringBuilder.append((char) ch);
+        }
+        return stringBuilder.toString();
+    }
+}
+package de.dhbw.bahn.schicht_0_plugins.algorithmen;
+import de.dhbw.bahn.schicht_2_anwendung.wegfinder.WegFinder;
+import de.dhbw.bahn.schicht_4_abstraktion.graph.Graph;
+import de.dhbw.bahn.schicht_4_abstraktion.graph.Kante;
+import de.dhbw.bahn.schicht_4_abstraktion.graph.Knoten;
+import java.util.*;
+public class Dijkstra implements WegFinder {
+    private Graph graph;
+    private Knoten aktuellerKnoten;
+    private Map<Knoten, DijkstraKnotenDaten> distanzTabelle;
+    public Dijkstra() {
+    }
+    @Override
+    public void initialisiereGraphen(Graph graph) {
+        this.graph = graph;
+    }
+    public List<? extends Kante> berechneWeg(Knoten start, Knoten end) {
+        if(this.graph == null)
+            return Collections.emptyList();
+        initialisiereDistanzTabelle();
+        waehleKnoten(start);
+        distanzTabelle.get(start).setzeDistanz(0);
+        while (!aktuellerKnoten.equals(end)) {
+            berechneDistanzen();
+            Knoten neuerKnoten = findeUnbearbeitetenMinimalenKnoten();
+            if (neuerKnoten == null) {
+                // Keinen Weg gefunden :(
+                return new ArrayList<>();
+            }
+            waehleKnoten(neuerKnoten);
+        }
+        return bauWeg(start, end);
+    }
+    private void initialisiereDistanzTabelle() {
+        if (distanzTabelle == null) {
+            distanzTabelle = new HashMap<>();
+        }
+        for (Knoten knoten : graph.holeKnoten()) {
+            distanzTabelle.put(knoten, new DijkstraKnotenDaten());
+        }
+    }
+    private void laufeKnotenAb(Knoten knoten, double distanz) {
+        DijkstraKnotenDaten daten = distanzTabelle.get(knoten);
+        if (distanz < daten.holeDistanz()) {
+            daten.setzeDistanz(distanz);
+            daten.setzeVon(aktuellerKnoten);
+        }
+    }
+    private Knoten findeUnbearbeitetenMinimalenKnoten() {
+        Knoten minimalerKnoten = null;
+        DijkstraKnotenDaten minimalerKnotenDaten = null;
+        for (Map.Entry<Knoten, DijkstraKnotenDaten> entry : distanzTabelle.entrySet()) {
+            Knoten knoten = entry.getKey();
+            DijkstraKnotenDaten daten = entry.getValue();
+            if (daten.istBearbeitet()) continue;
+            if (minimalerKnoten == null
+                    || daten.holeDistanz() < minimalerKnotenDaten.holeDistanz()) {
+                minimalerKnoten = knoten;
+                minimalerKnotenDaten = daten;
+            }
+        }
+        return minimalerKnoten;
+    }
+    private void berechneDistanzen() {
+        for (Kante kante : graph.holeKanten()) {
+            Knoten endKnoten = null;
+            if (kante.holeStartKnoten().equals(aktuellerKnoten)) {
+                endKnoten = kante.holeEndKnoten();
+            } else if (kante.holeEndKnoten().equals(aktuellerKnoten)) {
+                endKnoten = kante.holeStartKnoten();
+            }
+            if (endKnoten != null) {
+                DijkstraKnotenDaten daten = distanzTabelle.get(endKnoten);
+                if (daten.istBearbeitet()) continue;
+                double aktuelleGewichtung = distanzTabelle.get(aktuellerKnoten).holeDistanz();
+                laufeKnotenAb(endKnoten, aktuelleGewichtung + kante.holeGewichtung());
+            }
+        }
+    }
+    private void waehleKnoten(Knoten knoten) {
+        distanzTabelle.get(knoten).setzeBearbeitet(true);
+        aktuellerKnoten = knoten;
+    }
+    private Knoten vorgeangerKnoten(Knoten knoten) {
+        return distanzTabelle.get(knoten).holeVon();
+    }
+    private Kante kanteZwischen(Knoten knoten_1, Knoten knoten_2) {
+        for (Kante kante : graph.holeKanten()) {
+            if (kante.holeEndKnoten().equals(knoten_1) && kante.holeStartKnoten().equals(knoten_2)) {
+                return kante;
+            } else if (kante.holeEndKnoten().equals(knoten_2) && kante.holeStartKnoten().equals(knoten_1)) {
+                return kante;
+            }
+        }
+        return null;
+    }
+    private List<Kante> bauWeg(Knoten start, Knoten end) {
+        List<Kante> weg = new ArrayList<>();
+        Knoten zwischenKnoten = end;
+        while (!zwischenKnoten.equals(start)) {
+            Knoten knoten = vorgeangerKnoten(zwischenKnoten);
+            Kante kante = kanteZwischen(knoten, zwischenKnoten);
+            weg.add(0, kante);
+            zwischenKnoten = knoten;
+        }
+        return weg;
+    }
+    private static class DijkstraKnotenDaten {
+        private double distanz;
+        private boolean bearbeitet;
+        private Knoten von;
+        public DijkstraKnotenDaten() {
+            this.distanz = Integer.MAX_VALUE;
+            this.bearbeitet = false;
+            this.von = null;
+        }
+        public Knoten holeVon() {
+            return von;
+        }
+        public void setzeVon(Knoten von) {
+            this.von = von;
+        }
+        public double holeDistanz() {
+            return distanz;
+        }
+        public void setzeDistanz(double distanz) {
+            this.distanz = distanz;
+        }
+        public boolean istBearbeitet() {
+            return bearbeitet;
+        }
+        public void setzeBearbeitet(boolean bearbeitet) {
+            this.bearbeitet = bearbeitet;
+        }
+    }
+}
+package de.dhbw.bahn.schicht_0_plugins.serialisierer;
+import com.google.gson.Gson;
+import de.dhbw.bahn.schicht_1_adapter.serialisierer.Serialisierer;
+public class GsonSerialisierer implements Serialisierer {
+    private final Gson gson;
+    public GsonSerialisierer() {
+        this.gson = new Gson();
+    }
+    @Override
+    public <T> String serialisieren(T objekt) {
+        return this.gson.toJson(objekt);
+    }
+    @Override
+    public <T> T deserialisieren(String json, Class<T> klasse) {
+        return this.gson.fromJson(json, klasse);
+    }
+}
+package de.dhbw.bahn.schicht_2_anwendung.crud;
+import de.dhbw.bahn.schicht_2_anwendung.DuplikatFehler;
+import de.dhbw.bahn.schicht_2_anwendung.crud.EntitaetenAufsicht;
+import de.dhbw.bahn.schicht_2_anwendung.crud.Verwaltung;
+import de.dhbw.bahn.schicht_3_domaene.Bahnhof;
+import de.dhbw.bahn.schicht_3_domaene.Strecke;
+import de.dhbw.bahn.schicht_3_domaene.Zug;
+import de.dhbw.bahn.schicht_3_domaene.ZugTyp;
+import org.easymock.EasyMock;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.api.Test;
+import java.util.MissingResourceException;
+import java.util.Set;
+import java.util.TreeSet;
+@DisplayName("EntitaetenAufsicht Use-Case")
+public class EntitaetenAufsichtTest {
+    @Test
+    @DisplayName("streckeHinzufuegen(). Bahnhoefe existieren bereits.")
+    public void fuegeNeueStreckeHinzuBahnhoefeExistent() {
+        //Capture
+        Bahnhof startBahnhof = new Bahnhof("Test Startbahnhof");
+        Bahnhof endBahnhof = new Bahnhof("Test Endbahnhof");
+        double maximalGeschwindigkeit = 100;
+        double laenge = 3;
+        Set<ZugTyp> erlaubteZugTypen = new TreeSet<>();
+        erlaubteZugTypen.add(ZugTyp.IRE);
+        boolean freigegeben = true;
+        Strecke testStrecke = new Strecke("Test Strecke",
+                laenge,
+                maximalGeschwindigkeit,
+                erlaubteZugTypen,
+                freigegeben,
+                startBahnhof,
+                endBahnhof
+        );
+        //Mocks
+        Verwaltung<Bahnhof> mockVerwaltungBahnhof = EasyMock.createMock(Verwaltung.class);
+        Verwaltung<Strecke> mockVerwaltungStrecke = EasyMock.createMock(Verwaltung.class);
+        Verwaltung<Zug> mockVerwaltungZug = EasyMock.createMock(Verwaltung.class);
+        EasyMock.expect(mockVerwaltungBahnhof.hatEntitaet(startBahnhof.holeIdentifizierer())).andReturn(true).once();
+        EasyMock.expect(mockVerwaltungBahnhof.hatEntitaet(endBahnhof.holeIdentifizierer())).andReturn(true).once();
+        mockVerwaltungStrecke.persistiereEntitaet(testStrecke);
+        EasyMock.expectLastCall().once();
+        EasyMock.expect(mockVerwaltungStrecke.hatEntitaet(testStrecke.holeIdentifizierer())).andReturn(false).once();
+        EasyMock.expect(mockVerwaltungStrecke.holeEntitaet(testStrecke.holeIdentifizierer())).andReturn(testStrecke).once();
+        EasyMock.replay(mockVerwaltungBahnhof, mockVerwaltungStrecke, mockVerwaltungZug);
+        //Arrange
+        EntitaetenAufsicht cut = new EntitaetenAufsicht(mockVerwaltungBahnhof, mockVerwaltungStrecke, mockVerwaltungZug);
+        //Act
+        cut.streckeHinzufuegen(testStrecke);
+        //Assert
+        Assertions.assertEquals(
+                testStrecke, cut.holeStrecke(testStrecke.holeIdentifizierer())
+        );
+        //Verify
+        EasyMock.verify(mockVerwaltungBahnhof, mockVerwaltungStrecke, mockVerwaltungZug);
+    }
+    @Test
+    @DisplayName("streckeHinzufuegen(). Startbahnhof existiert nicht.")
+    public void fuegeNeueStreckeHinzuStartBahnhofNichtExistent() {
+        //Capture
+        Bahnhof startBahnhof = new Bahnhof("Test Startbahnhof");
+        Bahnhof endBahnhof = new Bahnhof("Test Endbahnhof");
+        double maximalGeschwindigkeit = 100;
+        double laenge = 3;
+        Set<ZugTyp> erlaubteZugTypen = new TreeSet<>();
+        erlaubteZugTypen.add(ZugTyp.IRE);
+        boolean freigegeben = true;
+        Strecke testStrecke = new Strecke("Test Strecke",
+                laenge,
+                maximalGeschwindigkeit,
+                erlaubteZugTypen,
+                freigegeben,
+                startBahnhof,
+                endBahnhof
+        );
+        //Mocks
+        Verwaltung<Bahnhof> mockVerwaltungBahnhof = EasyMock.createMock(Verwaltung.class);
+        Verwaltung<Strecke> mockVerwaltungStrecke = EasyMock.createMock(Verwaltung.class);
+        Verwaltung<Zug> mockVerwaltungZug = EasyMock.createMock(Verwaltung.class);
+        EasyMock.expect(mockVerwaltungBahnhof.hatEntitaet(startBahnhof.holeIdentifizierer())).andReturn(false).once();
+        //EasyMock.expect(mockVerwaltungBahnhof.hatEntitaet(endBahnhof.holeIdentifizierer())).andReturn(false).once();
+        EasyMock.expect(mockVerwaltungStrecke.hatEntitaet(testStrecke.holeIdentifizierer())).andReturn(false).once();
+        EasyMock.replay(mockVerwaltungBahnhof, mockVerwaltungStrecke, mockVerwaltungZug);
+        //Arrange
+        EntitaetenAufsicht cut = new EntitaetenAufsicht(mockVerwaltungBahnhof, mockVerwaltungStrecke, mockVerwaltungZug);
+        //Act, Assert
+        Assertions.assertThrows(MissingResourceException.class, ()-> cut.streckeHinzufuegen(testStrecke));
+        //Verify
+        EasyMock.verify(mockVerwaltungBahnhof, mockVerwaltungStrecke, mockVerwaltungZug);
+    }
+    @Test
+    @DisplayName("streckeHinzufuegen(). Endbahnhof existiert nicht.")
+    public void fuegeNeueStreckeHinzuEndBahnhofNichtExistent() {
+        //Capture
+        Bahnhof startBahnhof = new Bahnhof("Test Startbahnhof");
+        Bahnhof endBahnhof = new Bahnhof("Test Endbahnhof");
+        double maximalGeschwindigkeit = 100;
+        double laenge = 3;
+        Set<ZugTyp> erlaubteZugTypen = new TreeSet<>();
+        erlaubteZugTypen.add(ZugTyp.IRE);
+        boolean freigegeben = true;
+        Strecke testStrecke = new Strecke("Test Strecke",
+                laenge,
+                maximalGeschwindigkeit,
+                erlaubteZugTypen,
+                freigegeben,
+                startBahnhof,
+                endBahnhof
+        );
+        Verwaltung<Bahnhof> mockVerwaltungBahnhof = EasyMock.createMock(Verwaltung.class);
+        Verwaltung<Strecke> mockVerwaltungStrecke = EasyMock.createMock(Verwaltung.class);
+        Verwaltung<Zug> mockVerwaltungZug = EasyMock.createMock(Verwaltung.class);
+        EasyMock.expect(mockVerwaltungBahnhof.hatEntitaet(startBahnhof.holeIdentifizierer())).andReturn(true).once();
+        EasyMock.expect(mockVerwaltungBahnhof.hatEntitaet(endBahnhof.holeIdentifizierer())).andReturn(false).once();
+        EasyMock.expect(mockVerwaltungStrecke.hatEntitaet(testStrecke.holeIdentifizierer())).andReturn(false).once();
+        EasyMock.replay(mockVerwaltungBahnhof, mockVerwaltungStrecke, mockVerwaltungZug);
+        //Arrange
+        EntitaetenAufsicht cut = new EntitaetenAufsicht(mockVerwaltungBahnhof, mockVerwaltungStrecke, mockVerwaltungZug);
+        //Act, Assert
+        Assertions.assertThrows(MissingResourceException.class, ()-> cut.streckeHinzufuegen(testStrecke));
+        //Verify
+        EasyMock.verify(mockVerwaltungBahnhof, mockVerwaltungStrecke, mockVerwaltungZug);
+    }
+    @Test
+    @DisplayName("streckeHinzufuegen(). Strecke existiert bereits.")
+    public void fuegeVorhandeneStreckeHinzu() {
+        //Capture
+        Bahnhof startBahnhof = new Bahnhof("Test Startbahnhof");
+        Bahnhof endBahnhof = new Bahnhof("Test Endbahnhof");
+        double maximalGeschwindigkeit = 100;
+        double laenge = 3;
+        Set<ZugTyp> erlaubteZugTypen = new TreeSet<>();
+        erlaubteZugTypen.add(ZugTyp.IRE);
+        boolean freigegeben = true;
+        Strecke testStrecke = new Strecke("Test Strecke",
+                laenge,
+                maximalGeschwindigkeit,
+                erlaubteZugTypen,
+                freigegeben,
+                startBahnhof,
+                endBahnhof
+        );
+        Verwaltung<Bahnhof> mockVerwaltungBahnhof = EasyMock.createMock(Verwaltung.class);
+        Verwaltung<Strecke> mockVerwaltungStrecke = EasyMock.createMock(Verwaltung.class);
+        Verwaltung<Zug> mockVerwaltungZug = EasyMock.createMock(Verwaltung.class);
+        EasyMock.expect(mockVerwaltungStrecke.hatEntitaet(testStrecke.holeIdentifizierer())).andReturn(true).once();
+        EasyMock.replay(mockVerwaltungBahnhof, mockVerwaltungStrecke, mockVerwaltungZug);
+        //Arrange
+        EntitaetenAufsicht cut = new EntitaetenAufsicht(mockVerwaltungBahnhof, mockVerwaltungStrecke, mockVerwaltungZug);
+        //Act, Assert
+        Assertions.assertThrows(DuplikatFehler.class, ()-> cut.streckeHinzufuegen(testStrecke));
+        //Verify
+        EasyMock.verify(mockVerwaltungBahnhof, mockVerwaltungStrecke, mockVerwaltungZug);
+    }
+}
+package de.dhbw.bahn.schicht_2_anwendung.wegfinder;
+import de.dhbw.bahn.schicht_2_anwendung.crud.Verwaltung;
+import de.dhbw.bahn.schicht_2_anwendung.wegfinder.*;
+import de.dhbw.bahn.schicht_3_domaene.Bahnhof;
+import de.dhbw.bahn.schicht_3_domaene.Strecke;
+import de.dhbw.bahn.schicht_3_domaene.Zug;
+import de.dhbw.bahn.schicht_3_domaene.ZugTyp;
+import de.dhbw.bahn.schicht_4_abstraktion.graph.Kante;
+import org.easymock.EasyMock;
+import org.easymock.IExpectationSetters;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.api.Test;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Set;
+import java.util.TreeSet;
+@DisplayName("StreckenBerechner Use-Case")
+public class StreckenBerechnerTest {
+    @Test
+    @DisplayName("berechneKuerzesteStrecke().")
+    public void berechneKuerzesteStrecke(){
+        //Capture
+        Verwaltung<Bahnhof> mockBahnhofsVerwaltung = EasyMock.mock(Verwaltung.class);
+        Verwaltung<Strecke> mockStreckenVerwaltung = EasyMock.mock(Verwaltung.class);
+        WegFinder mockWegFinder = EasyMock.mock(WegFinder.class);
+        Bahnhof startBahnhof = new Bahnhof("Test Startbahnhof");
+        Bahnhof endBahnhof = new Bahnhof("Test Endbahnhof");
+        BahnhofsKnoten startBahnhofKnoten = new BahnhofsKnoten(startBahnhof);
+        BahnhofsKnoten endBahnhofKnoten = new BahnhofsKnoten(endBahnhof);
+        int zugNummer = 666;
+        double zugHoechstGeschwindigkeit = 142.0;
+        double zugVerbrauch = 12.0;
+        Zug testZug = new Zug(zugNummer, ZugTyp.IRE, zugHoechstGeschwindigkeit, zugVerbrauch);
+        double maximalGeschwindigkeit = 100;
+        double laenge = 3;
+        Set<ZugTyp> erlaubteZugTypen = new TreeSet<>();
+        erlaubteZugTypen.add(ZugTyp.IRE);
+        boolean freigegeben = true;
+        Strecke testStrecke = new Strecke("Test Strecke",
+                laenge,
+                maximalGeschwindigkeit,
+                erlaubteZugTypen,
+                freigegeben,
+                startBahnhof,
+                endBahnhof
+        );
+        List<Strecke> testStreckenEntitaeten = new ArrayList<>();
+        testStreckenEntitaeten.add(testStrecke);
+        List<Bahnhof> testBahnhofsEntitaeten = new ArrayList<>();
+        testBahnhofsEntitaeten.add(startBahnhof);
+        testBahnhofsEntitaeten.add(endBahnhof);
+        EasyMock.expect(mockStreckenVerwaltung.holeEntitaeten()).andReturn(testStreckenEntitaeten).once();
+        EasyMock.expect(mockBahnhofsVerwaltung.holeEntitaeten()).andReturn(testBahnhofsEntitaeten).once();
+        mockWegFinder.initialisiereGraphen(
+                EasyMock.isA(StreckenNetz.class)
+        );
+        EasyMock.expectLastCall().once();
+        List<StreckenKante> testKantenListe = new ArrayList<>();
+        testKantenListe.add(new StreckenKante(testStrecke, startBahnhofKnoten, endBahnhofKnoten) {
+            @Override
+            public double holeGewichtung() {
+                return 0;
+            }
+        });
+        IExpectationSetters<List<? extends Kante>> expect = EasyMock.expect(
+                mockWegFinder.berechneWeg(EasyMock.isA(BahnhofsKnoten.class), EasyMock.isA(BahnhofsKnoten.class))
+        );
+        expect.andReturn(testKantenListe);
+        expect.once();
+        EasyMock.replay(mockBahnhofsVerwaltung, mockStreckenVerwaltung, mockWegFinder);
+        //Arrange
+        StreckenBerechner cut = new StreckenBerechner(mockBahnhofsVerwaltung, mockStreckenVerwaltung, mockWegFinder);
+        //Act
+        List<Strecke> ergebnis = cut.berechneKuerzesteStrecke(startBahnhof, endBahnhof, testZug);
+        //Assert
+        Assertions.assertEquals(1, ergebnis.size());
+        Assertions.assertEquals(testStrecke, ergebnis.get(0));
+        //Verify
+        EasyMock.verify(mockBahnhofsVerwaltung, mockStreckenVerwaltung, mockWegFinder);
+    }
+    @Test
+    @DisplayName("berechneKuerzesteZeitStrecke().")
+    public void berechneKuerzesteZeitStrecke(){
+        //Capture
+        Verwaltung<Bahnhof> mockBahnhofsVerwaltung = EasyMock.mock(Verwaltung.class);
+        Verwaltung<Strecke> mockStreckenVerwaltung = EasyMock.mock(Verwaltung.class);
+        WegFinder mockWegFinder = EasyMock.mock(WegFinder.class);
+        Bahnhof startBahnhof = new Bahnhof("Test Startbahnhof");
+        Bahnhof endBahnhof = new Bahnhof("Test Endbahnhof");
+        BahnhofsKnoten startBahnhofKnoten = new BahnhofsKnoten(startBahnhof);
+        BahnhofsKnoten endBahnhofKnoten = new BahnhofsKnoten(endBahnhof);
+        int zugNummer = 666;
+        double zugHoechstGeschwindigkeit = 142.0;
+        double zugVerbrauch = 12.0;
+        Zug testZug = new Zug(zugNummer, ZugTyp.IRE, zugHoechstGeschwindigkeit, zugVerbrauch);
+        double maximalGeschwindigkeit = 100;
+        double laenge = 3;
+        Set<ZugTyp> erlaubteZugTypen = new TreeSet<>();
+        erlaubteZugTypen.add(ZugTyp.IRE);
+        boolean freigegeben = true;
+        Strecke testStrecke = new Strecke("Test Strecke",
+                laenge,
+                maximalGeschwindigkeit,
+                erlaubteZugTypen,
+                freigegeben,
+                startBahnhof,
+                endBahnhof
+        );
+        List<Strecke> testStreckenEntitaeten = new ArrayList<>();
+        testStreckenEntitaeten.add(testStrecke);
+        List<Bahnhof> testBahnhofsEntitaeten = new ArrayList<>();
+        testBahnhofsEntitaeten.add(startBahnhof);
+        testBahnhofsEntitaeten.add(endBahnhof);
+        EasyMock.expect(mockStreckenVerwaltung.holeEntitaeten()).andReturn(testStreckenEntitaeten).once();
+        EasyMock.expect(mockBahnhofsVerwaltung.holeEntitaeten()).andReturn(testBahnhofsEntitaeten).once();
+        mockWegFinder.initialisiereGraphen(
+                EasyMock.isA(StreckenNetz.class)
+        );
+        EasyMock.expectLastCall().once();
+        List<StreckenKante> testKantenListe = new ArrayList<>();
+        testKantenListe.add(new StreckenKante(testStrecke, startBahnhofKnoten, endBahnhofKnoten) {
+            @Override
+            public double holeGewichtung() {
+                return 0;
+            }
+        });
+        IExpectationSetters<List<? extends Kante>> expect = EasyMock.expect(
+                mockWegFinder.berechneWeg(EasyMock.isA(BahnhofsKnoten.class), EasyMock.isA(BahnhofsKnoten.class))
+        );
+        expect.andReturn(testKantenListe);
+        expect.once();
+        EasyMock.replay(mockBahnhofsVerwaltung, mockStreckenVerwaltung, mockWegFinder);
+        //Arrange
+        StreckenBerechner cut = new StreckenBerechner(mockBahnhofsVerwaltung, mockStreckenVerwaltung, mockWegFinder);
+        //Act
+        List<Strecke> ergebnis = cut.berechneKuerzesteZeitStrecke(startBahnhof, endBahnhof, testZug);
+        //Assert
+        Assertions.assertEquals(1, ergebnis.size());
+        Assertions.assertEquals(testStrecke, ergebnis.get(0));
+        //Verify
+        EasyMock.verify(mockBahnhofsVerwaltung, mockStreckenVerwaltung, mockWegFinder);
+    }
+}
+package de.dhbw.bahn.schicht_2_anwendung.wegfinder;
+import de.dhbw.bahn.schicht_2_anwendung.wegfinder.BahnhofsKnoten;
+import de.dhbw.bahn.schicht_2_anwendung.wegfinder.StreckenKante;
+import de.dhbw.bahn.schicht_2_anwendung.wegfinder.StreckenNetz;
+import de.dhbw.bahn.schicht_3_domaene.Bahnhof;
+import de.dhbw.bahn.schicht_3_domaene.Strecke;
+import de.dhbw.bahn.schicht_3_domaene.ZugTyp;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.api.Test;
+import java.util.Optional;
+import java.util.Set;
+import java.util.TreeSet;
+@DisplayName("StreckenNetz")
+public class StreckenNetzTest {
+    @Test
+    @DisplayName("Suche nach nicht vorhandenem Bahnhof.")
+    public void sucheBahnhofLeer(){
+        //Arrange
+        Bahnhof testBahnhof = new Bahnhof("Test Bahnhof");
+        StreckenNetz cut = new StreckenNetz();
+        //Act
+        Optional<BahnhofsKnoten> ergebnis = cut.sucheBahnhof(testBahnhof.holeIdentifizierer());
+        //Assert
+        Assertions.assertFalse(ergebnis.isPresent());
+    }
+    @Test
+    @DisplayName("Suche nach vorhandenem Bahnhof.")
+    public void sucheBahnhofVorhanden(){
+        //Arrange
+        Bahnhof testBahnhof = new Bahnhof("Test Bahnhof");
+        StreckenNetz cut = new StreckenNetz();
+        cut.bahnhofHinzufuegen(new BahnhofsKnoten(testBahnhof));
+        //Act
+        Optional<BahnhofsKnoten> ergebnis = cut.sucheBahnhof(testBahnhof.holeIdentifizierer());
+        //Assert
+        Assertions.assertTrue(ergebnis.isPresent());
+        Assertions.assertEquals(testBahnhof.holeIdentifizierer(), ergebnis.get().holeIdentifizierer());
+    }
+    @Test
+    @DisplayName("Suche nach nicht vorhandener Strecke.")
+    public void sucheStreckeLeer(){
+        //Arrange
+        StreckenNetz cut = new StreckenNetz();
+        Bahnhof testBahnhof = new Bahnhof("Test Bahnhof");
+        BahnhofsKnoten testKnoten = new BahnhofsKnoten(testBahnhof);
+        double maximalGeschwindigkeit = 100;
+        double laenge = 3;
+        Set<ZugTyp> erlaubteZugTypen = new TreeSet<>();
+        erlaubteZugTypen.add(ZugTyp.IRE);
+        boolean freigegeben = true;
+        Bahnhof startBahnhof = testBahnhof;
+        Bahnhof endBahnhof = testBahnhof;
+        Strecke testStrecke = new Strecke("Umweg von Test Bahnhof zu Test Bahnhof",
+                laenge,
+                maximalGeschwindigkeit,
+                erlaubteZugTypen,
+                freigegeben,
+                startBahnhof,
+                endBahnhof
+        );
+        StreckenKante testStreckenKante = new StreckenKante(testStrecke, testKnoten, testKnoten) {
+            @Override
+            public double holeGewichtung() {
+                return this.holeStrecke().holeLaenge();
+            }
+        };
+        cut.bahnhofHinzufuegen(testKnoten);
+        cut.streckeHinzufuegen(testStreckenKante);
+        //Act
+        Optional<StreckenKante> ergebnis = cut.sucheStrecke(testStreckenKante.holeIdentifizierer());
+        //Assert
+        Assertions.assertTrue(ergebnis.isPresent());
+        Assertions.assertEquals(testStrecke.holeIdentifizierer(), ergebnis.get().holeIdentifizierer());
+    }
+    @Test
+    @DisplayName("Suche nach vorhandener Strecke.")
+    public void sucheStreckeVorhanden(){
+        //Arrange
+        Bahnhof testBahnhof = new Bahnhof("Test Bahnhof");
+        BahnhofsKnoten testKnoten = new BahnhofsKnoten(testBahnhof);
+        double maximalGeschwindigkeit = 100;
+        double laenge = 3;
+        Set<ZugTyp> erlaubteZugTypen = new TreeSet<>();
+        erlaubteZugTypen.add(ZugTyp.IRE);
+        boolean freigegeben = true;
+        Bahnhof startBahnhof = testBahnhof;
+        Bahnhof endBahnhof = testBahnhof;
+        Strecke testStrecke = new Strecke("Umweg von Test Bahnhof zu Test Bahnhof",
+                laenge,
+                maximalGeschwindigkeit,
+                erlaubteZugTypen,
+                freigegeben,
+                startBahnhof,
+                endBahnhof
+        );
+        StreckenKante testStreckenKante = new StreckenKante(testStrecke, testKnoten, testKnoten) {
+            @Override
+            public double holeGewichtung() {
+                return this.holeStrecke().holeLaenge();
+            }
+        };
+        StreckenNetz cut = new StreckenNetz();
+        //Act
+        Optional<StreckenKante> ergebnis = cut.sucheStrecke(testStreckenKante.holeIdentifizierer());
+        //Assert
+        Assertions.assertFalse(ergebnis.isPresent());
+    }
+}
+package de.dhbw.bahn.schicht_0_plugins.persistenz;
+import de.dhbw.bahn.schicht_3_domaene.Bahnhof;
+import de.dhbw.bahn.schicht_3_domaene.Zug;
+import de.dhbw.bahn.schicht_3_domaene.ZugTyp;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.api.Test;
+@DisplayName("TemporaereVerwaltung Plugin")
+public class TemporaereVerwaltungTest {
+    @Test
+    @DisplayName("Entitaet soll persistiert werden. Nur unechte Persistenz wird gefordert.")
+    public void entitaetPersistieren(){
+        //Arrange
+        Bahnhof testBahnhof = new Bahnhof("Test Bahnhof");
+        TemporaereVerwaltung<Bahnhof> cut = new TemporaereVerwaltung<>();
+        //Act
+        boolean hatEntitaetBevorPersistenz = cut.hatEntitaet(testBahnhof.holeIdentifizierer());
+        cut.persistiereEntitaet(testBahnhof);
+        boolean hatEntitaetNachPersistenz = cut.hatEntitaet(testBahnhof.holeIdentifizierer());
+        //Assert
+        Assertions.assertFalse(hatEntitaetBevorPersistenz);
+        Assertions.assertTrue(hatEntitaetNachPersistenz);
+    }
+    @Test
+    @DisplayName("Entitaet soll nach Loeschen nicht mehr existent sein.")
+    public void entitaetLoeschen(){
+        //Arrange
+        Bahnhof testBahnhof = new Bahnhof("Test Bahnhof");
+        TemporaereVerwaltung<Bahnhof> cut = new TemporaereVerwaltung<>();
+        cut.persistiereEntitaet(testBahnhof);
+        //Act
+        boolean hatEntitaetBevorPersistenz = cut.hatEntitaet(testBahnhof.holeIdentifizierer());
+        cut.loescheEntitaet(testBahnhof.holeIdentifizierer());
+        boolean hatEntitaetNachPersistenz = cut.hatEntitaet(testBahnhof.holeIdentifizierer());
+        //Assert
+        Assertions.assertTrue(hatEntitaetBevorPersistenz);
+        Assertions.assertFalse(hatEntitaetNachPersistenz);
+    }
+    @Test
+    @DisplayName("Kann eine Entitaet aktualisiert werden.")
+    public void entitaetAktualisieren(){
+        //Arrange
+        int zugNummer = 666;
+        double zugHoechstGeschwindigkeit = 142.0;
+        double zugVerbrauch = 12.0;
+        Zug testZug = new Zug(zugNummer, ZugTyp.IRE, zugHoechstGeschwindigkeit, zugVerbrauch);
+        TemporaereVerwaltung<Zug> cut = new TemporaereVerwaltung<>();
+        cut.persistiereEntitaet(testZug);
+        double zugNeuerVerbrauch = 42.0;
+        //Act
+        double vorherigerVerbrauch = cut.holeEntitaet(testZug.holeIdentifizierer()).holeVerbrauch();
+        testZug.setzeVerbrauch(zugNeuerVerbrauch);
+        cut.aktualisiereEntitaet(testZug);
+        double nachfolgenderVerbrauch = cut.holeEntitaet(testZug.holeIdentifizierer()).holeVerbrauch();
+        //Assert
+        Assertions.assertEquals(zugVerbrauch, vorherigerVerbrauch, Double.MIN_VALUE);
+        Assertions.assertEquals(zugNeuerVerbrauch, nachfolgenderVerbrauch, Double.MIN_VALUE);
+    }
+}
+package de.dhbw.bahn.schicht_0_plugins.algorithmen;
+import de.dhbw.bahn.schicht_0_plugins.algorithmen.Dijkstra;
+import de.dhbw.bahn.schicht_2_anwendung.wegfinder.BahnhofsKnoten;
+import de.dhbw.bahn.schicht_2_anwendung.wegfinder.StreckenKante;
+import de.dhbw.bahn.schicht_2_anwendung.wegfinder.StreckenNetz;
+import de.dhbw.bahn.schicht_3_domaene.Bahnhof;
+import de.dhbw.bahn.schicht_3_domaene.Strecke;
+import de.dhbw.bahn.schicht_3_domaene.ZugTyp;
+import de.dhbw.bahn.schicht_4_abstraktion.graph.Kante;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.api.Test;
+import java.util.List;
+import java.util.Set;
+import java.util.TreeSet;
+@DisplayName("Dijkstra Wegsuche Plugin")
+public class DijkstraTest {
+    @Test
+    @DisplayName("Wegsuche von A nach A. Umwege sollen ignoriert werden.")
+    public void reflexivitaetTest(){
+        //Arrange
+        StreckenNetz graph = new StreckenNetz();
+        Bahnhof testBahnhof = new Bahnhof("Test Bahnhof");
+        BahnhofsKnoten testKnoten = new BahnhofsKnoten(testBahnhof);
+        double maximalGeschwindigkeit = 100;
+        double laenge = 3;
+        Set<ZugTyp> erlaubteZugTypen = new TreeSet<>();
+        erlaubteZugTypen.add(ZugTyp.IRE);
+        boolean freigegeben = true;
+        Bahnhof startBahnhof = testBahnhof;
+        Bahnhof endBahnhof = testBahnhof;
+        Strecke umweg = new Strecke("Umweg von Test Bahnhof zu Test Bahnhof",
+                laenge,
+                maximalGeschwindigkeit,
+                erlaubteZugTypen,
+                freigegeben,
+                startBahnhof,
+                endBahnhof
+        );
+        graph.bahnhofHinzufuegen(testKnoten);
+        graph.streckeHinzufuegen(new StreckenKante(umweg, testKnoten, testKnoten) {
+            @Override
+            public double holeGewichtung() {
+                return this.holeStrecke().holeLaenge();
+            }
+        });
+        Dijkstra cut = new Dijkstra();
+        cut.initialisiereGraphen(graph);
+        //Act
+        List<? extends Kante> wege = cut.berechneWeg(testKnoten, testKnoten);
+        //Assert
+        //Kein Weg wird erwartet, da kein Weg zu sich selbst benötigt wird
+        Assertions.assertEquals(0, wege.size());
+    }
+}
