@@ -145,7 +145,7 @@ public class DijkstraTest {
         List<? extends Kante> wege = cut.berechneWeg(testKnoten2, testKnoten3);
 
         //Assert
-        //Kein Weg wird erwartet, da kein Weg zu sich selbst benötigt wird
+        //Der Weg von 2->1->3 wird erwartet
         Assertions.assertEquals(2, wege.size());
     }
 
