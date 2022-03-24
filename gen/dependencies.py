@@ -1,6 +1,7 @@
 #!/usr/bin/env python3
 import os
 import pathlib
+import random
 
 
 PROJECT_DIR = "../src/main"
@@ -31,13 +32,6 @@ FOOTER = """
 
 ROOT_PACKAGE_NAME = "de.dhbw.bahn"
 
-PACKAGE_NAMES = [
-    "de.dhbw.bahn.schicht_4_abstraktion",
-    "de.dhbw.bahn.schicht_3_domaene",
-    "de.dhbw.bahn.schicht_2_anwendung",
-    "de.dhbw.bahn.schicht_1_adapter",
-    "de.dhbw.bahn.schicht_0_plugins"
-]
 
 class Package():
     def __init__(self, name):
@@ -56,7 +50,13 @@ class Package():
 
 
     def gen_structure(self):
-        lines = [f"package {self.name} {{"]
+        r = random.randint(200, 255)
+        g = random.randint(200, 255)
+        b = random.randint(200, 255)
+        c = (r << 16) + (g << 8) + b
+        color = hex(c).replace("0x", "#")
+
+        lines = [f"package {self.name} {color}{{"]
         for (class_name, _) in self.classes:
             lines.append(f"class {class_name}{{\n}}")
         for k in self.packages:
