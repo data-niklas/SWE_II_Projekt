@@ -2,7 +2,12 @@ package de.dhbw.bahn.schicht_0_plugins.http;
 
 import com.sun.net.httpserver.HttpExchange;
 import com.sun.net.httpserver.HttpHandler;
-import de.dhbw.bahn.schicht_1_adapter.http.*;
+import de.dhbw.bahn.schicht_1_adapter.http.Darstellung;
+import de.dhbw.bahn.schicht_1_adapter.http.Event;
+import de.dhbw.bahn.schicht_1_adapter.http.EventAntwort;
+import de.dhbw.bahn.schicht_1_adapter.http.EventRueckruf;
+import de.dhbw.bahn.schicht_1_adapter.http.MimeTyp;
+import de.dhbw.bahn.schicht_1_adapter.http.EventTyp;
 
 import java.io.*;
 import java.net.InetSocketAddress;

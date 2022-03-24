@@ -1,0 +1,337 @@
+
+@startuml
+<style>
+    classDiagram{
+        FontColor Black
+        BackgroundColor White
+        LineThickness 2
+        LineColor Black
+        RoundCorner 10
+    }
+
+</style>
+skinparam useBetaStyle true
+package de.dhbw.bahn {
+class Main{
+}
+package de.dhbw.bahn.schicht_2_anwendung {
+class DuplikatFehler{
+}
+package de.dhbw.bahn.schicht_2_anwendung.crud {
+class EntitaetenAufsicht{
+}
+class Verwaltung{
+}
+}
+package de.dhbw.bahn.schicht_2_anwendung.wegfinder {
+class StreckenBerechner{
+}
+class StreckenNetz{
+}
+class WegFinder{
+}
+class BahnhofsKnoten{
+}
+class StreckenKante{
+}
+}
+}
+package de.dhbw.bahn.schicht_3_domaene {
+class Strecke{
+}
+class Zug{
+}
+class ZugTyp{
+}
+class Bahnhof{
+}
+}
+package de.dhbw.bahn.schicht_4_abstraktion {
+class Identifizierbar{
+}
+package de.dhbw.bahn.schicht_4_abstraktion.graph {
+class Graph{
+}
+class Kante{
+}
+class Knoten{
+}
+}
+}
+package de.dhbw.bahn.schicht_1_adapter {
+class Kontrollierer{
+}
+package de.dhbw.bahn.schicht_1_adapter.http {
+class Darstellung{
+}
+class EventAntwort{
+}
+class EventTyp{
+}
+class Event{
+}
+class EventRueckruf{
+}
+class MimeTyp{
+}
+package de.dhbw.bahn.schicht_1_adapter.http.routen {
+package de.dhbw.bahn.schicht_1_adapter.http.routen.berechnungen {
+class SchnellsteStreckeLesen{
+}
+class StreckenBerechnungRoute{
+}
+class KuerzesteStreckeLesen{
+}
+}
+package de.dhbw.bahn.schicht_1_adapter.http.routen.bahnhof {
+class BahnhofLoeschen{
+}
+class BahnhofRoute{
+}
+class BahnhofLesen{
+}
+class BahnhofAktualisieren{
+}
+class BahnhofErstellen{
+}
+}
+package de.dhbw.bahn.schicht_1_adapter.http.routen.zug {
+class ZugLesen{
+}
+class ZugAktualisieren{
+}
+class ZugRoute{
+}
+class ZugLoeschen{
+}
+class ZugErstellen{
+}
+}
+package de.dhbw.bahn.schicht_1_adapter.http.routen.strecke {
+class StreckeAktualisieren{
+}
+class StreckeLesen{
+}
+class StreckeLoeschen{
+}
+class StreckeRoute{
+}
+class StreckeErstellen{
+}
+}
+}
+package de.dhbw.bahn.schicht_1_adapter.http.ressourcen {
+class RessourcenKonvertierer{
+}
+class StreckenRessource{
+}
+class StreckenRessourcenKonvertierer{
+}
+}
+}
+package de.dhbw.bahn.schicht_1_adapter.serialisierer {
+class Serialisierer{
+}
+}
+}
+package de.dhbw.bahn.schicht_0_plugins {
+package de.dhbw.bahn.schicht_0_plugins.persistenz {
+class TemporaereVerwaltung{
+}
+}
+package de.dhbw.bahn.schicht_0_plugins.http {
+class EinfacherHttpServer{
+}
+}
+package de.dhbw.bahn.schicht_0_plugins.algorithmen {
+class Dijkstra{
+}
+}
+package de.dhbw.bahn.schicht_0_plugins.serialisierer {
+class GsonSerialisierer{
+}
+}
+}
+}
+Main --> Dijkstra
+Main --> EinfacherHttpServer
+Main --> TemporaereVerwaltung
+Main --> GsonSerialisierer
+Main --> Kontrollierer
+Main --> Darstellung
+Main --> Serialisierer
+Main --> Verwaltung
+Main --> EntitaetenAufsicht
+Main --> WegFinder
+Main --> Bahnhof
+Main --> Strecke
+Main --> Zug
+EntitaetenAufsicht --> Bahnhof
+EntitaetenAufsicht --> DuplikatFehler
+EntitaetenAufsicht --> Strecke
+EntitaetenAufsicht --> Zug
+Verwaltung --> Identifizierbar
+StreckenBerechner --> Verwaltung
+StreckenBerechner --> Bahnhof
+StreckenBerechner --> Strecke
+StreckenBerechner --> Zug
+StreckenNetz --> DuplikatFehler
+StreckenNetz --> Bahnhof
+StreckenNetz --> Graph
+WegFinder --> Graph
+WegFinder --> Kante
+WegFinder --> Knoten
+BahnhofsKnoten --> Bahnhof
+BahnhofsKnoten --> Knoten
+StreckenKante --> Strecke
+StreckenKante --> Kante
+StreckenKante --> Knoten
+Strecke --> Identifizierbar
+Zug --> Identifizierbar
+Bahnhof --> Identifizierbar
+Kante --> Identifizierbar
+Knoten --> Identifizierbar
+Kontrollierer --> EventTyp
+Kontrollierer --> Event
+Kontrollierer --> Darstellung
+Kontrollierer --> BahnhofLoeschen
+Kontrollierer --> BahnhofLesen
+Kontrollierer --> BahnhofErstellen
+Kontrollierer --> KuerzesteStreckeLesen
+Kontrollierer --> SchnellsteStreckeLesen
+Kontrollierer --> StreckeLoeschen
+Kontrollierer --> StreckeLesen
+Kontrollierer --> StreckeErstellen
+Kontrollierer --> ZugLoeschen
+Kontrollierer --> ZugLesen
+Kontrollierer --> ZugErstellen
+Kontrollierer --> ZugAktualisieren
+Kontrollierer --> Serialisierer
+Kontrollierer --> EntitaetenAufsicht
+Kontrollierer --> WegFinder
+SchnellsteStreckeLesen --> Serialisierer
+SchnellsteStreckeLesen --> EntitaetenAufsicht
+SchnellsteStreckeLesen --> WegFinder
+SchnellsteStreckeLesen --> Bahnhof
+SchnellsteStreckeLesen --> Strecke
+SchnellsteStreckeLesen --> Zug
+StreckenBerechnungRoute --> EventAntwort
+StreckenBerechnungRoute --> Event
+StreckenBerechnungRoute --> EventRueckruf
+StreckenBerechnungRoute --> MimeTyp
+StreckenBerechnungRoute --> Serialisierer
+StreckenBerechnungRoute --> EntitaetenAufsicht
+StreckenBerechnungRoute --> WegFinder
+StreckenBerechnungRoute --> StreckenBerechner
+StreckenBerechnungRoute --> Bahnhof
+StreckenBerechnungRoute --> Strecke
+StreckenBerechnungRoute --> Zug
+KuerzesteStreckeLesen --> Serialisierer
+KuerzesteStreckeLesen --> EntitaetenAufsicht
+KuerzesteStreckeLesen --> StreckenKante
+KuerzesteStreckeLesen --> WegFinder
+KuerzesteStreckeLesen --> Bahnhof
+KuerzesteStreckeLesen --> Strecke
+KuerzesteStreckeLesen --> Zug
+BahnhofLoeschen --> EventAntwort
+BahnhofLoeschen --> Event
+BahnhofLoeschen --> MimeTyp
+BahnhofLoeschen --> Serialisierer
+BahnhofLoeschen --> EntitaetenAufsicht
+BahnhofRoute --> EventRueckruf
+BahnhofRoute --> Serialisierer
+BahnhofRoute --> EntitaetenAufsicht
+BahnhofLesen --> EventAntwort
+BahnhofLesen --> Event
+BahnhofLesen --> MimeTyp
+BahnhofLesen --> Serialisierer
+BahnhofLesen --> EntitaetenAufsicht
+BahnhofLesen --> Bahnhof
+BahnhofAktualisieren --> EventAntwort
+BahnhofAktualisieren --> Event
+BahnhofAktualisieren --> MimeTyp
+BahnhofAktualisieren --> Serialisierer
+BahnhofAktualisieren --> EntitaetenAufsicht
+BahnhofAktualisieren --> Bahnhof
+BahnhofErstellen --> EventAntwort
+BahnhofErstellen --> Event
+BahnhofErstellen --> MimeTyp
+BahnhofErstellen --> Serialisierer
+BahnhofErstellen --> EntitaetenAufsicht
+BahnhofErstellen --> Bahnhof
+ZugLesen --> EventAntwort
+ZugLesen --> Event
+ZugLesen --> MimeTyp
+ZugLesen --> Serialisierer
+ZugLesen --> EntitaetenAufsicht
+ZugLesen --> Zug
+ZugAktualisieren --> EventAntwort
+ZugAktualisieren --> Event
+ZugAktualisieren --> MimeTyp
+ZugAktualisieren --> Serialisierer
+ZugAktualisieren --> EntitaetenAufsicht
+ZugAktualisieren --> Zug
+ZugRoute --> EventRueckruf
+ZugRoute --> Serialisierer
+ZugRoute --> EntitaetenAufsicht
+ZugLoeschen --> EventAntwort
+ZugLoeschen --> Event
+ZugLoeschen --> MimeTyp
+ZugLoeschen --> Serialisierer
+ZugLoeschen --> EntitaetenAufsicht
+ZugErstellen --> EventAntwort
+ZugErstellen --> Event
+ZugErstellen --> MimeTyp
+ZugErstellen --> Serialisierer
+ZugErstellen --> EntitaetenAufsicht
+ZugErstellen --> Zug
+StreckeAktualisieren --> EventAntwort
+StreckeAktualisieren --> Event
+StreckeAktualisieren --> MimeTyp
+StreckeAktualisieren --> StreckenRessource
+StreckeAktualisieren --> Serialisierer
+StreckeAktualisieren --> EntitaetenAufsicht
+StreckeAktualisieren --> Strecke
+StreckeLesen --> EventAntwort
+StreckeLesen --> Event
+StreckeLesen --> MimeTyp
+StreckeLesen --> StreckenRessource
+StreckeLesen --> Serialisierer
+StreckeLesen --> EntitaetenAufsicht
+StreckeLesen --> Strecke
+StreckeLoeschen --> EventAntwort
+StreckeLoeschen --> Event
+StreckeLoeschen --> MimeTyp
+StreckeLoeschen --> Serialisierer
+StreckeLoeschen --> EntitaetenAufsicht
+StreckeRoute --> EventRueckruf
+StreckeRoute --> StreckenRessourcenKonvertierer
+StreckeRoute --> Serialisierer
+StreckeRoute --> EntitaetenAufsicht
+StreckeErstellen --> EventAntwort
+StreckeErstellen --> Event
+StreckeErstellen --> MimeTyp
+StreckeErstellen --> StreckenRessource
+StreckeErstellen --> Serialisierer
+StreckeErstellen --> EntitaetenAufsicht
+StreckeErstellen --> Strecke
+StreckenRessource --> ZugTyp
+StreckenRessourcenKonvertierer --> Verwaltung
+StreckenRessourcenKonvertierer --> Bahnhof
+StreckenRessourcenKonvertierer --> Strecke
+
+TemporaereVerwaltung --> Verwaltung
+TemporaereVerwaltung --> Identifizierbar
+EinfacherHttpServer --> Darstellung
+EinfacherHttpServer --> Event
+EinfacherHttpServer --> EventAntwort
+EinfacherHttpServer --> EventRueckruf
+EinfacherHttpServer --> MimeTyp
+EinfacherHttpServer --> EventTyp
+Dijkstra --> WegFinder
+Dijkstra --> Graph
+Dijkstra --> Kante
+Dijkstra --> Knoten
+GsonSerialisierer --> Serialisierer
+
+@enduml
