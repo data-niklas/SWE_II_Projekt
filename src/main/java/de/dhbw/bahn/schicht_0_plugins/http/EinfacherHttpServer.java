@@ -32,7 +32,6 @@ public class EinfacherHttpServer implements Darstellung, HttpHandler {
         host = "localhost";
     }
 
-
     private void registriereKontext() {
         this.rueckrufTabelle.keySet().forEach(route -> this.httpServer.createContext(route.holeName(), this));
     }
@@ -56,8 +55,10 @@ public class EinfacherHttpServer implements Darstellung, HttpHandler {
     @Override
     public void legeLos(Map<String, String> konfiguration) {
         this.konfiguration = konfiguration;
-        if (konfiguration.containsKey("host"))this.host = konfiguration.get("host");
-        if (konfiguration.containsKey("port"))this.port = Integer.parseInt(konfiguration.get("port"));
+        if (konfiguration.containsKey("host"))
+            this.host = konfiguration.get("host");
+        if (konfiguration.containsKey("port"))
+            this.port = Integer.parseInt(konfiguration.get("port"));
         try {
             this.httpServer = com.sun.net.httpserver.HttpServer.create(new InetSocketAddress(this.host, this.port), 0);
             this.registriereKontext();
@@ -85,13 +86,18 @@ public class EinfacherHttpServer implements Darstellung, HttpHandler {
         this.verarbeiteHttpAntwort(exchange, antwort);
     }
 
-    private EventTyp httpMethodeZuEventTyp(String httpMethode){
-        switch (httpMethode){
-            case "GET": return EventTyp.LESEN;
-            case "PUT": return EventTyp.AKTUALISIEREN;
-            case "POST": return EventTyp.ERSTELLEN;
-            case "DELETE": return EventTyp.LOESCHEN;
-            default: return null;
+    private EventTyp httpMethodeZuEventTyp(String httpMethode) {
+        switch (httpMethode) {
+        case "GET":
+            return EventTyp.LESEN;
+        case "PUT":
+            return EventTyp.AKTUALISIEREN;
+        case "POST":
+            return EventTyp.ERSTELLEN;
+        case "DELETE":
+            return EventTyp.LOESCHEN;
+        default:
+            return null;
         }
     }
 
@@ -101,7 +107,8 @@ public class EinfacherHttpServer implements Darstellung, HttpHandler {
         String pfad = exchange.getHttpContext().getPath();
 
         EventTyp eventTyp = httpMethodeZuEventTyp(exchange.getRequestMethod());
-        if (eventTyp == null)return new EventAntwort(404, "Diese Anfragemethode wird nicht unterstützt", MimeTyp.SCHLICHT);
+        if (eventTyp == null)
+            return new EventAntwort(404, "Diese Anfragemethode wird nicht unterstützt", MimeTyp.SCHLICHT);
         Event route = new Event(pfad, eventTyp);
         if (!this.rueckrufTabelle.containsKey(route)) {
             return new EventAntwort(404, "Not Found", MimeTyp.SCHLICHT);
@@ -117,7 +124,8 @@ public class EinfacherHttpServer implements Darstellung, HttpHandler {
 
     private Map<String, String> leseParameter(String query) throws UnsupportedEncodingException {
         Map<String, String> parameter = new HashMap<>();
-        if (query == null) return parameter;
+        if (query == null)
+            return parameter;
         String[] parameterPaare = query.split("&");
         for (String paar : parameterPaare) {
             String[] paarTeile = paar.split("=");
@@ -147,7 +155,7 @@ public class EinfacherHttpServer implements Darstellung, HttpHandler {
     private String leseKoerper(InputStream input) throws IOException {
         BufferedReader reader = new BufferedReader(new InputStreamReader(input));
         StringBuilder stringBuilder = new StringBuilder();
-        for (int ch; (ch = reader.read()) != -1; ) {
+        for (int ch; (ch = reader.read()) != -1;) {
             stringBuilder.append((char) ch);
         }
         return stringBuilder.toString();
