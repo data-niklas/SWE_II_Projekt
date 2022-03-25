@@ -127,3 +127,6 @@ if __name__ == "__main__":
         out_file.write(package.gen_refs())
         out_file.write("\n")
         generate_footer(out_file)
+
+    os.system(f"PLANTUML_LIMIT_SIZE=8192 plantuml -tsvg {OUTPUT_FILE}")
+    os.system(f"PLANTUML_LIMIT_SIZE=8192 plantuml -tpng {OUTPUT_FILE}")
