@@ -7,6 +7,17 @@ import random
 PROJECT_DIR = "../src/main"
 OUTPUT_FILE = "./dependencies.puml"
 
+HOVER_STYLE = """
+<style type="text/css"><![CDATA[
+    path:hover + polygon, path:hover {
+        stroke: #ff008c !important;
+        stroke-width: 8 !important;
+    }
+
+]]>
+</style>
+"""
+
 HEADER = """
 @startuml
 <style>
@@ -116,6 +127,13 @@ def analyze_java_files(files):
 
     return package
 
+def apply_hover_effect(file_name):
+    with open(file_name, 'r') as file:
+        content = file.read()
+    content = content.replace("<defs>", HOVER_STYLE + "<defs>")
+    with open(file_name, 'w') as file:
+        file.write(content)
+
 if __name__ == "__main__":
     files = find_java_files(PROJECT_DIR)
     package = analyze_java_files(files)
@@ -130,3 +148,4 @@ if __name__ == "__main__":
 
     os.system(f"PLANTUML_LIMIT_SIZE=8192 plantuml -tsvg {OUTPUT_FILE}")
     os.system(f"PLANTUML_LIMIT_SIZE=8192 plantuml -tpng {OUTPUT_FILE}")
+    apply_hover_effect(OUTPUT_FILE.replace("puml", "svg"))

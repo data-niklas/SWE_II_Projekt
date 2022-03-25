@@ -11,19 +11,19 @@
 
 </style>
 skinparam useBetaStyle true
-package de.dhbw.bahn #cef7f1{
+package de.dhbw.bahn #dbf9d4{
 class Main{
 }
-package de.dhbw.bahn.schicht_2_anwendung #fae7f9{
+package de.dhbw.bahn.schicht_2_anwendung #dafdfa{
 class DuplikatFehler{
 }
-package de.dhbw.bahn.schicht_2_anwendung.crud #e6d1e8{
+package de.dhbw.bahn.schicht_2_anwendung.crud #f3defe{
 class EntitaetenAufsicht{
 }
 class Verwaltung{
 }
 }
-package de.dhbw.bahn.schicht_2_anwendung.wegfinder #e9f3d0{
+package de.dhbw.bahn.schicht_2_anwendung.wegfinder #cfeae7{
 class StreckenBerechner{
 }
 class StreckenNetz{
@@ -36,7 +36,7 @@ class StreckenKante{
 }
 }
 }
-package de.dhbw.bahn.schicht_3_domaene #ffc9cc{
+package de.dhbw.bahn.schicht_3_domaene #efe1e1{
 class Strecke{
 }
 class Zug{
@@ -46,10 +46,10 @@ class ZugTyp{
 class Bahnhof{
 }
 }
-package de.dhbw.bahn.schicht_4_abstraktion #e6feea{
+package de.dhbw.bahn.schicht_4_abstraktion #edf5cc{
 class Identifizierbar{
 }
-package de.dhbw.bahn.schicht_4_abstraktion.graph #d1f3e0{
+package de.dhbw.bahn.schicht_4_abstraktion.graph #f1dbdf{
 class Graph{
 }
 class Kante{
@@ -58,10 +58,10 @@ class Knoten{
 }
 }
 }
-package de.dhbw.bahn.schicht_1_adapter #f8fae1{
+package de.dhbw.bahn.schicht_1_adapter #f1e9ea{
 class Kontrollierer{
 }
-package de.dhbw.bahn.schicht_1_adapter.http #dbd6f6{
+package de.dhbw.bahn.schicht_1_adapter.http #e8ecd8{
 class Darstellung{
 }
 class EventAntwort{
@@ -74,8 +74,8 @@ class EventRueckruf{
 }
 class MimeTyp{
 }
-package de.dhbw.bahn.schicht_1_adapter.http.routen #e2f7d7{
-package de.dhbw.bahn.schicht_1_adapter.http.routen.berechnungen #e2f6df{
+package de.dhbw.bahn.schicht_1_adapter.http.routen #d7defd{
+package de.dhbw.bahn.schicht_1_adapter.http.routen.berechnungen #caf9e6{
 class SchnellsteStreckeLesen{
 }
 class StreckenBerechnungRoute{
@@ -83,7 +83,7 @@ class StreckenBerechnungRoute{
 class KuerzesteStreckeLesen{
 }
 }
-package de.dhbw.bahn.schicht_1_adapter.http.routen.bahnhof #fdd5d0{
+package de.dhbw.bahn.schicht_1_adapter.http.routen.bahnhof #e5cad0{
 class BahnhofLoeschen{
 }
 class BahnhofRoute{
@@ -95,7 +95,7 @@ class BahnhofAktualisieren{
 class BahnhofErstellen{
 }
 }
-package de.dhbw.bahn.schicht_1_adapter.http.routen.zug #f4f6ff{
+package de.dhbw.bahn.schicht_1_adapter.http.routen.zug #d8f2d4{
 class ZugLesen{
 }
 class ZugAktualisieren{
@@ -107,7 +107,7 @@ class ZugLoeschen{
 class ZugErstellen{
 }
 }
-package de.dhbw.bahn.schicht_1_adapter.http.routen.strecke #d4d6e6{
+package de.dhbw.bahn.schicht_1_adapter.http.routen.strecke #ccd5d5{
 class StreckeAktualisieren{
 }
 class StreckeLesen{
@@ -120,7 +120,7 @@ class StreckeErstellen{
 }
 }
 }
-package de.dhbw.bahn.schicht_1_adapter.http.ressourcen #e8e4f2{
+package de.dhbw.bahn.schicht_1_adapter.http.ressourcen #f8c8e6{
 class RessourcenKonvertierer{
 }
 class StreckenRessource{
@@ -129,25 +129,25 @@ class StreckenRessourcenKonvertierer{
 }
 }
 }
-package de.dhbw.bahn.schicht_1_adapter.serialisierer #fceaef{
+package de.dhbw.bahn.schicht_1_adapter.serialisierer #f4d5e9{
 class Serialisierer{
 }
 }
 }
-package de.dhbw.bahn.schicht_0_plugins #e7faf9{
-package de.dhbw.bahn.schicht_0_plugins.persistenz #f7dff9{
+package de.dhbw.bahn.schicht_0_plugins #d7fef6{
+package de.dhbw.bahn.schicht_0_plugins.persistenz #dfe2f0{
 class TemporaereVerwaltung{
 }
 }
-package de.dhbw.bahn.schicht_0_plugins.http #d7f6d6{
+package de.dhbw.bahn.schicht_0_plugins.http #faf1d6{
 class EinfacherHttpServer{
 }
 }
-package de.dhbw.bahn.schicht_0_plugins.algorithmen #dcd0f6{
+package de.dhbw.bahn.schicht_0_plugins.algorithmen #fedeee{
 class Dijkstra{
 }
 }
-package de.dhbw.bahn.schicht_0_plugins.serialisierer #dbf5d4{
+package de.dhbw.bahn.schicht_0_plugins.serialisierer #d2d3dc{
 class GsonSerialisierer{
 }
 }
