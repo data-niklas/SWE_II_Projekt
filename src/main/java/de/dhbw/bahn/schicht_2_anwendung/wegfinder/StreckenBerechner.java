@@ -38,23 +38,35 @@ public class StreckenBerechner {
         return this.berechneStrecke(start, ende, streckenNetz);
     }
 
-    private StreckenNetz baueStreckenNetz(final Zug zug, final StreckenKantenGenerierer streckenKantenGenerierer) {
-        StreckenNetz netz = new StreckenNetz();
-        for (Bahnhof bahnhof : bahnhofsVerwaltung.holeEntitaeten()) {
-            netz.bahnhofHinzufuegen(new BahnhofsKnoten(bahnhof));
-        }
-        if (zug.holeHoechstGeschwindigkeit() == 0){
-            return netz;
-        }
+    private void fuegeStreckeZuStreckenNetzHinzu(StreckenNetz netz, Strecke strecke, final StreckenKantenGenerierer streckenKantenGenerierer){
+        final BahnhofsKnoten start = new BahnhofsKnoten(strecke.holeStartBahnhof());
+        final BahnhofsKnoten ende = new BahnhofsKnoten(strecke.holeEndBahnhof());
+        StreckenKante streckeGraph = streckenKantenGenerierer.generiereStreckenKante(strecke, start, ende);
+        netz.streckeHinzufuegen(streckeGraph);
+    }
+
+    private void fuegeKantenZuStreckenNetzHinzu(StreckenNetz netz, final Zug zug, final StreckenKantenGenerierer streckenKantenGenerierer){
         for (Strecke strecke : streckenVerwaltung.holeEntitaeten()) {
             if (!strecke.istFreigegeben() || !strecke.holeErlaubteZugTypen().contains(zug.holeZugTyp()) || strecke.holeMaximalGeschwindigkeit() == 0) {
                 continue;
             }
-            final BahnhofsKnoten start = new BahnhofsKnoten(strecke.holeStartBahnhof());
-            final BahnhofsKnoten ende = new BahnhofsKnoten(strecke.holeEndBahnhof());
-            StreckenKante streckeGraph = streckenKantenGenerierer.generiereStreckenKante(strecke, start, ende);
-            netz.streckeHinzufuegen(streckeGraph);
+            fuegeStreckeZuStreckenNetzHinzu(netz, strecke, streckenKantenGenerierer);
         }
+    }
+
+    private void fuegeBahnhoefeZuStreckenNetzHinzu(StreckenNetz netz){
+        for (Bahnhof bahnhof : bahnhofsVerwaltung.holeEntitaeten()) {
+            netz.bahnhofHinzufuegen(new BahnhofsKnoten(bahnhof));
+        }
+    }
+
+    private StreckenNetz baueStreckenNetz(final Zug zug, final StreckenKantenGenerierer streckenKantenGenerierer) {
+        StreckenNetz netz = new StreckenNetz();
+        fuegeBahnhoefeZuStreckenNetzHinzu(netz);
+        if (zug.holeHoechstGeschwindigkeit() == 0){
+            return netz;
+        }
+        fuegeKantenZuStreckenNetzHinzu(netz, zug, streckenKantenGenerierer);
         return netz;
     }
 
