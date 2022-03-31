@@ -43,8 +43,11 @@ public class StreckenBerechner {
         for (Bahnhof bahnhof : bahnhofsVerwaltung.holeEntitaeten()) {
             netz.bahnhofHinzufuegen(new BahnhofsKnoten(bahnhof));
         }
+        if (zug.holeHoechstGeschwindigkeit() == 0){
+            return netz;
+        }
         for (Strecke strecke : streckenVerwaltung.holeEntitaeten()) {
-            if (!strecke.istFreigegeben() || !strecke.holeErlaubteZugTypen().contains(zug.holeZugTyp())) {
+            if (!strecke.istFreigegeben() || !strecke.holeErlaubteZugTypen().contains(zug.holeZugTyp()) || strecke.holeMaximalGeschwindigkeit() == 0) {
                 continue;
             }
             final BahnhofsKnoten start = new BahnhofsKnoten(strecke.holeStartBahnhof());
@@ -78,8 +81,6 @@ public class StreckenBerechner {
                     @Override
                     public double holeGewichtung() {
                         double fahrGeschwindigkeit = Math.min(zug.holeHoechstGeschwindigkeit(), this.holeStrecke().holeMaximalGeschwindigkeit());
-                        if (fahrGeschwindigkeit == 0)
-                            return Double.MAX_VALUE;
                         return this.holeStrecke().holeLaenge() / fahrGeschwindigkeit;                    }
                 };
             }
