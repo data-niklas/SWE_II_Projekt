@@ -20,8 +20,7 @@ public class StreckenBerechner {
         this.wegFinder = wegFinder;
     }
 
-    public List<Strecke> berechneKuerzesteStrecke(Bahnhof start, Bahnhof ende, Zug zug) {
-        StreckenNetz streckenNetz = baueKuerzesteStreckeNetz(zug);
+    public List<Strecke> berechneStrecke(Bahnhof start, Bahnhof ende, StreckenNetz streckenNetz) {
         this.wegFinder.initialisiereGraphen(streckenNetz);
         BahnhofsKnoten startKnoten = new BahnhofsKnoten(start);
         BahnhofsKnoten endKnoten = new BahnhofsKnoten(ende);
@@ -29,13 +28,14 @@ public class StreckenBerechner {
         return weg.stream().map(StreckenKante::holeStrecke).collect(Collectors.toList());
     }
 
+    public List<Strecke> berechneKuerzesteStrecke(Bahnhof start, Bahnhof ende, Zug zug) {
+        StreckenNetz streckenNetz = baueKuerzesteStreckeNetz(zug);
+        return this.berechneStrecke(start, ende, streckenNetz);
+    }
+
     public List<Strecke> berechneKuerzesteZeitStrecke(Bahnhof start, Bahnhof ende, Zug zug) {
         StreckenNetz streckenNetz = baueKuerzesteZeitNetz(zug);
-        this.wegFinder.initialisiereGraphen(streckenNetz);
-        BahnhofsKnoten startKnoten = new BahnhofsKnoten(start);
-        BahnhofsKnoten endKnoten = new BahnhofsKnoten(ende);
-        List<StreckenKante> weg = (List<StreckenKante>) this.wegFinder.berechneWeg(startKnoten, endKnoten);
-        return weg.stream().map(StreckenKante::holeStrecke).collect(Collectors.toList());
+        return this.berechneStrecke(start, ende, streckenNetz);
     }
 
     private StreckenNetz baueKuerzesteStreckeNetz(Zug zug) {
