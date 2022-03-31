@@ -29,7 +29,7 @@ public class StreckenBerechner {
     }
 
     public List<Strecke> berechneKuerzesteStrecke(Bahnhof start, Bahnhof ende, Zug zug) {
-        StreckenNetz streckenNetz = baueKuerzesteStreckeNetz(zug);
+        StreckenNetz streckenNetz = baueKuerzesteStreckenNetz(zug);
         return this.berechneStrecke(start, ende, streckenNetz);
     }
 
@@ -38,7 +38,7 @@ public class StreckenBerechner {
         return this.berechneStrecke(start, ende, streckenNetz);
     }
 
-    private StreckenNetz baueKuerzesteStreckeNetz(Zug zug) {
+    private StreckenNetz baueStreckenNetz(final Zug zug, final StreckenKantenGenerierer streckenKantenGenerierer) {
         StreckenNetz netz = new StreckenNetz();
         for (Bahnhof bahnhof : bahnhofsVerwaltung.holeEntitaeten()) {
             netz.bahnhofHinzufuegen(new BahnhofsKnoten(bahnhof));
@@ -47,42 +47,44 @@ public class StreckenBerechner {
             if (!strecke.istFreigegeben() || !strecke.holeErlaubteZugTypen().contains(zug.holeZugTyp())) {
                 continue;
             }
-            BahnhofsKnoten start = new BahnhofsKnoten(strecke.holeStartBahnhof());
-            BahnhofsKnoten ende = new BahnhofsKnoten(strecke.holeEndBahnhof());
-            StreckenKante streckeGraph = new StreckenKante(strecke, start, ende) {
-                @Override
-                public double holeGewichtung() {
-                    return this.holeStrecke().holeLaenge();
-                }
-            };
+            final BahnhofsKnoten start = new BahnhofsKnoten(strecke.holeStartBahnhof());
+            final BahnhofsKnoten ende = new BahnhofsKnoten(strecke.holeEndBahnhof());
+            StreckenKante streckeGraph = streckenKantenGenerierer.generiereStreckenKante(strecke, start, ende);
             netz.streckeHinzufuegen(streckeGraph);
         }
         return netz;
     }
 
-    private StreckenNetz baueKuerzesteZeitNetz(final Zug zug) {
-        StreckenNetz netz = new StreckenNetz();
-        for (Bahnhof bahnhof : bahnhofsVerwaltung.holeEntitaeten()) {
-            netz.bahnhofHinzufuegen(new BahnhofsKnoten(bahnhof));
-        }
-        for (Strecke strecke : streckenVerwaltung.holeEntitaeten()) {
-            if (!strecke.istFreigegeben() || !strecke.holeErlaubteZugTypen().contains(zug.holeZugTyp())) {
-                continue;
+    private StreckenNetz baueKuerzesteStreckenNetz(Zug zug) {
+        StreckenKantenGenerierer streckenKantenGenerierer = new StreckenKantenGenerierer() {
+            @Override
+            public StreckenKante generiereStreckenKante(Strecke strecke, BahnhofsKnoten startBahnhof, BahnhofsKnoten endBahnhof) {
+                return new StreckenKante(strecke, startBahnhof, endBahnhof) {
+                    @Override
+                    public double holeGewichtung() {
+                        return this.holeStrecke().holeLaenge();
+                    }
+                };
             }
-            BahnhofsKnoten start = new BahnhofsKnoten(strecke.holeStartBahnhof());
-            BahnhofsKnoten ende = new BahnhofsKnoten(strecke.holeEndBahnhof());
-            StreckenKante streckeGraph = new StreckenKante(strecke, start, ende) {
-                @Override
-                public double holeGewichtung() {
-                    double fahrGeschwindigkeit = Math.min(zug.holeHoechstGeschwindigkeit(), this.holeStrecke().holeMaximalGeschwindigkeit());
-                    if (fahrGeschwindigkeit == 0)
-                        return Double.MAX_VALUE;
-                    return this.holeStrecke().holeLaenge() / fahrGeschwindigkeit;
-                }
-            };
-            netz.streckeHinzufuegen(streckeGraph);
-        }
-        return netz;
+        };
+        return baueStreckenNetz(zug, streckenKantenGenerierer);
+    }
+
+    private StreckenNetz baueKuerzesteZeitNetz(final Zug zug) {
+        StreckenKantenGenerierer streckenKantenGenerierer = new StreckenKantenGenerierer() {
+            @Override
+            public StreckenKante generiereStreckenKante(Strecke strecke, BahnhofsKnoten startBahnhof, BahnhofsKnoten endBahnhof) {
+                return new StreckenKante(strecke, startBahnhof, endBahnhof) {
+                    @Override
+                    public double holeGewichtung() {
+                        double fahrGeschwindigkeit = Math.min(zug.holeHoechstGeschwindigkeit(), this.holeStrecke().holeMaximalGeschwindigkeit());
+                        if (fahrGeschwindigkeit == 0)
+                            return Double.MAX_VALUE;
+                        return this.holeStrecke().holeLaenge() / fahrGeschwindigkeit;                    }
+                };
+            }
+        };
+        return baueStreckenNetz(zug, streckenKantenGenerierer);
     }
 
 }
