@@ -5,10 +5,9 @@ import de.dhbw.bahn.schicht_0_plugins.http.EinfacherHttpServer;
 import de.dhbw.bahn.schicht_0_plugins.persistenz.TemporaereVerwaltung;
 import de.dhbw.bahn.schicht_0_plugins.serialisierer.GsonSerialisierer;
 import de.dhbw.bahn.schicht_1_adapter.Kontrollierer;
-import de.dhbw.bahn.schicht_1_adapter.http.Darstellung;
 import de.dhbw.bahn.schicht_1_adapter.serialisierer.Serialisierer;
-import de.dhbw.bahn.schicht_2_anwendung.crud.Verwaltung;
 import de.dhbw.bahn.schicht_2_anwendung.crud.EntitaetenAufsicht;
+import de.dhbw.bahn.schicht_2_anwendung.crud.Verwaltung;
 import de.dhbw.bahn.schicht_2_anwendung.wegfinder.WegFinder;
 import de.dhbw.bahn.schicht_3_domaene.Bahnhof;
 import de.dhbw.bahn.schicht_3_domaene.Strecke;
@@ -24,7 +23,7 @@ public class Main {
         konfiguration.put("host", "localhost");
         konfiguration.put("port", "8081");
 
-        Darstellung server = new EinfacherHttpServer();
+        EinfacherHttpServer server = new EinfacherHttpServer();
         Serialisierer serialisierer = new GsonSerialisierer();
         Verwaltung<Bahnhof> bahnhofVerwaltung = new TemporaereVerwaltung<>();
         Verwaltung<Strecke> streckenVerwaltung = new TemporaereVerwaltung<>();
@@ -35,6 +34,6 @@ public class Main {
         WegFinder wegeFinder = new Dijkstra();
 
         Kontrollierer kontrollierer = new Kontrollierer(server, serialisierer, aufsicht, wegeFinder);
-        kontrollierer.legeLos(konfiguration);
+        server.legeLos(konfiguration);
     }
 }

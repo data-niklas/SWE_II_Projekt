@@ -2,12 +2,7 @@ package de.dhbw.bahn.schicht_0_plugins.http;
 
 import com.sun.net.httpserver.HttpExchange;
 import com.sun.net.httpserver.HttpHandler;
-import de.dhbw.bahn.schicht_1_adapter.http.Darstellung;
-import de.dhbw.bahn.schicht_1_adapter.http.Event;
-import de.dhbw.bahn.schicht_1_adapter.http.EventAntwort;
-import de.dhbw.bahn.schicht_1_adapter.http.EventRueckruf;
-import de.dhbw.bahn.schicht_1_adapter.http.MimeTyp;
-import de.dhbw.bahn.schicht_1_adapter.http.EventTyp;
+import de.dhbw.bahn.schicht_1_adapter.http.*;
 
 import java.io.*;
 import java.net.InetSocketAddress;
@@ -15,7 +10,7 @@ import java.net.URLDecoder;
 import java.util.HashMap;
 import java.util.Map;
 
-public class EinfacherHttpServer implements Darstellung, HttpHandler {
+public class EinfacherHttpServer implements EventRegistrierer, Startbar, Konfigurierbar, HttpHandler {
 
     private final Map<Event, EventRueckruf> rueckrufTabelle;
     private int port;
@@ -88,16 +83,16 @@ public class EinfacherHttpServer implements Darstellung, HttpHandler {
 
     private EventTyp httpMethodeZuEventTyp(String httpMethode) {
         switch (httpMethode) {
-        case "GET":
-            return EventTyp.LESEN;
-        case "PUT":
-            return EventTyp.AKTUALISIEREN;
-        case "POST":
-            return EventTyp.ERSTELLEN;
-        case "DELETE":
-            return EventTyp.LOESCHEN;
-        default:
-            return null;
+            case "GET":
+                return EventTyp.LESEN;
+            case "PUT":
+                return EventTyp.AKTUALISIEREN;
+            case "POST":
+                return EventTyp.ERSTELLEN;
+            case "DELETE":
+                return EventTyp.LOESCHEN;
+            default:
+                return null;
         }
     }
 
@@ -155,7 +150,7 @@ public class EinfacherHttpServer implements Darstellung, HttpHandler {
     private String leseKoerper(InputStream input) throws IOException {
         BufferedReader reader = new BufferedReader(new InputStreamReader(input));
         StringBuilder stringBuilder = new StringBuilder();
-        for (int ch; (ch = reader.read()) != -1;) {
+        for (int ch; (ch = reader.read()) != -1; ) {
             stringBuilder.append((char) ch);
         }
         return stringBuilder.toString();

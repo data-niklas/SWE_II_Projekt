@@ -2,9 +2,7 @@ package de.dhbw.bahn.schicht_1_adapter.http;
 
 import java.util.Map;
 
-public interface Darstellung {
-
-    Map<String, String> holeKonfiguration();
+public interface Startbar {
 
     boolean holeLaeuft();
 
@@ -12,5 +10,4 @@ public interface Darstellung {
 
     void halteAn();
 
-    void registriereEventRueckruf(Event route, EventRueckruf rueckruf);
 }
