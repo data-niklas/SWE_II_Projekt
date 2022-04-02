@@ -82,21 +82,6 @@ public class EinfacherHttpServer implements EventRegistrierer, Startbar, Konfigu
         this.verarbeiteHttpAntwort(exchange, antwort);
     }
 
-    private EventTyp httpMethodeZuEventTyp(String httpMethode) {
-        switch (httpMethode) {
-            case "GET":
-                return EventTyp.LESEN;
-            case "PUT":
-                return EventTyp.AKTUALISIEREN;
-            case "POST":
-                return EventTyp.ERSTELLEN;
-            case "DELETE":
-                return EventTyp.LOESCHEN;
-            default:
-                return null;
-        }
-    }
-
     private EventAntwort verarbeiteAnfrage(HttpExchange exchange) throws IOException {
         System.out.println(exchange.getRequestMethod() + " Anfrage an " + exchange.getHttpContext().getPath());
 
@@ -118,10 +103,7 @@ public class EinfacherHttpServer implements EventRegistrierer, Startbar, Konfigu
 
     private Optional<EventTyp> holeEventTypFuer(HttpExchange exchange) {
         String httpMethod = exchange.getRequestMethod();
-        EventTyp eventTyp = httpMethodeZuEventTyp(httpMethod);
-        if (eventTyp == null)
-            return Optional.empty();
-        return Optional.of(eventTyp);
+        return HttpMethodeZuEventTypMapping.fuer(httpMethod);
     }
 
     private EventAntwort baueEventAntwortAnfragemethodeNichtUnterstuetzt() {
