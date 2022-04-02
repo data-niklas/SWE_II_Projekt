@@ -9,6 +9,7 @@ import java.net.InetSocketAddress;
 import java.net.URLDecoder;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Optional;
 
 public class EinfacherHttpServer implements EventRegistrierer, Startbar, Konfigurierbar, HttpHandler {
 
@@ -99,22 +100,59 @@ public class EinfacherHttpServer implements EventRegistrierer, Startbar, Konfigu
     private EventAntwort verarbeiteAnfrage(HttpExchange exchange) throws IOException {
         System.out.println(exchange.getRequestMethod() + " Anfrage an " + exchange.getHttpContext().getPath());
 
-        String pfad = exchange.getHttpContext().getPath();
+        if (!wirdAnfragemethodeUnterstuetzt(exchange))
+            return baueEventAntwortAnfragemethodeNichtUnterstuetzt();
 
-        EventTyp eventTyp = httpMethodeZuEventTyp(exchange.getRequestMethod());
+        Event event = baueEventAus(exchange);
+        if (!istEventRueckrufVorhandenFuer(event))
+            return baueEventAntwortEventRueckrufNichtGefunden();
+
+        EventAntwort antwort = rufeEventRueckrufAufFuer(event, exchange);
+        return antwort;
+    }
+
+    private boolean wirdAnfragemethodeUnterstuetzt(HttpExchange exchange) {
+        Optional<EventTyp> eventTyp = holeEventTypFuer(exchange);
+        return eventTyp.isPresent();
+    }
+
+    private Optional<EventTyp> holeEventTypFuer(HttpExchange exchange) {
+        String httpMethod = exchange.getRequestMethod();
+        EventTyp eventTyp = httpMethodeZuEventTyp(httpMethod);
         if (eventTyp == null)
-            return new EventAntwort(404, "Diese Anfragemethode wird nicht unterstützt", MimeTyp.SCHLICHT);
-        Event route = new Event(pfad, eventTyp);
-        if (!this.rueckrufTabelle.containsKey(route)) {
-            return new EventAntwort(404, "Not Found", MimeTyp.SCHLICHT);
-        }
-        EventRueckruf rueckruf = this.rueckrufTabelle.get(route);
+            return Optional.empty();
+        return Optional.of(eventTyp);
+    }
 
+    private EventAntwort baueEventAntwortAnfragemethodeNichtUnterstuetzt() {
+        return new EventAntwort(404, "Diese Anfragemethode wird nicht unterstützt", MimeTyp.SCHLICHT);
+    }
+
+    private Event baueEventAus(HttpExchange exchange) {
+        EventTyp eventTyp = holeEventTypFuer(exchange).get();
+        String pfad = exchange.getHttpContext().getPath();
+        Event event = new Event(pfad, eventTyp);
+        return event;
+    }
+
+    private boolean istEventRueckrufVorhandenFuer(Event event) {
+        return this.rueckrufTabelle.containsKey(event);
+    }
+
+    private EventAntwort baueEventAntwortEventRueckrufNichtGefunden() {
+        return new EventAntwort(404, "Not Found", MimeTyp.SCHLICHT);
+    }
+
+    private EventAntwort rufeEventRueckrufAufFuer(Event event, HttpExchange exchange) throws IOException {
+        EventRueckruf rueckruf = holeEventRueckrufFuer(event);
         String query = exchange.getRequestURI().getQuery();
         Map<String, String> parameter = leseParameter(query);
         String koerper = leseKoerper(exchange.getRequestBody());
+        return rueckruf.bearbeiteAnfrage(event, koerper, parameter);
+    }
 
-        return rueckruf.bearbeiteAnfrage(route, koerper, parameter);
+    private EventRueckruf holeEventRueckrufFuer(Event event) {
+        return this.rueckrufTabelle.get(event);
     }
 
     private Map<String, String> leseParameter(String query) throws UnsupportedEncodingException {
