@@ -130,7 +130,8 @@ public class EinfacherHttpServer implements EventRegistrierer, Startbar, Konfigu
         String query = exchange.getRequestURI().getQuery();
         Map<String, String> parameter = leseParameter(query);
         String koerper = leseKoerper(exchange.getRequestBody());
-        return rueckruf.bearbeiteAnfrage(event, koerper, parameter);
+        EventAntwort antwort = rueckruf.bearbeiteAnfrage(event, koerper, parameter);
+        return antwort;
     }
 
     private EventRueckruf holeEventRueckrufFuer(Event event) {
